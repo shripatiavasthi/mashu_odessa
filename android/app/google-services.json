@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "236917131842",
+    "project_id": "infojini-69e06",
+    "storage_bucket": "infojini-69e06.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236917131842:android:21dba832242e4f9d4efbdb",
+        "android_client_info": {
+          "package_name": "com.odessa_mobile_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0EJZg3ddHTEueL-_imIzaMlwncrz3vNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

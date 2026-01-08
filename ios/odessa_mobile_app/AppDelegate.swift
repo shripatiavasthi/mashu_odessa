@@ -5,7 +5,7 @@ import ReactAppDependencyProvider
 import FirebaseCore
 import AppAuth
 
-@objc protocol RNAppAuthAuthorizationFlowManager {
+@objc(RNAppAuthAuthorizationFlowManager) protocol RNAppAuthAuthorizationFlowManager {
   var currentAuthorizationFlow: OIDExternalUserAgentSession? { get set }
 }
 

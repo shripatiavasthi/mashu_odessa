@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -47,16 +47,19 @@ const EmployeeLoginScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        console.log('RNAppAuth config (screen mount):', {
+            clientId: config.clientId,
+            redirectUrl: config.redirectUrl,
+            scopes: config.scopes,
+            authorizationEndpoint: config.serviceConfiguration?.authorizationEndpoint,
+            tokenEndpoint: config.serviceConfiguration?.tokenEndpoint,
+        });
+    }, []);
+
     const handleLogin = async () => {
         setLoading(true);
         try {
-            console.log('RNAppAuth config:', {
-                clientId: config.clientId,
-                redirectUrl: config.redirectUrl,
-                scopes: config.scopes,
-                authorizationEndpoint: config.serviceConfiguration?.authorizationEndpoint,
-                tokenEndpoint: config.serviceConfiguration?.tokenEndpoint,
-            });
             const result = await authorize(config);
 
             console.log('===== AUTH RESULT =====');

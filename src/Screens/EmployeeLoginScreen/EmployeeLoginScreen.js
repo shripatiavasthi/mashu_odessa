@@ -22,7 +22,6 @@ const config = {
         Platform.OS === 'ios'
             ? env.azure.redirectUrl.ios
             : env.azure.redirectUrl.android,
-    clientSecret: '',
     scopes: ['openid', 'profile', 'email', 'offline_access', 'User.Read'],
     additionalParameters: {},
     additionalHeaders: {},

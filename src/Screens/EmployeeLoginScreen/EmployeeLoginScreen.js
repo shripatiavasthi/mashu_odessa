@@ -1,32 +1,32 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Alert,
-  Platform,
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    Dimensions,
+    Alert,
+    Platform,
 } from 'react-native';
 import AppGradient from '../../components/AppGradient';
 import { authorize } from 'react-native-app-auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {useDispatch} from 'react-redux';
-import {env} from '../../env';
-import {setAuthData} from '../../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { env } from '../../env';
+import { setAuthData } from '../../store/slices/authSlice';
 
 const config = {
-  clientId: env.azure.clientId,
-  redirectUrl:
-    Platform.OS === 'ios'
-      ? env.azure.redirectUrl.ios
-      : env.azure.redirectUrl.android,
-  scopes: ['openid', 'profile', 'email', 'offline_access', 'User.Read'],
-  serviceConfiguration: {
-    authorizationEndpoint: `https://login.microsoftonline.com/${env.azure.tenantId}/oauth2/v2.0/authorize`,
-    tokenEndpoint: `https://login.microsoftonline.com/${env.azure.tenantId}/oauth2/v2.0/token`,
-  },
+    clientId: env.azure.clientId,
+    redirectUrl:
+        Platform.OS === 'ios'
+            ? env.azure.redirectUrl.ios
+            : env.azure.redirectUrl.android,
+    scopes: ['openid', 'profile', 'email', 'offline_access', 'User.Read'],
+    serviceConfiguration: {
+        authorizationEndpoint: `https://login.microsoftonline.com/${env.azure.tenantId}/oauth2/v2.0/authorize`,
+        tokenEndpoint: `https://login.microsoftonline.com/${env.azure.tenantId}/oauth2/v2.0/token`,
+    },
 };
 
 // const config = {
@@ -48,52 +48,61 @@ const EmployeeLoginScreen = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const handleLogin = async () => {
-      setLoading(true);
-      try {
-        const result = await authorize(config);
+        setLoading(true);
+        try {
+            const result = await authorize(config);
 
-        const graphResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${result.accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
+            console.log('===== AUTH RESULT =====');
+            console.log('Access Token:', result.accessToken);
+            console.log('Refresh Token:', result.refreshToken);
+            console.log('ID Token:', result.idToken);
+            console.log('Token Type:', result.tokenType);
+            console.log('Expires In:', result.accessTokenExpirationDate);
 
-        if (graphResponse.ok) {
-          const userData = await graphResponse.json();
 
-          const userPayload = {
-            displayName: userData.displayName || 'Employee',
-            email: userData.mail || userData.userPrincipalName || '',
-            jobTitle: userData.jobTitle || '',
-            officeLocation: userData.officeLocation || '',
-            mobilePhone: userData.mobilePhone || '',
-          };
+            const graphResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${result.accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
 
-          dispatch(
-            setAuthData({
-              accessToken: result.accessToken,
-              refreshToken: result.refreshToken,
-              user: userPayload,
-            }),
-          );
+            if (graphResponse.ok) {
+                const userData = await graphResponse.json();
 
-          navigation.navigate('EventCheckInScreen', {
-            user: userPayload,
-            accessToken: result.accessToken,
-          });
-        } else {
-          const errorText = await graphResponse.text();
-          console.error('Graph API Error:', graphResponse.status, errorText);
-          Alert.alert('Error', 'Failed to fetch user profile.');
+                const userPayload = {
+                    displayName: userData.displayName || 'Employee',
+                    email: userData.mail || userData.userPrincipalName || '',
+                    jobTitle: userData.jobTitle || '',
+                    officeLocation: userData.officeLocation || '',
+                    mobilePhone: userData.mobilePhone || '',
+                };
+                console.log("User Details: ", userData)
+
+                dispatch(
+                    setAuthData({
+                        accessToken: result.accessToken,
+                        refreshToken: result.refreshToken,
+                        user: userPayload,
+                    }),
+                );
+
+                navigation.navigate('MainTabs', {
+                    user: userPayload,
+                    accessToken: result.accessToken,
+                });
+            } else {
+                const errorText = await graphResponse.text();
+                console.error('Graph API Error:', graphResponse.status, errorText);
+                Alert.alert('Error', 'Failed to fetch user profile.');
+            }
+        } catch (error) {
+            console.error('Login Error:', error);
+            Alert.alert('Login Failed', error.message || 'Something went wrong');
+        } finally {
+            setLoading(false);
         }
-      } catch (error) {
-        console.error('Login Error:', error);
-        Alert.alert('Login Failed', error.message || 'Something went wrong');
-      } finally {
-        setLoading(false);
-      }
     };
 
     return (

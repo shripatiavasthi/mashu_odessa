@@ -33,7 +33,7 @@ const CheckInSuccessScreen = ({ navigation }) => {
             {/* </View> */}
           </View>
 
-          {/* Success Text */}
+
           <View style={styles.textContainer}>
             <Text style={styles.successText}>
               You have successfully checked in to the{'\n'}
@@ -84,7 +84,7 @@ const CheckInSuccessScreen = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('Events')}
+              onPress={() => navigation.navigate('EventsScreen')}
             >
               <Text style={styles.buttonText}>Visit Events</Text>
             </TouchableOpacity>

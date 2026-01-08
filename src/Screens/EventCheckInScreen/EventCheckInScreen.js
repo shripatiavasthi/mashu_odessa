@@ -18,6 +18,8 @@ import {submitActivityId, resetCheckIn} from '../../store/slices/checkInSlice';
 import {selectAuth, selectCheckIn} from '../../store';
 import InvalidActivityModal from '../../components/InvalidActivityModal';
 // import Group from '../../assets/svg/Group.svg';
+import AppGradient from '../../components/AppGradient';
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -32,34 +34,38 @@ const EventCheckInScreen = ({ navigation, route }) => {
   const isValidActivityId = /^\d{4}$/.test(activityId);
 
   const onCheckIn = async () => {
-    const trimmedId = activityId.trim();
 
-    if (!/^\d{4}$/.test(trimmedId)) {
-      Alert.alert('Invalid Activity ID', 'Activity ID must be exactly 4 digits.');
-      return;
-    }
+    navigation.navigate('CheckInSuccessScreen')
 
-    console.log('Activity ID:', trimmedId);
+    // const trimmedId = activityId.trim();
 
-    try {
-      const token = navToken || accessToken;
-      const response = await dispatch(
-        submitActivityId({activityId: trimmedId, token}),
-      ).unwrap();
+    // if (!/^\d{4}$/.test(trimmedId)) {
+    //   Alert.alert('Invalid Activity ID', 'Activity ID must be exactly 4 digits.');
+    //   return;
+    // }
 
-      dispatch(resetCheckIn());
-      navigation.navigate('CheckInSuccessScreen', {
-        activityId: trimmedId,
-        user: user || authUser,
-        response,
-      });
-    } catch (err) {
-      setModalVisible(true);
-    }
+    // console.log('Activity ID:', trimmedId);
+
+    // try {
+    //   const token = navToken || accessToken;
+    //   const response = await dispatch(
+    //     submitActivityId({activityId: trimmedId, token}),
+    //   ).unwrap();
+
+    //   dispatch(resetCheckIn());
+    //   navigation.navigate('CheckInSuccessScreen', {
+    //     activityId: trimmedId,
+    //     user: user || authUser,
+    //     response,
+    //   });
+    // } catch (err) {
+    //   setModalVisible(true);
+    // }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <AppGradient style={styles.container}>
       <LinearGradient
         colors={['#2E6FB6', '#4DA3DA']}
         style={styles.header}>
@@ -152,6 +158,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
           }}
         />
       </KeyboardAvoidingView>
+    </AppGradient>
     </SafeAreaView>
   );
 };

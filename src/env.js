@@ -1,5 +1,3 @@
-// Environment-aware configuration for API endpoints and third-party keys.
-// Switch between debug/production by changing ENVIRONMENT or relying on __DEV__.
 const ENVIRONMENT = __DEV__ ? 'debug' : 'production';
 
 const CONFIG = {

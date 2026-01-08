@@ -50,6 +50,13 @@ const EmployeeLoginScreen = ({ navigation }) => {
     const handleLogin = async () => {
         setLoading(true);
         try {
+            console.log('RNAppAuth config:', {
+                clientId: config.clientId,
+                redirectUrl: config.redirectUrl,
+                scopes: config.scopes,
+                authorizationEndpoint: config.serviceConfiguration?.authorizationEndpoint,
+                tokenEndpoint: config.serviceConfiguration?.tokenEndpoint,
+            });
             const result = await authorize(config);
 
             console.log('===== AUTH RESULT =====');

@@ -8,7 +8,7 @@ import AppAuth
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlowManager {
   var window: UIWindow?
-  var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate?
+  @objc var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate?
 
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?

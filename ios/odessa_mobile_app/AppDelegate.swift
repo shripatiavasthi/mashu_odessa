@@ -3,10 +3,13 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import FirebaseCore
+import AppAuth
+import RNAppAuth
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlowManager {
   var window: UIWindow?
+  var currentAuthorizationFlow: OIDExternalUserAgentSession?
 
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
@@ -40,6 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey : Any] = [:]
   ) -> Bool {
+    if let currentFlow = currentAuthorizationFlow,
+       currentFlow.resumeExternalUserAgentFlow(with: url) {
+      currentAuthorizationFlow = nil
+      return true
+    }
     return RCTLinkingManager.application(application, open: url, options: options)
   }
 
@@ -48,6 +56,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
   ) -> Bool {
+    if let currentFlow = currentAuthorizationFlow,
+       let url = userActivity.webpageURL,
+       currentFlow.resumeExternalUserAgentFlow(with: url) {
+      currentAuthorizationFlow = nil
+      return true
+    }
     return RCTLinkingManager.application(
       application,
       continue: userActivity,

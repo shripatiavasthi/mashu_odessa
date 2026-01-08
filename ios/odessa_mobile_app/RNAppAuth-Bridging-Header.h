@@ -1,1 +1,1 @@
-#import <RNAppAuth/RNAppAuthAuthorizationFlowManager.h>
+#import <RNAppAuthAuthorizationFlowManager.h>

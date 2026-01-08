@@ -4,7 +4,10 @@ import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import FirebaseCore
 import AppAuth
-import RNAppAuth
+
+@objc protocol RNAppAuthAuthorizationFlowManager {
+  var currentAuthorizationFlow: OIDExternalUserAgentSession? { get set }
+}
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlowManager {

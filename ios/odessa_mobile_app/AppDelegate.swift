@@ -42,10 +42,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey : Any] = [:]
   ) -> Bool {
+    print("AppDelegate openURL:", url.absoluteString)
+    print("RNAppAuth delegate set:", authorizationFlowManagerDelegate != nil)
     if let delegate = authorizationFlowManagerDelegate,
        delegate.resumeExternalUserAgentFlow(with: url) {
+      print("RNAppAuth resumeExternalUserAgentFlow: true")
       return true
     }
+    print("RNAppAuth resumeExternalUserAgentFlow: false")
     return RCTLinkingManager.application(application, open: url, options: options)
   }
 
@@ -54,11 +58,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
   ) -> Bool {
+    if let url = userActivity.webpageURL {
+      print("AppDelegate continueUserActivity URL:", url.absoluteString)
+    }
+    print("RNAppAuth delegate set:", authorizationFlowManagerDelegate != nil)
     if let delegate = authorizationFlowManagerDelegate,
        let url = userActivity.webpageURL,
        delegate.resumeExternalUserAgentFlow(with: url) {
+      print("RNAppAuth resumeExternalUserAgentFlow (userActivity): true")
       return true
     }
+    print("RNAppAuth resumeExternalUserAgentFlow (userActivity): false")
     return RCTLinkingManager.application(
       application,
       continue: userActivity,

@@ -3,16 +3,7 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import FirebaseCore
-@objc(RNAppAuthAuthorizationFlowManagerDelegate)
-protocol RNAppAuthAuthorizationFlowManagerDelegate {
-  @objc(resumeExternalUserAgentFlowWithURL:)
-  func resumeExternalUserAgentFlow(with url: URL) -> Bool
-}
-
-@objc(RNAppAuthAuthorizationFlowManager)
-protocol RNAppAuthAuthorizationFlowManager {
-  var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate? { get set }
-}
+import AppAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlowManager {

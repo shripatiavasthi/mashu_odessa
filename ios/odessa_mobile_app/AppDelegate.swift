@@ -3,16 +3,20 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import FirebaseCore
-import AppAuth
+@objc(RNAppAuthAuthorizationFlowManagerDelegate)
+protocol RNAppAuthAuthorizationFlowManagerDelegate {
+  func resumeExternalUserAgentFlow(with url: URL) -> Bool
+}
 
-@objc(RNAppAuthAuthorizationFlowManager) protocol RNAppAuthAuthorizationFlowManager {
-  var currentAuthorizationFlow: OIDExternalUserAgentSession? { get set }
+@objc(RNAppAuthAuthorizationFlowManager)
+protocol RNAppAuthAuthorizationFlowManager {
+  var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate? { get set }
 }
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlowManager {
   var window: UIWindow?
-  var currentAuthorizationFlow: OIDExternalUserAgentSession?
+  var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate?
 
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
@@ -46,9 +50,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey : Any] = [:]
   ) -> Bool {
-    if let currentFlow = currentAuthorizationFlow,
-       currentFlow.resumeExternalUserAgentFlow(with: url) {
-      currentAuthorizationFlow = nil
+    if let delegate = authorizationFlowManagerDelegate,
+       delegate.resumeExternalUserAgentFlow(with: url) {
       return true
     }
     return RCTLinkingManager.application(application, open: url, options: options)
@@ -59,10 +62,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     continue userActivity: NSUserActivity,
     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
   ) -> Bool {
-    if let currentFlow = currentAuthorizationFlow,
+    if let delegate = authorizationFlowManagerDelegate,
        let url = userActivity.webpageURL,
-       currentFlow.resumeExternalUserAgentFlow(with: url) {
-      currentAuthorizationFlow = nil
+       delegate.resumeExternalUserAgentFlow(with: url) {
       return true
     }
     return RCTLinkingManager.application(

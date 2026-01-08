@@ -5,6 +5,7 @@ import ReactAppDependencyProvider
 import FirebaseCore
 @objc(RNAppAuthAuthorizationFlowManagerDelegate)
 protocol RNAppAuthAuthorizationFlowManagerDelegate {
+  @objc(resumeExternalUserAgentFlowWithURL:)
   func resumeExternalUserAgentFlow(with url: URL) -> Bool
 }
 

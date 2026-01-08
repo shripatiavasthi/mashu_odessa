@@ -22,7 +22,14 @@ const config = {
         Platform.OS === 'ios'
             ? env.azure.redirectUrl.ios
             : env.azure.redirectUrl.android,
+    clientSecret: '',
     scopes: ['openid', 'profile', 'email', 'offline_access', 'User.Read'],
+    additionalParameters: {},
+    additionalHeaders: {},
+    iosCustomBrowser: 'safari',
+    prefersEphemeralSession: false,
+    usePKCE: true,
+    useNonce: true,
     serviceConfiguration: {
         authorizationEndpoint: `https://login.microsoftonline.com/${env.azure.tenantId}/oauth2/v2.0/authorize`,
         tokenEndpoint: `https://login.microsoftonline.com/${env.azure.tenantId}/oauth2/v2.0/token`,

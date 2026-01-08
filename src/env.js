@@ -7,7 +7,7 @@ const CONFIG = {
       clientId: '84f6ef89-463c-4e4d-b92b-637b9f42fad7',
       tenantId: 'bdd49817-9db8-4c1c-8269-0cd1044427df',
       redirectUrl: {
-        ios: 'msauth.com.odessa.mobile.app://auth',
+        ios: 'com.odessa.mobile.app://oauth',
         android: 'com.odessa.mobile.app://oauth',
       },
     },
@@ -18,7 +18,7 @@ const CONFIG = {
       clientId: '84f6ef89-463c-4e4d-b92b-637b9f42fad7',
       tenantId: 'bdd49817-9db8-4c1c-8269-0cd1044427df',
       redirectUrl: {
-        ios: 'msauth.com.odessa.mobile.app://auth',
+        ios: 'com.odessa.mobile.app://oauth',
         android: 'com.odessa.mobile.app://oauth',
       },
     },

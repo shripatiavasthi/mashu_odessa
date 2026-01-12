@@ -10,7 +10,7 @@ import LoginScreen from './src/Screens/LoginScreen';
 import EmployeeLoginScreen from './src/Screens/EmployeeLoginScreen/EmployeeLoginScreen';
 import ContactUsScreen from './src/Screens/ContactUsScreen/ContactUsScreen';
 
-import BottomTabs from './src/navigation/BottomTabs';
+import DrawerNavigator from './src/navigation/DrawerNavigator';
 
 import { persistor, store } from './src/store';
 
@@ -30,7 +30,7 @@ function App() {
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen name="EmployeeLoginScreen" component={EmployeeLoginScreen} />
 
-            <Stack.Screen name="MainTabs" component={BottomTabs} />
+            <Stack.Screen name="MainTabs" component={DrawerNavigator} />
             
             <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
           </Stack.Navigator>

@@ -1,11 +1,12 @@
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import {colors} from '../styles/globalStyles';
 
 const AppGradient = ({ children, style }) => {
   return (
     <LinearGradient
       colors={[
-        '#FFFFFF',
+        colors.white,
         '#FEFEFE',
         '#F7FDFF',
         '#EEF9FF',

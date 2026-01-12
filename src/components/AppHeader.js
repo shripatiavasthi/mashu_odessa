@@ -7,7 +7,8 @@ import {
   Dimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {colors} from '../styles/globalStyles';
 
 const { height, width } = Dimensions.get('window');
 
@@ -18,13 +19,13 @@ const AppHeader = ({ showMenu = true, onMenuPress }) => {
     if (onMenuPress) {
       onMenuPress();
     } else {
-      navigation.openDrawer?.();
+      navigation.openDrawer?.() || navigation.getParent?.()?.openDrawer?.();
     }
   };
 
   return (
     <LinearGradient
-      colors={['#2E6FB6', '#4DA3DA']}
+      colors={[colors.primary, colors.primaryLight]}
       style={styles.header}
     >
       {/* Menu Icon */}
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   menuIcon: {
     height: height / 28,
     width: height / 28,
-    tintColor: '#FFFFFF',
+    tintColor: colors.white,
   },
 
   logoContainer: {

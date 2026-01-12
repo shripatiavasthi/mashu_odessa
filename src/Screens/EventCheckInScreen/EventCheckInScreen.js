@@ -19,6 +19,7 @@ import {selectAuth, selectCheckIn} from '../../store';
 import InvalidActivityModal from '../../components/InvalidActivityModal';
 // import Group from '../../assets/svg/Group.svg';
 import AppGradient from '../../components/AppGradient';
+import {colors, typography} from '../../styles/globalStyles';
 
 
 const { height, width } = Dimensions.get('window');
@@ -71,7 +72,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
         style={styles.header}>
         <TouchableOpacity
           style={styles.menuContainer}
-          onPress={() => navigation.openDrawer?.()}>
+          onPress={() => navigation.openDrawer?.() || navigation.getParent?.()?.openDrawer?.()}>
           <Image
             source={require('../../assets/Image/Menu.png')}
             resizeMode="contain"
@@ -168,7 +169,7 @@ export default EventCheckInScreen;
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F5F9FF',
+    backgroundColor: colors.surface,
   },
   header: {
     height: height / 12,
@@ -190,7 +191,7 @@ const styles = StyleSheet.create({
   menuIcon: {
     width: 30,
     height: 30,
-    tintColor: '#FFFFFF',
+    tintColor: colors.white,
   },
   logo: {
     width: 100,
@@ -208,7 +209,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2E6FB6',
+    color: colors.primary,
+    fontFamily: typography.regular,
   },
   headerContainer: {
     height: height / 15,
@@ -224,10 +226,11 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: '#414651',
+    color: colors.textDark,
     textAlign: 'center',
     lineHeight: 24,
     fontWeight: '600',
+    fontFamily: typography.regular,
   },
   labelContainer: {
     height: height / 15,
@@ -238,7 +241,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#414651',
+    color: colors.textDark,
+    fontFamily: typography.regular,
   },
   spacer: {
     height: height / 15,
@@ -253,8 +257,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     fontSize: 16,
+    fontFamily: typography.regular,
   },
   btnContainer: {
     height: height / 10,
@@ -265,7 +270,7 @@ const styles = StyleSheet.create({
   button: {
     height: height / 22,
     width: width / 1.2,
-    backgroundColor: '#2E6FB6',
+    backgroundColor: colors.primary,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -276,7 +281,8 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    color: colors.white,
+    fontFamily: typography.regular,
   },
   disabledButtonText: {
     color: '#FFFFFFAA',

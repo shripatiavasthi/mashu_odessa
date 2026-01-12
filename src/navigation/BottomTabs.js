@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
+import {colors, typography} from '../styles/globalStyles';
 
 import EventCheckInScreen from '../Screens/EventCheckInScreen/EventCheckInScreen';
 import EventsScreen from '../Screens/EventsScreen/EventsScreen';
@@ -42,8 +43,8 @@ const BottomTabs = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: true,
-        tabBarActiveTintColor: '#2E6FB6',
-        tabBarInactiveTintColor: '#667085',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.label,
         tabBarIcon: ({ focused }) => {
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     paddingBottom: height / 60,
     // borderTopLeftRadius: width / 18,
     // borderTopRightRadius: width / 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     position: 'absolute',
     elevation: 8,
     shadowColor: '#000',
@@ -129,5 +130,6 @@ const styles = StyleSheet.create({
     fontSize: width / 32,
     fontWeight: '600',
     marginTop: height / 200,
+    fontFamily: typography.regular,
   },
 });

@@ -80,11 +80,11 @@ const CheckInSuccessScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Button */}
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('EventsScreen')}
+              onPress={() => navigation.navigate('Events')}
             >
               <Text style={styles.buttonText}>Visit Events</Text>
             </TouchableOpacity>

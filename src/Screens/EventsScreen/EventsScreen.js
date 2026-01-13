@@ -111,7 +111,6 @@ const EventsScreen = () => {
             <AppGradient style={styles.gradient}>
                 <AppHeader />
 
-                {/* Tabs */}
                 <View style={styles.tabContainer}>
                     <TabItem
                         title="My Events"
@@ -169,6 +168,10 @@ const EventsScreen = () => {
                         </>
                     )}
                 </ScrollView>
+
+                <TouchableOpacity style={styles.fab}>
+                    <Text style={styles.fabText}>i</Text>
+                </TouchableOpacity>
 
             </AppGradient>
         </SafeAreaView>
@@ -292,79 +295,101 @@ const styles = StyleSheet.create({
     },
 
     /* Upcoming Card */
-upcomingCard: {
-    width: width / 1.1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: width / 30,
-    borderWidth: 1,
-    borderColor: '#B9DCF5',
-    padding: width / 25,
-    marginBottom: height / 40,
-},
+    upcomingCard: {
+        width: width / 1.1,
+        backgroundColor: '#FFFFFF',
+        borderRadius: width / 30,
+        borderWidth: 1,
+        borderColor: '#B9DCF5',
+        padding: width / 25,
+        marginBottom: height / 40,
+    },
 
-upcomingHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-},
+    upcomingHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
 
-ribbon: {
-    backgroundColor: '#4A90E2',
-    paddingHorizontal: width / 30,
-    paddingVertical: height / 120,
-    borderTopLeftRadius: width / 40,
-    borderBottomLeftRadius: width / 40,
-},
+    ribbon: {
+        backgroundColor: '#4A90E2',
+        paddingHorizontal: width / 30,
+        paddingVertical: height / 120,
+        borderTopLeftRadius: width / 40,
+        borderBottomLeftRadius: width / 40,
+    },
 
-ribbonText: {
-    color: '#FFFFFF',
-    fontSize: width / 32,
-    fontWeight: '600',
-},
+    ribbonText: {
+        color: '#FFFFFF',
+        fontSize: width / 32,
+        fontWeight: '600',
+    },
 
-termText: {
-    fontSize: width / 30,
-    color: '#667085',
-    marginTop: height / 120,
-},
+    termText: {
+        fontSize: width / 30,
+        color: '#667085',
+        marginTop: height / 120,
+    },
 
-pointsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: height / 150,
-},
+    pointsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: height / 150,
+    },
 
-dot: {
-    height: width / 40,
-    width: width / 40,
-    borderRadius: width / 80,
-    backgroundColor: '#2E6FB6',
-    marginRight: width / 50,
-},
+    dot: {
+        height: width / 40,
+        width: width / 40,
+        borderRadius: width / 80,
+        backgroundColor: '#2E6FB6',
+        marginRight: width / 50,
+    },
 
-upcomingFooter: {
-    marginTop: height / 40,
-    paddingTop: height / 60,
-    borderTopWidth: 1,
-    borderTopColor: '#E4F1FB',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-},
+    upcomingFooter: {
+        marginTop: height / 40,
+        paddingTop: height / 60,
+        borderTopWidth: 1,
+        borderTopColor: '#E4F1FB',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
 
-checkInBtn: {
-    height: height / 18,
-    width: width / 3,
-    backgroundColor: '#2E6FB6',
-    borderRadius: width / 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-},
+    checkInBtn: {
+        height: height / 18,
+        width: width / 3,
+        backgroundColor: '#2E6FB6',
+        borderRadius: width / 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 
-checkInText: {
-    color: '#FFFFFF',
-    fontSize: width / 28,
-    fontWeight: '700',
-},
+    checkInText: {
+        color: '#FFFFFF',
+        fontSize: width / 28,
+        fontWeight: '700',
+    },
+     fab: {
+        position: 'absolute',
+        right: width / 18,
+        bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
+        height: width / 6,
+        width: width / 6,
+        borderRadius: width / 12,
+        backgroundColor: '#2E6FB6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        shadowOffset: { width: 0, height: 3 },
+      },
+    
+      fabText: {
+        color: '#FFFFFF',
+        fontSize: width / 18,
+        fontWeight: '700',
+      },
 
 });

@@ -14,8 +14,7 @@ const AppGradient = ({ children, style }) => {
       ]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
-      style={style}
-    >
+      style={style}>
       {children}
     </LinearGradient>
   );

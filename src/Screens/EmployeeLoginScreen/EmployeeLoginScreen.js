@@ -192,8 +192,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     backIcon: {
-        width: width * 0.06,
-        height: width * 0.06,
+        width: width * 0.05,
+        height: height * 0.04,
         tintColor: '#1E63B5',
     },
     headerTitle: {
@@ -215,7 +215,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '800',
         color: '#1E63B5',
-        marginTop: height * 0.04,
+        fontFamily: 'OpenSans-Bold',
+
+
     },
     subtitleContainer: {
         height: height / 16,
@@ -223,12 +225,14 @@ const styles = StyleSheet.create({
         width: width / 1.5,
         alignSelf: 'center',
         justifyContent: 'flex-end',
+        
     },
     subtitle: {
         textAlign: 'center',
         fontSize: 14,
         color: '#414651',
         fontWeight: '600',
+        
     },
     description: {
         textAlign: 'center',
@@ -236,23 +240,24 @@ const styles = StyleSheet.create({
         color: '#4A4A4A',
         marginTop: height * 0.01,
         lineHeight: height * 0.026,
-        fontFamily: 'Open-Sans',
+        fontFamily: 'OpenSans-Regular',
     },
     buttonContainer: {
-        height: height / 8,
+        height: height / 8.5,
         width: width / 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
+        // backgroundColor: 'cyan'
     },
     microsoftButton: {
-        height: height / 15,
+        height: height / 17,
         width: width / 1.2,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#006BB6',
         borderRadius: 12,
-        paddingVertical: height * 0.02,
+        // paddingVertical: height * 0.02,
     },
     disabledButton: {
         backgroundColor: '#8ab4f8',
@@ -261,11 +266,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '700',
         color: '#FFFFFF',
-        // paddingHorizontal: 20,
+        // textAlign: 'center'
     },
     microsoftIcon: {
-        width: 24,
-        height: 24,
+        width: 20,
+        height: 20,
         marginRight: 10,
     },
 });

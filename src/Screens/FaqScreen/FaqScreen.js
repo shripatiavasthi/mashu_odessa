@@ -116,35 +116,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  /* FAQ Card */
+  
   card: {
+    // height: height/18,
     width: width / 1.1,
     backgroundColor: '#FFFFFF',
-    borderRadius: width / 25,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#B9DCF5',
+    borderColor: '#00A2E54D',
     paddingHorizontal: width / 24,
-    paddingVertical: height / 45,
+    paddingVertical: height / 75,
     marginBottom: height / 40,
+
   },
 
   questionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    
   },
 
   questionText: {
     width: width / 1.5,
-    fontSize: width / 22,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#344054',
+    color: '#414651',
+    
   },
 
   icon: {
-    fontSize: width / 16,
+    fontSize: width / 17,
     fontWeight: '600',
-    color: '#1D4E89',
+    color: '#006BB6',
     lineHeight: width / 16,
   },
 
@@ -156,16 +160,17 @@ const styles = StyleSheet.create({
   },
 
   answerText: {
-    fontSize: width / 26,
-    color: '#475467',
-    lineHeight: height / 35,
+    fontSize: 12,
+    color: '#414651',
+    lineHeight: 20,
+    fontFamily: 'OpenSons-Regular'
   },
 
-  /* Floating Button */
+  
   fab: {
     position: 'absolute',
     right: width / 18,
-    bottom: Platform.OS === 'ios' ? height / 16 : height / 22,
+    bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
     height: width / 6,
     width: width / 6,
     borderRadius: width / 12,

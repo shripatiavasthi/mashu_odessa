@@ -57,9 +57,10 @@ const AppDrawerContent = ({navigation}) => {
           <Image
             source={require('../assets/Image/Profile.png')}
             style={styles.avatar}
+            resizeMode='contain'
           />
-          <Text style={styles.nameText}>Michaela Johnson</Text>
-          <Text style={styles.emailText}>michaela@odessa.edu</Text>
+          <Text style={styles.nameText}>Mashu Alam</Text>
+          <Text style={styles.emailText}>mashu.alam@infojiniconsulting.com</Text>
         </View>
 
         <View style={styles.menuSection}>
@@ -78,6 +79,7 @@ const AppDrawerContent = ({navigation}) => {
             <Image
               source={require('../assets/Image/back.png')}
               style={styles.menuIcon}
+              resizeMode='contain'
             />
             <Text style={styles.menuLabel}>Logout</Text>
           </TouchableOpacity>
@@ -137,8 +139,8 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255,255,255,0.2)',
   },
   menuIcon: {
-    width: 22,
-    height: 22,
+    width: 21,
+    height: 21,
     tintColor: colors.white,
     marginRight: 16,
   },

@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
-import {colors, typography} from '../styles/globalStyles';
 
 import EventCheckInScreen from '../Screens/EventCheckInScreen/EventCheckInScreen';
 import EventsScreen from '../Screens/EventsScreen/EventsScreen';
@@ -29,10 +28,10 @@ function CheckInStack() {
         name="CheckInSuccessScreen"
         component={CheckInSuccessScreen}
       />
-       <Stack.Screen
+       {/* <Stack.Screen
         name="EventsScreen"
         component={EventsScreen}
-      />
+      /> */}
     </Stack.Navigator>
   );
 }
@@ -43,13 +42,12 @@ const BottomTabs = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: true,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarActiveTintColor: '#2E6FB6',
+        tabBarInactiveTintColor: '#667085',
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.label,
         tabBarIcon: ({ focused }) => {
           let icon;
-
           if (route.name === 'CheckIn') {
             icon = focused
               ? require('../assets/Image/Icons/CheckInOn.png')
@@ -76,8 +74,7 @@ const BottomTabs = () => {
             />
           );
         },
-      })}
-    >
+      })}>
       
       <Tab.Screen
         name="CheckIn"
@@ -89,7 +86,6 @@ const BottomTabs = () => {
         name="Events"
         component={EventsScreen}
       />
-
       <Tab.Screen
         name="Rewards"
         component={TermRewardsScreen}
@@ -108,12 +104,12 @@ export default BottomTabs;
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: height / 11,
+    height: height / 10,
     paddingTop: height / 80,
     paddingBottom: height / 60,
     // borderTopLeftRadius: width / 18,
     // borderTopRightRadius: width / 18,
-    backgroundColor: colors.white,
+    backgroundColor: '#FFFFFF',
     position: 'absolute',
     elevation: 8,
     shadowColor: '#000',
@@ -122,14 +118,14 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   icon: {
-    height: 22,
-    width: 22,
+    height: 24,
+    width: 24,
     resizeMode: 'contain'
   },
   label: {
-    fontSize: width / 32,
+    fontSize: 16,
     fontWeight: '600',
     marginTop: height / 200,
-    fontFamily: typography.regular,
+    // fontFamily: 'OpenSans-SemiBold'
   },
 });

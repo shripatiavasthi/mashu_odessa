@@ -6,8 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image
 } from 'react-native';
-// import Svg, { Circle, Rect, Path } from 'react-native-svg';
 
 const { height, width } = Dimensions.get('window');
 
@@ -17,14 +17,9 @@ const InvalidActivityModal = ({ visible, onCancel, onRetry }) => {
       visible={visible}
       transparent
       animationType="fade"
-      statusBarTranslucent
-    >
-      {/* Overlay */}
+      statusBarTranslucent>
       <View style={styles.overlay}>
-        {/* Card */}
         <View style={styles.card}>
-
-          {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerText}>Event Check In</Text>
           </View>
@@ -33,46 +28,13 @@ const InvalidActivityModal = ({ visible, onCancel, onRetry }) => {
 
           {/* Icon */}
           <View style={styles.iconContainer}>
-            {/* <Svg
-              height={height / 7}
-              width={height / 7}
-              viewBox="0 0 100 100"
-            >
-              <Circle
-                cx="50"
-                cy="50"
-                r="45"
-                stroke="#E53935"
-                strokeWidth="6"
-                fill="none"
-              />
-              <Rect
-                x="30"
-                y="28"
-                width="40"
-                height="32"
-                rx="6"
-                stroke="#E53935"
-                strokeWidth="5"
-                fill="none"
-              />
-              <Path
-                d="M42 48 L48 54 L60 42"
-                stroke="#E53935"
-                strokeWidth="5"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </Svg> */}
+           <Image source={require('../assets/Image/Icons/Invalid.png')} style={styles.iconStyle} />
           </View>
-
-          {/* Title */}
+          
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Invalid Activity ID</Text>
           </View>
 
-          {/* Description */}
           <View style={styles.descContainer}>
             <Text style={styles.description}>
               The activity ID you have entered appears to be invalid.
@@ -123,16 +85,20 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: width / 1.15,
-    borderRadius: 16,
+    height: height/2,
+    width: width / 1.05,
+    borderRadius: 12,
     backgroundColor: '#FFFFFF',
-    paddingVertical: height / 40,
+    // paddingVertical: height / 40,
   },
 
   header: {
-    height: height / 18,
+    height: height / 14,
+    width: width/1.3,
+    // backgroundColor: 'cyan',
     justifyContent: 'center',
-    paddingHorizontal: width / 15,
+    alignSelf: 'center'
+    
   },
   headerText: {
     fontSize: 18,
@@ -146,16 +112,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 
-  iconContainer: {
-    height: height / 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
 
   titleContainer: {
-    height: height / 14,
-    justifyContent: 'center',
+    height: height / 20,
+    width: width/ 1.15,
+    // justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor: 'blue',
+    alignSelf: 'center'
   },
   title: {
     fontSize: 20,
@@ -167,6 +132,7 @@ const styles = StyleSheet.create({
     width: width / 1.3,
     alignSelf: 'center',
     marginBottom: height / 50,
+    // backgroundColor: 'pink'
   },
   description: {
     fontSize: 14,
@@ -178,9 +144,10 @@ const styles = StyleSheet.create({
 
   buttonRow: {
     flexDirection: 'row',
-    height: height / 10,
+    height: height / 14,
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    // backgroundColor: 'cyan'
   },
 
   cancelButton: {
@@ -211,4 +178,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#FFFFFF',
   },
+    iconContainer: {
+    height: height / 6.5,
+    width: width/1.15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'cyan'
+  },
+
+  iconStyle:{
+    height: 90,
+    width: 90,
+    resizeMode: 'contain'
+  },
+  
 });

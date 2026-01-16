@@ -6,7 +6,7 @@ export const metrics = {
   height,
   width,
   isSmallDevice: width < 360,
-};
+}; 
 
 export const colors = {
   primary: '#2E6FB6',
@@ -17,13 +17,17 @@ export const colors = {
   textMuted: '#667085',
   textDark: '#414651',
   white: '#FFFFFF',
-  border: '#E4F1FB',
+  border: '#006BB640',
   surface: '#F5F9FF',
+  boderLight: '#99999980'
 };
 
 export const typography = {
   regular: Platform.select({ios: 'OpenSans-Regular', android: 'OpenSans-Regular'}),
+  bold: Platform.select({ios: 'OpenSans-Bold', android: 'OpenSans-Bold'}),
+  semiBold: Platform.select({ios: 'OpenSans-SemiBold', android: 'OpenSans-SemiBold'}),
   size: {
+    xx: 10,
     xs: 12,
     sm: 14,
     md: 16,
@@ -56,4 +60,8 @@ export default {
   typography,
   spacing,
   shadows,
+};
+
+export const gradients = {
+  primary: ['#0B6FB6', '#0FA3E0'],
 };

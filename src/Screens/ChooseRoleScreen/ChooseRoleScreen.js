@@ -20,7 +20,7 @@ const ChooseRoleScreen = ({ navigation }) => {
     <AppGradient style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={require('../../assets/Image/Logo.png')}
+          source={require('../../assets/Image/SplashLogo.png')}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#006BB60D',
     borderRadius: 8,
-    height: height / 8.5,
+    height: height / 9,
     width: width / 1.1,
     alignSelf: 'center',
     // marginBottom: height * 0.02,

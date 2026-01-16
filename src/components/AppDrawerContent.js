@@ -8,10 +8,10 @@ import {
   Dimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {colors, typography} from '../styles/globalStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors, typography, gradients } from '../styles/globalStyles';
 
-const {height, width} = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const drawerItems = [
   {
@@ -38,12 +38,13 @@ const drawerItems = [
     label: "FAQ's",
     icon: require('../assets/Image/Icons/FaqOn.png'),
     tab: 'Faq',
+    
   },
 ];
 
-const AppDrawerContent = ({navigation}) => {
+const AppDrawerContent = ({ navigation }) => {
   const handleNavigate = tab => {
-    navigation.navigate('Home', {screen: tab});
+    navigation.navigate('Home', { screen: tab });
   };
 
   const handleLogout = () => {
@@ -52,6 +53,12 @@ const AppDrawerContent = ({navigation}) => {
 
   return (
     <LinearGradient colors={[colors.primary, colors.primaryLight]} style={styles.fill}>
+      {/* <LinearGradient
+      colors={gradients.primary}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.fill}
+    > */}
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.profileSection}>
           <Image
@@ -70,7 +77,7 @@ const AppDrawerContent = ({navigation}) => {
               style={styles.menuItem}
               onPress={() => handleNavigate(item.tab)}
             >
-              <Image source={item.icon} style={styles.menuIcon} />
+              <Image source={item.icon} style={styles.menuIcon} resizeMode='contain' />
               <Text style={styles.menuLabel}>{item.label}</Text>
             </TouchableOpacity>
           ))}
@@ -105,7 +112,7 @@ const styles = StyleSheet.create({
   },
   profileSection: {
     paddingTop: height * 0.05,
-    paddingBottom: height * 0.04,
+    paddingBottom: height * 0.02,
   },
   avatar: {
     width: 68,

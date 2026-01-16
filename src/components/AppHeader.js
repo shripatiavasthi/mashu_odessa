@@ -48,7 +48,7 @@ const AppHeader = ({ showMenu = true, onMenuPress }) => {
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/Image/Menulogo.png')}
-          resizeMode="contain"
+          resizeMode='contain'
           style={styles.logo}
         />
       </View>
@@ -64,33 +64,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-
   menuContainer: {
-    height: height / 12,
+    height: height / 18,
     width: width / 6,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  menuPlaceholder: {
-    height: height / 12,
-    width: width / 6,
-  },
-
-  menuIcon: {
-    height: height / 28,
-    width: height / 28,
-    tintColor: colors.white,
-  },
-
   logoContainer: {
     height: height / 12,
     width: width / 1.3,
     justifyContent: 'center',
   },
-
+  menuIcon: {
+    width: 30,
+    height: 30,
+    tintColor: colors.white,
+  },
   logo: {
-    height: height / 18,
-    width: width / 3,
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
   },
 });

@@ -9,6 +9,8 @@ import ChooseRoleScreen from './src/Screens/ChooseRoleScreen/ChooseRoleScreen';
 import LoginScreen from './src/Screens/LoginScreen';
 import EmployeeLoginScreen from './src/Screens/EmployeeLoginScreen/EmployeeLoginScreen';
 import ContactUsScreen from './src/Screens/ContactUsScreen/ContactUsScreen';
+import EventDetailsScreen from './src/Screens/EventDetailsScreen/EventDetailsScreen'
+import EventSuccessScreens from './src/Screens/EventSuccessScreens/EventSuccessScreens'
 
 import DrawerNavigator from './src/navigation/DrawerNavigator';
 
@@ -31,8 +33,11 @@ function App() {
             <Stack.Screen name="EmployeeLoginScreen" component={EmployeeLoginScreen} />
 
             <Stack.Screen name="MainTabs" component={DrawerNavigator} />
-            
+            <Stack.Screen name="EventDetailsScreen" component={EventDetailsScreen} />
             <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
+            <Stack.Screen name="EventSuccessScreens" component={EventSuccessScreens} />
+
+
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

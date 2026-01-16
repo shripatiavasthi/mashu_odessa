@@ -6,27 +6,54 @@ import {
     Dimensions,
     ScrollView,
     TouchableOpacity,
+    Image,
+    Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
+import RewardPointsModal from '../../components/RewardPointsModal';
+import { colors, typography } from '../../styles/globalStyles';
+import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import CheckInModal from '../../components/CheckInModal'
 
 const { height, width } = Dimensions.get('window');
 
-const EventsScreen = () => {
+const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
     const [activeTab, setActiveTab] = useState('MY_EVENTS');
+    const [showModal, setShowModal] = useState(false);
+
+    const [showCheckInModal, setShowCheckInModal] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+
+
+    const navigation = useNavigation();
+
+    const handleMenuPress = () => {
+        if (onMenuPress) {
+            onMenuPress();
+        } else {
+            navigation.openDrawer?.() || navigation.getParent?.()?.openDrawer?.();
+        }
+    };
+
 
     const TabItem = ({ title, active, onPress }) => (
         <TouchableOpacity
             style={[styles.tabItem, active && styles.activeTab]}
-            onPress={onPress}
-        >
+            onPress={onPress}>
+
             <Text style={[styles.tabText, active && styles.activeTabText]}>
                 {title}
             </Text>
         </TouchableOpacity>
     );
+
+    const goToEventDetails = () => {
+        navigation.navigate('EventDetailsScreen');
+    };
 
     const MyEventCard = ({
         title,
@@ -35,29 +62,47 @@ const EventsScreen = () => {
         eventDate,
         checkInDate,
     }) => (
-        <View style={styles.card}>
-            <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>{title}</Text>
-                <Text style={styles.pointsText}>{points}</Text>
-            </View>
+        <View style={styles.spaceConatiner}>
+            <TouchableOpacity
+                onPress={goToEventDetails}
+                style={styles.card}>
+                {/* <View style={styles.card}> */}
+                <View style={styles.cardHeader}>
+                    <Text style={styles.cardTitle}>{title}</Text>
 
-            <Text style={styles.locationText}>Location: {location}</Text>
-
-            <View style={styles.cardDivider} />
-
-            <View style={styles.dateRow}>
-                <View style={styles.dateBlock}>
-                    <Text style={styles.dateLabel}>Event Date & Time</Text>
-                    <Text style={styles.dateValue}>{eventDate}</Text>
+                    <View style={styles.pointsRow}>
+                        <View style={styles.dot} />
+                        <Text style={styles.pointsText}>{points}</Text>
+                    </View>
+                </View>
+                <View style={styles.locationCon}>
+                    <Text style={styles.locationText}>Location: {location}</Text>
                 </View>
 
-                <View style={styles.verticalDivider} />
+                <View style={styles.cardDivider} />
+                <View style={styles.dateRow}>
+                    <View style={styles.dateBlock}>
+                        <View style={styles.dateContainer}>
+                            <Text style={styles.dateLabel}>Event Date & Time</Text>
+                        </View>
+                        <View style={styles.timeContainer}>
+                            <Text style={styles.dateValue}>{eventDate}</Text>
+                        </View>
+                    </View>
 
-                <View style={styles.dateBlock}>
-                    <Text style={styles.dateLabel}>Check-In Date & Time</Text>
-                    <Text style={styles.dateValue}>{checkInDate}</Text>
+                    <View style={styles.verticalDivider} />
+
+                    <View style={styles.dateBlock}>
+                        <View style={styles.checkInCon}>
+                            <Text style={styles.dateLabel}>Check-In Date & Time</Text>
+                        </View>
+                        <View style={styles.checkInvalueCon}>
+                            <Text style={styles.dateValue}>{checkInDate}</Text>
+                        </View>
+                    </View>
                 </View>
-            </View>
+                {/* </View> */}
+            </TouchableOpacity>
         </View>
     );
 
@@ -70,37 +115,68 @@ const EventsScreen = () => {
         eventDate,
         isEarly,
     }) => (
-        <View style={styles.upcomingCard}>
-            {/* Header */}
-            <View style={styles.upcomingHeader}>
-                <Text style={styles.cardTitle}>{title}</Text>
+        <View style={styles.upcomingContainer}>
+            <TouchableOpacity style={styles.upcomingCard}>
+                <View style={styles.cardHeaderUpcome}>
+                    <Text style={styles.cardTitle}>{title}</Text>
 
-                {isEarly && (
-                    <View style={styles.ribbon}>
-                        <Text style={styles.ribbonText}>Early Check in</Text>
+                    {isEarly && (
+                        <View style={styles.ribbon}>
+                            {/* <Text style={styles.ribbonText}>Early Check in</Text> */}
+                            <Image source={require('../../assets/Image/ArrowStyle.png')} />
+                        </View>
+                    )}
+                </View>
+                <View style={styles.upcomingLoc}>
+                    <Text style={styles.locationText}>Location: {location}</Text>
+                    <View style={styles.pointsRow}>
+                        <View style={styles.dot} />
+                        <Text style={styles.pointsText}>{points}</Text>
                     </View>
-                )}
-            </View>
-
-            <Text style={styles.locationText}>Location: {location}</Text>
-            <Text style={styles.termText}>Event Term : {term}</Text>
-
-            <View style={styles.pointsRow}>
-                <View style={styles.dot} />
-                <Text style={styles.pointsText}>{points}</Text>
-            </View>
-
-            {/* Footer */}
-            <View style={styles.upcomingFooter}>
-                <View>
-                    <Text style={styles.dateLabel}>Event Date & Time</Text>
-                    <Text style={styles.dateValue}>{eventDate}</Text>
                 </View>
 
-                <TouchableOpacity style={styles.checkInBtn}>
-                    <Text style={styles.checkInText}>Check In Now</Text>
-                </TouchableOpacity>
-            </View>
+                <View style={styles.termContainer}>
+                    <Text style={styles.termText}>Event Term : {term}</Text>
+                </View>
+
+                {/* Footer */}
+                <View style={styles.cardDivider} />
+                <View style={styles.dateRow}>
+                    <View style={styles.dateBlock}>
+                        <View style={styles.dateContainer}>
+                            <Text style={styles.dateLabel}>Event Date & Time</Text>
+                        </View>
+                        <View style={styles.timeContainer}>
+                            <Text style={styles.dateValue}>{eventDate}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.verticalDivider} />
+                    <View style={styles.dateBlock}>
+                        <View style={styles.btnContainer}>
+                            <TouchableOpacity
+                                style={styles.checkInBtn}
+                                onPress={() => {
+                                    setSelectedEvent({
+                                        id: 'event_123',
+                                        name: 'Alumni Gathering',
+                                    });
+                                    setShowCheckInModal(true);
+                                }}
+                            >
+                                <Text style={styles.checkInText}>Check In Now</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                        {/* <View style={styles.checkInvalueCon}>
+                            <Text style={styles.dateValue}>{checkInDate}</Text>
+                        </View> */}
+                    </View>
+                </View>
+
+
+
+                {/* </View> */}
+            </TouchableOpacity>
         </View>
     );
 
@@ -108,8 +184,45 @@ const EventsScreen = () => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+
+            <CheckInModal
+                visible={showCheckInModal}
+                eventName={selectedEvent?.name}
+                onClose={() => setShowCheckInModal(false)}
+                onSubmit={(activityId) => {
+                    console.log('Event ID:', selectedEvent?.id);
+                    console.log('Activity ID:', activityId);
+
+                    
+                    // dispatch(checkInEvent({ eventId, activityId }))
+                }}
+            />
+
+
+
             <AppGradient style={styles.gradient}>
-                <AppHeader />
+
+                <LinearGradient
+                    colors={['#2E6FB6', '#4DA3DA']}
+                    style={styles.header}>
+                    <TouchableOpacity
+                        style={styles.menuContainer}
+                        onPress={handleMenuPress}>
+                        <Image
+                            source={require('../../assets/Image/Menu.png')}
+                            resizeMode="contain"
+                            style={styles.menuIcon} />
+                    </TouchableOpacity>
+
+                    <View style={styles.logoContainer}>
+                        <Image
+                            source={require('../../assets/Image/Menulogo.png')}
+                            resizeMode="contain"
+                            style={styles.logo}
+                        />
+                    </View>
+                </LinearGradient>
+
 
                 <View style={styles.tabContainer}>
                     <TabItem
@@ -169,9 +282,23 @@ const EventsScreen = () => {
                     )}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.fab}>
-                    <Text style={styles.fabText}>i</Text>
+                <TouchableOpacity
+                    onPress={() => setShowModal(prev => !prev)}
+                    style={styles.fab}
+                    activeOpacity={0.8}>
+
+                    <Image
+                        source={
+                            showModal
+                                ? require('../../assets/Image/close.png')
+                                : require('../../assets/Image/Info.png')
+                        }
+                    />
                 </TouchableOpacity>
+                <RewardPointsModal
+                    visible={showModal}
+                    onClose={() => setShowModal(false)}
+                />
 
             </AppGradient>
         </SafeAreaView>
@@ -188,23 +315,57 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
+    header: {
+        height: height / 12,
+        width: width,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    menuContainer: {
+        height: height / 18,
+        width: width / 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logoContainer: {
+        height: height / 12,
+        width: width / 1.3,
+        justifyContent: 'center',
+    },
+    menuIcon: {
+        width: 30,
+        height: 30,
+        tintColor: colors.white,
+    },
+    logo: {
+        width: 100,
+        height: 60,
+        resizeMode: 'contain',
+    },
+
+
     /* Tabs */
     tabContainer: {
-        height: height / 14,
+        height: height / 18,
         width: width / 1,
         flexDirection: 'row',
         backgroundColor: '#FFFFFF',
+        // backgroundColor: 'cyan'
+        borderWidth: 0.5,
+        borderColor: colors.border
     },
     tabItem: {
-        height: height / 14,
+        height: height / 18.5,
         width: width / 2,
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 2,
         borderBottomColor: 'transparent',
+        // backgroundColor: 'cyan'
     },
     activeTab: {
-        borderBottomColor: '#2E6FB6',
+        borderBottomColor: colors.primary,
+
     },
     tabText: {
         fontSize: width / 24,
@@ -212,98 +373,172 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     activeTabText: {
+        fontSize: typography.size.md,
         color: '#2E6FB6',
         fontWeight: '700',
     },
 
     /* Scroll */
     scrollContent: {
-        paddingTop: height / 50,
+        // paddingTop: height / 50,
         paddingBottom: height / 20,
-        alignItems: 'center',
+        // alignItems: 'center',
     },
 
-    /* Card */
+    spaceConatiner: {
+        height: height / 5.5,
+        width: width / 1,
+        // backgroundColor: 'pink',
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
     card: {
-        height: height / 4.2,
+        height: height / 6.5,
         width: width / 1.1,
-        backgroundColor: '#FFFFFF',
-        borderRadius: width / 30,
+        backgroundColor: colors.white,
+        borderRadius: 8,
         borderWidth: 1,
-        borderColor: '#B9DCF5',
-        padding: width / 25,
-        marginBottom: height / 40,
-    },
+        borderColor: colors.border,
 
+
+    },
     cardHeader: {
-        height: height / 20,
+        height: height / 25,
         width: width / 1.2,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: 'flex-end',
+        // backgroundColor: 'blue',
+        alignSelf: 'center'
+    },
+    cardHeaderUpcome: {
+        height: height / 25,
+        width: width / 1.15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        // backgroundColor: 'blue',
+        alignSelf: 'flex-end'
     },
     cardTitle: {
-        fontSize: width / 22,
+        fontSize: typography.size.md,
         fontWeight: '700',
-        color: '#3A3A3A',
+        color: colors.textDark,
+        fontFamily: typography.bold
     },
     pointsText: {
-        fontSize: width / 28,
+        fontSize: typography.xs,
         fontWeight: '700',
-        color: '#2E6FB6',
+        color: colors.primary,
+        fontFamily: typography.bold
+    },
+    locationCon: {
+        height: height / 25,
+        width: width / 1.2,
+        justifyContent: 'center',
+        // alignItems: 'center',
+        // backgroundColor: 'blue',
+        alignSelf: 'center'
     },
 
+
     locationText: {
-        fontSize: width / 28,
-        color: '#667085',
-        marginTop: height / 120,
+        fontSize: typography.xs,
+        color: colors.textDark,
+        fontWeight: '400',
+        fontFamily: typography.regular
     },
 
     cardDivider: {
         height: 1,
-        width: width / 1.2,
-        backgroundColor: '#E4F1FB',
-        marginVertical: height / 60,
+        width: width / 1.1,
+        backgroundColor: colors.border,
+        // marginVertical: height / 60,
+
     },
 
     /* Dates */
     dateRow: {
-        height: height / 10,
-        width: width / 1.2,
+        height: height / 14.4,
+        width: width / 1.11,
         flexDirection: 'row',
-        alignItems: 'center',
+        // alignItems: 'center',
+        backgroundColor: colors.surface,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        borderWidth: 0
     },
     dateBlock: {
-        height: height / 10,
-        width: width / 2.8,
+        height: height / 14,
+        width: width / 2.4,
+        // justifyContent: 'center',
+        // backgroundColor: 'yellow',
+        // paddingHorizontal: 15
+    },
+    dateContainer: {
+        height: height / 30,
+        width: width / 2.4,
+        justifyContent: 'flex-end',
+        // backgroundColor: 'pink',
+    },
+    checkInCon: {
+        height: height / 30,
+        width: width / 2.4,
+        justifyContent: 'flex-end',
+        // backgroundColor: 'pink',
+        paddingHorizontal: 10
+    },
+    checkInvalueCon: {
+        height: height / 32,
+        width: width / 2.4,
         justifyContent: 'center',
+        // backgroundColor: 'lightgreen',
+        paddingHorizontal: 10
     },
     dateLabel: {
-        fontSize: width / 32,
-        color: '#667085',
-        marginBottom: height / 200,
+        fontSize: typography.size.xx,
+        color: colors.textDark,
+        // marginBottom: height / 200,
+    },
+    timeContainer: {
+        height: height / 32,
+        width: width / 2.4,
+        justifyContent: 'center',
+        // backgroundColor: 'pink',
     },
     dateValue: {
-        fontSize: width / 28,
-        fontWeight: '600',
-        color: '#344054',
+        fontSize: typography.size.xs,
+        fontWeight: '700',
+        color: colors.textDark,
+        fontFamily: typography.bold
     },
     verticalDivider: {
-        height: height / 12,
+        height: height / 18,
         width: 1,
-        backgroundColor: '#D0D5DD',
+        backgroundColor: colors.border,
+        // justifyContent: 'center',
+        alignSelf: 'center'
     },
 
-    /* Upcoming Card */
+    // upcoming Designing here 
+    upcomingContainer: {
+        height: height / 4.3,
+        width: width / 1,
+        // backgroundColor: "blue",
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
+
     upcomingCard: {
         width: width / 1.1,
-        backgroundColor: '#FFFFFF',
-        borderRadius: width / 30,
+        backgroundColor: colors.white,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#B9DCF5',
-        padding: width / 25,
-        marginBottom: height / 40,
+        // padding: width / 25,
+        // marginBottom: height / 40,
     },
+
 
     upcomingHeader: {
         flexDirection: 'row',
@@ -311,24 +546,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-    ribbon: {
-        backgroundColor: '#4A90E2',
-        paddingHorizontal: width / 30,
-        paddingVertical: height / 120,
-        borderTopLeftRadius: width / 40,
-        borderBottomLeftRadius: width / 40,
+    upcomingLoc: {
+        height: height / 20,
+        width: width / 1.2,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        // backgroundColor: 'cyan',
+        alignSelf: 'center'
     },
 
-    ribbonText: {
-        color: '#FFFFFF',
-        fontSize: width / 32,
-        fontWeight: '600',
+    termContainer: {
+        height: height / 20,
+        width: width / 1.2,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // backgroundColor: 'blue',
+        alignSelf: 'center'
     },
 
     termText: {
         fontSize: width / 30,
         color: '#667085',
-        marginTop: height / 120,
+        // marginTop: height / 120,
     },
 
     pointsRow: {
@@ -354,12 +594,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
+    btnContainer: {
+        height: height / 15,
+        width: width / 2.2,
+        // backgroundColor: 'cyan',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
 
     checkInBtn: {
-        height: height / 18,
-        width: width / 3,
-        backgroundColor: '#2E6FB6',
-        borderRadius: width / 25,
+        height: height / 23,
+        width: width / 2.6,
+        backgroundColor: colors.primary,
+        borderRadius: 8,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -369,14 +616,15 @@ const styles = StyleSheet.create({
         fontSize: width / 28,
         fontWeight: '700',
     },
-     fab: {
+
+    fab: {
         position: 'absolute',
         right: width / 18,
         bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
-        height: width / 6,
-        width: width / 6,
+        height: width / 7,
+        width: width / 7,
         borderRadius: width / 12,
-        backgroundColor: '#2E6FB6',
+        backgroundColor: '#006BB6',
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 6,
@@ -384,12 +632,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 3 },
-      },
-    
-      fabText: {
+    },
+
+    fabText: {
         color: '#FFFFFF',
         fontSize: width / 18,
         fontWeight: '700',
-      },
+    },
 
 });

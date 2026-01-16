@@ -7,15 +7,22 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  Pressable,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
+import RewardPointsModal from '../../components/RewardPointsModal';
+
 
 const { height, width } = Dimensions.get('window');
 
 const FaqScreen = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  
+
 
   const faqData = [
     {
@@ -56,6 +63,7 @@ const FaqScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+
       <AppGradient style={styles.gradient}>
         <AppHeader />
 
@@ -91,11 +99,28 @@ const FaqScreen = () => {
           })}
         </ScrollView>
 
-        {/* Floating Info Button */}
-        <TouchableOpacity style={styles.fab}>
-          <Text style={styles.fabText}>i</Text>
+        <TouchableOpacity
+          onPress={() => setShowModal(prev => !prev)}
+          style={styles.fab}
+          activeOpacity={0.8}
+        >
+          <Image
+            source={
+              showModal
+                ? require('../../assets/Image/close.png')
+                : require('../../assets/Image/Info.png')
+            }
+          />
         </TouchableOpacity>
+
+        <RewardPointsModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+        />
+
+
       </AppGradient>
+
     </SafeAreaView>
   );
 };
@@ -116,7 +141,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  
+
   card: {
     // height: height/18,
     width: width / 1.1,
@@ -134,7 +159,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    
+
   },
 
   questionText: {
@@ -142,7 +167,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#414651',
-    
+
   },
 
   icon: {
@@ -156,25 +181,24 @@ const styles = StyleSheet.create({
     height: 1,
     width: '100%',
     backgroundColor: '#D0D5DD',
-    marginVertical: height / 40,
+    marginVertical: height / 70,
   },
 
   answerText: {
     fontSize: 12,
     color: '#414651',
-    lineHeight: 20,
+    lineHeight: 24,
     fontFamily: 'OpenSons-Regular'
   },
 
-  
   fab: {
     position: 'absolute',
     right: width / 18,
     bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
-    height: width / 6,
-    width: width / 6,
+    height: width / 7,
+    width: width / 7,
     borderRadius: width / 12,
-    backgroundColor: '#2E6FB6',
+    backgroundColor: '#006BB6',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,20 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
+import RewardPointsModal from '../../components/RewardPointsModal';
+
 
 const { height, width } = Dimensions.get('window');
 
 const RewardsScreen = () => {
+
+  const [showModal, setShowModal] = useState(false);
+
   const TermCard = ({ title, term, points, reward }) => (
     <View style={styles.card}>
       <View style={styles.cardTopRow}>
@@ -41,6 +47,7 @@ const RewardsScreen = () => {
         <View style={styles.rewardTag}>
           <Text style={styles.rewardText}>{reward}</Text>
         </View>
+
       </View>
     </View>
   );
@@ -96,10 +103,25 @@ const RewardsScreen = () => {
           </View>
         </ScrollView>
 
-        {/* Floating Info Button */}
-        <TouchableOpacity style={styles.fab}>
-          <Text style={styles.fabText}>i</Text>
+        <TouchableOpacity
+          onPress={() => setShowModal(prev => !prev)}
+          style={styles.fab}
+          activeOpacity={0.8}>
+
+          <Image
+            source={
+              showModal
+                ? require('../../assets/Image/close.png')
+                : require('../../assets/Image/Info.png')
+            }
+          />
         </TouchableOpacity>
+        <RewardPointsModal
+          visible={showModal}
+          onClose={() => setShowModal(false)}
+        />
+
+
       </AppGradient>
     </SafeAreaView>
   );
@@ -217,27 +239,28 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
 
-  /* Floating Button */
-  fab: {
-    position: 'absolute',
-    right: width / 18,
-    bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
-    height: width / 6,
-    width: width / 6,
-    borderRadius: width / 12,
-    backgroundColor: '#2E6FB6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
+   fab: {
+        position: 'absolute',
+        right: width / 18,
+        bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
+        height: width / 7,
+        width: width / 7,
+        borderRadius: width / 12,
+        backgroundColor: '#006BB6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        shadowOffset: { width: 0, height: 3 },
+      },
+    
+      fabText: {
+        color: '#FFFFFF',
+        fontSize: width / 18,
+        fontWeight: '700',
+      },
 
-  fabText: {
-    color: '#FFFFFF',
-    fontSize: width / 18,
-    fontWeight: '700',
-  },
+
 });

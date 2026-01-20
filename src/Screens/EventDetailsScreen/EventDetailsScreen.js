@@ -55,7 +55,7 @@ const EventDetailsScreen = () => {
           <View style={styles.headerContent}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.arrowCon}>
               <Image
-                source={require('../../assets/Image/Back.png')}
+                source={require('../../../src/assets/Image/back.png')}
                 style={styles.backIcon}
                 resizeMode='contain'
               />

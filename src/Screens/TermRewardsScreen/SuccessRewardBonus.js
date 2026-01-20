@@ -8,8 +8,7 @@ import {
   TouchableOpacity,
   Platform,
   Image,
-  ImageBackground,
-  Modal
+  ImageBackground
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
@@ -19,15 +18,13 @@ import { colors, typography } from '../../styles/globalStyles';
 
 const { height, width } = Dimensions.get('window');
 
-const RewardsScreen = (props) => {
+const SuccessRewardBonus = (props) => {
 
   const [showModal, setShowModal] = useState(false);
-  const [showDecemberModal, setShowDecemberModal] = useState(false);
-
 
   const TermCard = ({ title, term, points, reward }) => (
     <View style={styles.cardContainer}>
-      <TouchableOpacity style={styles.card} onPress={() => { props.navigation.navigate('TermRewardDetailsScreen') }}>
+      <View style={styles.card}>
         <View style={styles.cardTopRow}>
           <View>
             <View style={styles.titleRow}>
@@ -62,7 +59,7 @@ const RewardsScreen = (props) => {
           </View>
 
         </View>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -73,7 +70,8 @@ const RewardsScreen = (props) => {
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+        >
           {/* Term Rewards */}
           <View style={styles.sectionContainer}>
             <View style={styles.headerContainer}>
@@ -119,7 +117,7 @@ const RewardsScreen = (props) => {
                 <View style={styles.decebmerinfoCon}>
                   <View style={styles.decCon}>
                     <Text style={styles.cardTitle}>December Bonus</Text>
-                    <TouchableOpacity onPress={() => setShowDecemberModal(true)}>
+                    <TouchableOpacity>
                       {/* <Text style={styles.termText}>mashu</Text> */}
                       <Image source={require('../../assets/Image/Info.png')} style={styles.infoImgStyle} resizeMode='contain' />
                     </TouchableOpacity>
@@ -135,10 +133,10 @@ const RewardsScreen = (props) => {
                 </View>
               </View>
             </View>
-
+            
           </View>
 
-
+          {/* OC Success Rewards */}
           <View style={styles.sectionContainer}>
             <View style={styles.headerContainer}>
               <Text style={styles.sectionTitle}>OC Success Rewards</Text>
@@ -148,7 +146,7 @@ const RewardsScreen = (props) => {
 
 
             <View style={styles.decSpaceContainer}>
-              <TouchableOpacity style={styles.cardDecContainer}>
+              <View style={styles.cardDecContainer}>
                 <View style={styles.decebmerinfoCon}>
                   <View style={styles.decCon}>
                     <Text style={styles.cardTitle}>OC Success Reward</Text>
@@ -156,32 +154,13 @@ const RewardsScreen = (props) => {
                   <View>
                     <ImageBackground source={require('../../assets/Image/RewardIcon.png')}
                       style={styles.rewardTag}
-                      resizeMode='contain'>
-                      <Text style={styles.rewardText}>$25</Text>
-                    </ImageBackground>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-
-            <View style={styles.decSpaceContainer}>
-              <TouchableOpacity style={styles.cardDecContainer}
-                onPress={() => { props.navigation.navigate('SuccessRewardBonus') }}>
-                <View style={styles.decebmerinfoCon}>
-                  <View style={styles.decCon}>
-                    <Text style={styles.cardTitle}>OC Success Reward Bonus</Text>
-                  </View>
-                  <View>
-                    <ImageBackground source={require('../../assets/Image/RewardIcon.png')}
-                      style={styles.rewardTag}
                       resizeMode='contain'
                     >
-                      <Text style={styles.rewardText}>$ 200</Text>
+                      <Text style={styles.rewardText}>$ 25</Text>
                     </ImageBackground>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </View>
             </View>
 
           </View>
@@ -205,71 +184,12 @@ const RewardsScreen = (props) => {
           onClose={() => setShowModal(false)}
         />
 
-
-        <Modal
-          visible={showDecemberModal}
-          transparent
-          animationType="fade"
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.decModalContainer}>
-
-              <View style={styles.decHeadContainer}>
-                <Text style={styles.decTitle}>December Bonus</Text>
-              </View>
-              <View style={styles.modalDivider} />
-
-              {/* Icon */}
-              <View style={styles.iconContainer}>
-                <Image
-                  source={require('../../assets/Image/Calendar.png')}
-                  style={styles.bonusIcon}
-                  resizeMode="contain"
-                />
-              </View>
-
-              <View style={styles.criteriaContainer}>
-                <Text style={styles.decHeading}>
-                  Employee Eligibility Criteria
-                </Text>
-              </View>
-
-            <View style={styles.decContainer}>
-              <Text style={styles.decText}>
-                To be eligible, you must be a full-time employee with continuous
-                employment for the past year.
-              </Text>
-              </View>
-              <View style={styles.txtDecContainer}>
-              <Text style={styles.decText}>
-                For December 2025, you must have been full-time from September
-                2024 to December 2025 and earned at least 1,500 points in each
-                term (F1, F2, S1, S2).
-              </Text>
-              </View>
-
-              <View style={styles.modalDivider} />
-
-              <View style={styles.btnSpaceCon}>
-              <TouchableOpacity
-                style={styles.closeBtn}
-                onPress={() => setShowDecemberModal(false)}
-              >
-                <Text style={styles.closeText}>Close</Text>
-              </TouchableOpacity>
-              </View>
-
-            </View>
-          </View>
-        </Modal>
-
-
       </AppGradient>
     </SafeAreaView>
   );
 };
 
-export default RewardsScreen;
+export default SuccessRewardBonus;
 
 
 const styles = StyleSheet.create({
@@ -465,128 +385,6 @@ const styles = StyleSheet.create({
     // textAlignVertical: 'center',
   },
 
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  decModalContainer: {
-    height: height / 2.05,
-    width: width / 1.1,
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    // padding: 20,
-  },
-  decHeadContainer: {
-    height: height / 15,
-    width: width / 1.2,
-    // backgroundColor: "blue",
-    alignSelf: 'center',
-    justifyContent: 'center'
-  },
-
-  decTitle: {
-    fontSize: 16,
-    fontFamily: typography.bold,
-    color: colors.textDark,
-    fontWeight: 'bold',
-    // lineHeight: 150
-  },
-
-  criteriaContainer: {
-    height: height / 25,
-    width: width / 1.2,
-    // backgroundColor: "blue",
-    alignSelf: 'center',
-    // justifyContent: 'center'
-  },
-
-  modalDivider: {
-    height: 1,
-    backgroundColor: colors.boderLight,
-    // marginVertical: 14,
-  },
-
-  iconContainer: {
-    height: height / 7,
-    width: width / 1.2,
-    // backgroundColor: "blue",
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-
-  bonusIcon: {
-    height: 80,
-    width: 80,
-    tintColor: colors.primary,
-  },
-
-  decHeading: {
-    fontSize: 16,
-    fontFamily: typography.bold,
-    color: colors.textDark,
-    textAlign: 'center',
-    fontWeight: '700'
-    // marginBottom: 10,
-  },
-decContainer:{
-  height: height / 17,
-    width: width / 1.3,
-    // backgroundColor: "blue",
-    alignSelf: 'center'
-},
-
-txtDecContainer:{
-  height: height / 9,
-    width: width / 1.3,
-    // backgroundColor: "blue",
-    alignSelf: 'center'
-},
-  decText: {
-    // width: width / 1.2,
-    fontSize: 14,
-    color: colors.textDark,
-    lineHeight: 20,
-    // marginBottom: 10,
-    // textAlign: 'center',
-    fontFamily: typography.regular,
-    fontWeight: '400'
-  },
-
-  btnSpaceCon:{
-     height: height / 19,
-    width: width / 1.2,
-    // backgroundColor: "blue",
-    alignSelf: 'center',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end'
-  },
-
-  closeBtn: {
-    
-    borderWidth: 1,
-    borderColor: colors.boderLight,
-    height: height /27,
-    width:  width / 5.5,
-    // backgroundColor: 'cyan',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center'
-
-  },
-
-  closeText: {
-    fontSize: 14,
-    fontFamily: typography.semiBold,
-    color: colors.textDark,
-    fontWeight: '400',
-    lineHeight: 20
-  },
-
   fab: {
     position: 'absolute',
     right: width / 18,
@@ -609,7 +407,6 @@ txtDecContainer:{
     fontSize: width / 18,
     fontWeight: '700',
   },
-
 
 
 });

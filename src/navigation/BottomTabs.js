@@ -12,6 +12,9 @@ import EventsScreen from '../Screens/EventsScreen/EventsScreen';
 import TermRewardsScreen from '../Screens/TermRewardsScreen/TermRewardsScreen';
 import FaqScreen from '../Screens/FaqScreen/FaqScreen';
 import CheckInSuccessScreen from '../Screens/CheckInSuccessScreen/CheckInSuccessScreen';
+import SuccessRewardBonus from '../Screens/TermRewardsScreen/SuccessRewardBonus'
+// import TermRewardDetailsScreen from '../Screens/TermRewardDetailsScreen/TermRewardDetailsScreen'
+
 
 const { height, width } = Dimensions.get('window');
 const Tab = createBottomTabNavigator();
@@ -28,10 +31,14 @@ function CheckInStack() {
         name="CheckInSuccessScreen"
         component={CheckInSuccessScreen}
       />
-       {/* <Stack.Screen
-        name="EventsScreen"
-        component={EventsScreen}
-      /> */}
+       <Stack.Screen 
+       name="SuccessRewardBonus" 
+       component={SuccessRewardBonus} />
+
+       {/* <Stack.Screen 
+       name="TermRewardDetailsScreen" 
+       component={TermRewardDetailsScreen} /> */}
+
     </Stack.Navigator>
   );
 }
@@ -96,6 +103,7 @@ const BottomTabs = () => {
         component={FaqScreen}
         options={{ tabBarLabel: "FAQ's" }}
       />
+      
     </Tab.Navigator>
   );
 };

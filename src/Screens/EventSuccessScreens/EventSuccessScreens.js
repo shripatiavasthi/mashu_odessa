@@ -10,16 +10,35 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
-// import Icon from 'react-native-vector-icons/Ionicons';
+import { colors, typography } from '../../styles/globalStyles';
+import LinearGradient from 'react-native-linear-gradient';
 
 
 const { height, width } = Dimensions.get('window');
 
 const EventSuccessScreens = ({ navigation }) => {
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
-        <AppHeader />
+
+        <LinearGradient
+          colors={['#006BB6', '#00A2E5']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.header}>
+          <View style={styles.headerContent}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.arrowCon}>
+              <Image
+                source={require('../../assets/Image/back.png')}
+                style={styles.backIcon}
+                resizeMode='contain'
+              />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Event Check In</Text>
+          </View>
+        </LinearGradient>
+
 
         <View style={styles.container}>
 
@@ -72,7 +91,7 @@ const EventSuccessScreens = ({ navigation }) => {
                 Term : <Text style={styles.detailBold}>25S1</Text>
               </Text>
             </View>
-            
+
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Points :{' '}
@@ -85,7 +104,7 @@ const EventSuccessScreens = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('Events')}
+              onPress={() => navigation.getParent()?.navigate('Events')}
             >
               <Text style={styles.buttonText}>Visit Events</Text>
             </TouchableOpacity>
@@ -111,6 +130,42 @@ const styles = StyleSheet.create({
     width: width,
     alignItems: 'center',
   },
+
+   header: {
+      height: height / 14,
+      width: width / 1,
+      // backgroundColor: 'red'
+    },
+    headerContent: {
+      height: height / 14,
+      width: width / 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      // backgroundColor: 'cyan',
+  
+    },
+    arrowCon: {
+      height: height / 14,
+      width: width / 7.5,
+      // backgroundColor: 'cyan',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    backIcon: {
+      width: 28,
+      height: 28,
+      tintColor: colors.white,
+  
+  
+  
+    },
+    headerTitle: {
+      // marginLeft: 12,
+      fontSize: typography.size.lg,
+      color: colors.white,
+      fontWeight: '700',
+      fontFamily: typography.semiBold
+    },
 
 
   iconOuter: {

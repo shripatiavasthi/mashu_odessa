@@ -11,7 +11,8 @@ import EmployeeLoginScreen from './src/Screens/EmployeeLoginScreen/EmployeeLogin
 import ContactUsScreen from './src/Screens/ContactUsScreen/ContactUsScreen';
 import EventDetailsScreen from './src/Screens/EventDetailsScreen/EventDetailsScreen'
 import EventSuccessScreens from './src/Screens/EventSuccessScreens/EventSuccessScreens'
-
+import SuccessRewardBonus from './src/Screens/TermRewardsScreen/SuccessRewardBonus'
+import TermRewardDetailsScreen from './src/Screens/TermRewardDetailsScreen/TermRewardDetailsScreen'
 import DrawerNavigator from './src/navigation/DrawerNavigator';
 
 import { persistor, store } from './src/store';
@@ -35,7 +36,11 @@ function App() {
             <Stack.Screen name="MainTabs" component={DrawerNavigator} />
             <Stack.Screen name="EventDetailsScreen" component={EventDetailsScreen} />
             <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
+
             <Stack.Screen name="EventSuccessScreens" component={EventSuccessScreens} />
+            <Stack.Screen name="SuccessRewardBonus" component={SuccessRewardBonus} />
+            <Stack.Screen name="TermRewardDetailsScreen" component={TermRewardDetailsScreen} />
+            
 
 
           </Stack.Navigator>

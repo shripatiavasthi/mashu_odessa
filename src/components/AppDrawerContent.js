@@ -46,7 +46,12 @@ const drawerItems = [
 
 const AppDrawerContent = ({ navigation }) => {
   const handleNavigate = (tab, initialTab) => {
-    navigation.navigate('Home', { screen: tab, params: { initialTab } });
+    const resolvedInitialTab =
+      tab === 'Events' && !initialTab ? 'MY_EVENTS' : initialTab;
+    navigation.navigate('Home', {
+      screen: tab,
+      params: { initialTab: resolvedInitialTab },
+    });
   };
 
   const handleLogout = () => {

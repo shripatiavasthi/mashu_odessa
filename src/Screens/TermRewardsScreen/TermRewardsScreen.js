@@ -24,7 +24,6 @@ const RewardsScreen = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [showDecemberModal, setShowDecemberModal] = useState(false);
 
-
   const TermCard = ({ title, term, points, reward }) => (
     <View style={styles.cardContainer}>
       <TouchableOpacity style={styles.card} onPress={() => { props.navigation.navigate('TermRewardDetailsScreen') }}>
@@ -143,9 +142,9 @@ const RewardsScreen = (props) => {
             <View style={styles.headerContainer}>
               <Text style={styles.sectionTitle}>OC Success Rewards</Text>
             </View>
+
             {/* <TermCard title="OC Success Reward" reward="$ 25" />
             <TermCard title="OC Success Reward Bonus" reward="$ 200" /> */}
-
 
             <View style={styles.decSpaceContainer}>
               <TouchableOpacity style={styles.cardDecContainer}>

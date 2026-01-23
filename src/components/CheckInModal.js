@@ -7,9 +7,12 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import { colors, typography } from '../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
+
+const { height, width } = Dimensions.get('window')
 
 const CheckInModal = ({
   visible,
@@ -20,7 +23,7 @@ const CheckInModal = ({
   const [step, setStep] = useState(1);
   const [activityId, setActivityId] = useState('');
 
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
 
   useEffect(() => {
@@ -39,9 +42,11 @@ const CheckInModal = ({
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-          <Text style={styles.title}>Check In Now</Text>
 
-          
+          <View style={styles.modalheadCon}>
+            <Text style={styles.title}>Check In Now</Text>
+          </View>
+          <View style={styles.cardDivider} />
           {step === 1 && (
             <>
               <View style={styles.iconWrap}>
@@ -50,64 +55,77 @@ const CheckInModal = ({
                   style={styles.icon}
                 />
               </View>
+              <View style={styles.txtDetails}>
+                <Text style={styles.text}>
+                  Are you sure do you want to check in{'\n'}
+                  <Text style={styles.bold}>{eventName}</Text>
+                </Text>
+              </View>
 
-              <Text style={styles.text}>
-                Are you sure do you want to check in{'\n'}
-                <Text style={styles.bold}>{eventName}</Text>
-              </Text>
-
+              <View style={styles.cardDivider} />
               <View style={styles.footer}>
                 <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
                   <Text style={styles.cancelText}>Cancel</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={styles.confirmBtn}
-                  onPress={() => setStep(2)}
-                >
-                  <Text style={styles.confirmText}>Check In</Text>
-                </TouchableOpacity>
+                <View style={styles.checkinSpanceCon}>
+                  <TouchableOpacity
+                    style={styles.confirmBtn}
+                    onPress={() => setStep(2)}
+                  >
+                    <Text style={styles.confirmText}>Check In</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </>
           )}
 
           {step === 2 && (
             <>
+            <View style={styles.checkInCon}>
               <Text style={styles.heading}>Event Check-In</Text>
-
+            </View>
               <Text style={styles.description}>
                 To proceed with the check-in, enter the Activity ID you received
                 from the event organizer.{'\n\n'}
                 Once submitted, we will verify the ID and complete your check-in.
               </Text>
-
+              <View style={styles.labelCon}>
               <Text style={styles.label}>Activity ID</Text>
+              </View>
+              <View style={styles.txtinpCon}>
               <TextInput
                 placeholder="Enter activity ID"
                 value={activityId}
                 onChangeText={setActivityId}
                 style={styles.input}
               />
+              </View>
+
+              <View style={styles.cardDivider} />
 
               <View style={styles.footer}>
                 <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
                   <Text style={styles.cancelText}>Cancel</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={[
-                    styles.confirmBtn,
-                    !activityId && { opacity: 0.5 },
-                  ]}
-                  disabled={!activityId}
-                  onPress={() => {
-                    onSubmit(activityId);
-                    onClose();
-                    navigation.navigate('EventSuccessScreens')
-                  }}
-                >
-                  <Text style={styles.confirmText}>Check In</Text>
-                </TouchableOpacity>
+
+                <View style={styles.checkinSpanceCon}>
+                  <TouchableOpacity
+                    style={[
+                      styles.confirmBtn,
+                      !activityId && { opacity: 0.5 },
+                    ]}
+                    disabled={!activityId}
+                    onPress={() => {
+                      onSubmit(activityId);
+                      onClose();
+                      navigation.navigate('EventSuccessScreens')
+                    }}
+                  >
+                    <Text style={styles.confirmText}>Check In</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </>
           )}
@@ -129,21 +147,26 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    width: '85%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    paddingBottom: 16,
+    width: width / 1.1,
+    backgroundColor: colors.white,
+    borderRadius: 16,
+    // paddingBottom: 16,
   },
 
-  /* Header */
+
+  modalheadCon: {
+    height: height / 15,
+    width: width / 1.25,
+    // backgroundColor: "blue",
+    // alignSelf: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center'
+  },
   title: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#1F2937',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    fontWeight: '700',
+    color: colors.textDark,
+    fontFamily: typography.bold
   },
 
   /* STEP 1 */
@@ -158,75 +181,116 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
 
+  txtDetails: {
+    height: height / 12,
+    width: width / 1.2,
+    // backgroundColor: "blue",
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+
+  },
+
   text: {
-    marginTop: 16,
+    // marginTop: 16,
     textAlign: 'center',
-    fontSize: 14,
-    color: '#4B5563',
-    paddingHorizontal: 24,
+    fontSize: 16,
+    color: colors.textDark,
+    
     lineHeight: 20,
   },
 
   bold: {
+    fontFamily: typography.bold,
     fontWeight: '700',
-    color: '#111827',
+    color: colors.textDark,
+
   },
 
-  /* STEP 2 */
+  checkInCon:{
+     height: height / 15,
+    width: width / 1.2,
+    // backgroundColor: "blue",
+    alignSelf: 'center',
+    justifyContent: 'center'
+  },
   heading: {
-    marginTop: 20,
-    fontSize: 16,
+    // marginTop: 20,
+    fontSize: 18,
     fontWeight: '700',
-    color: '#0A58A8',
+    color: colors.primary,
     textAlign: 'center',
+    lineHeight: 20
   },
 
   description: {
-    marginTop: 12,
+    width: width/1.3,
     fontSize: 14,
-    color: '#4B5563',
+    color: colors.textDark,
     textAlign: 'center',
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     lineHeight: 20,
+    fontWeight: '600',
+    fontFamily: typography.semiBold,
+    alignSelf: 'center'
+  },
+  labelCon:{
+    height: height/30,
+    width: width/1.2,
+    alignSelf: 'center',
+    // backgroundColor: 'cyan',
+    justifyContent: 'center',
+    // alignItems: 'center'
   },
 
   label: {
-    marginTop: 20,
-    marginLeft: 16,
     fontSize: 14,
     fontWeight: '500',
     color: '#374151',
   },
 
+  txtinpCon:{
+      height: height/15,
+    width: width/1.1,
+  },
+
   input: {
-    marginTop: 8,
-    marginHorizontal: 16,
-    height: 44,
+    height: height/22,
+    width: width/1.2,
+    alignSelf: 'center',
     borderWidth: 1,
     borderColor: '#D1D5DB',
     borderRadius: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     fontSize: 14,
     color: '#111827',
   },
 
   /* Footer */
   footer: {
+    height: height / 13,
+    // backgroundColor: 'cyan',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingHorizontal: 16,
-    marginTop: 24,
+    alignItems: 'center'
   },
 
+  cardDivider: {
+    height: 1,
+    width: width / 1.1,
+    backgroundColor: colors.boderLight,
+    // marginVertical: height / 60,
+
+  },
   cancelBtn: {
-    height: 40,
+    height: height / 24,
     paddingHorizontal: 20,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#D1D5DB',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    // marginRight: 12,
   },
 
   cancelText: {
@@ -235,9 +299,18 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
+  checkinSpanceCon: {
+    height: height / 20,
+    width: width / 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'cyan'
+  },
+
   confirmBtn: {
-    height: 40,
-    paddingHorizontal: 20,
+    height: height / 24,
+    width: width / 4,
+    // paddingHorizontal: 20,
     borderRadius: 8,
     backgroundColor: '#0A58A8',
     justifyContent: 'center',

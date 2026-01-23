@@ -320,6 +320,7 @@ const styles = StyleSheet.create({
         width: width,
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: 'cyan'
     },
     menuContainer: {
         height: height / 18,
@@ -346,29 +347,31 @@ const styles = StyleSheet.create({
 
     /* Tabs */
     tabContainer: {
-        height: height / 18,
+        height: height / 17,
         width: width / 1,
         flexDirection: 'row',
         backgroundColor: '#FFFFFF',
-        // backgroundColor: 'cyan'
+        // backgroundColor: 'cyan',
         borderWidth: 0.5,
         borderColor: colors.border
     },
     tabItem: {
-        height: height / 18.5,
+        height: height / 18,
         width: width / 2,
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 2,
         borderBottomColor: 'transparent',
-        // backgroundColor: 'cyan'
+        // backgroundColor: 'lightgreen',
+        backgroundColor: '#FFFFFF',
     },
     activeTab: {
+       
         borderBottomColor: colors.primary,
 
     },
     tabText: {
-        fontSize: width / 24,
+        fontSize: typography.size.md,
         color: '#667085',
         fontWeight: '500',
     },
@@ -499,6 +502,7 @@ const styles = StyleSheet.create({
         fontSize: typography.size.xx,
         color: colors.textDark,
         // marginBottom: height / 200,
+        
     },
     timeContainer: {
         height: height / 32,

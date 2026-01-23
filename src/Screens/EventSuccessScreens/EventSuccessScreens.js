@@ -18,6 +18,10 @@ const { height, width } = Dimensions.get('window');
 
 const EventSuccessScreens = ({ navigation }) => {
 
+  const navHandle= () =>{
+    
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
@@ -102,12 +106,15 @@ const EventSuccessScreens = ({ navigation }) => {
 
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.getParent()?.navigate('Events')}
-            >
-              <Text style={styles.buttonText}>Visit Events</Text>
-            </TouchableOpacity>
+           <TouchableOpacity
+  style={styles.button}
+  onPress={() =>
+    navigation.getParent()?.getParent()?.navigate('Events')
+  }
+>
+  <Text style={styles.buttonText}>Visit Events</Text>
+</TouchableOpacity>
+
           </View>
 
         </View>

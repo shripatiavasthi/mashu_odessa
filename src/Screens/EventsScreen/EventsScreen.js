@@ -33,14 +33,16 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     const route = useRoute();
 
     useFocusEffect(
+
         useCallback(() => {
+                    console.log("callback running")
             const initialTab = route?.params?.initialTab;
             if (initialTab) {
                 setActiveTab(initialTab);
             }
         }, [route?.params?.initialTab])
     );
-    
+
 
     const handleMenuPress = () => {
         if (onMenuPress) {

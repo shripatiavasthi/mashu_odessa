@@ -40,6 +40,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             }
         }, [route?.params?.initialTab])
     );
+    
 
     const handleMenuPress = () => {
         if (onMenuPress) {

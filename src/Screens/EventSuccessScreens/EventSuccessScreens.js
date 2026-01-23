@@ -8,6 +8,7 @@ import {
   Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
 import { colors, typography } from '../../styles/globalStyles';
@@ -16,7 +17,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const { height, width } = Dimensions.get('window');
 
-const EventSuccessScreens = ({ navigation }) => {
+const EventSuccessScreens = () => {
+  const navigation = useNavigation();
 
   const navHandle= () =>{
     

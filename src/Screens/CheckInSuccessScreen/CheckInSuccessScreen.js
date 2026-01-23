@@ -15,6 +15,15 @@ import AppGradient from '../../components/AppGradient';
 const { height, width } = Dimensions.get('window');
 
 const CheckInSuccessScreen = ({ navigation }) => {
+  const handleVisitEvents = () => {
+    const parentNav = navigation.getParent?.();
+    if (parentNav) {
+      parentNav.navigate('Events', { initialTab: 'MY_EVENTS' });
+      return;
+    }
+    navigation.navigate('Events', { initialTab: 'MY_EVENTS' });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
@@ -84,7 +93,7 @@ const CheckInSuccessScreen = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('Events', { initialTab: 'MY_EVENTS' })}
+              onPress={handleVisitEvents}
             >
               <Text style={styles.buttonText}>Visit Events</Text>
             </TouchableOpacity>

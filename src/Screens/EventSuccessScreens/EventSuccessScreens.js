@@ -108,14 +108,20 @@ const EventSuccessScreens = () => {
 
 
           <View style={styles.buttonContainer}>
- <TouchableOpacity
-  style={styles.button}
-  onPress={() =>
-    navigation.getParent()?.getParent()?.navigate('Events', { initialTab: 'MY_EVENTS' })
-  }
->
-  <Text style={styles.buttonText}>Visit Events</Text>
-</TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              navigation.navigate('MainTabs', {
+                screen: 'Home',
+                params: {
+                  screen: 'Events',
+                  params: { initialTab: 'MY_EVENTS' },
+                },
+              })
+            }
+          >
+            <Text style={styles.buttonText}>Visit Events</Text>
+          </TouchableOpacity>
 
           </View>
 

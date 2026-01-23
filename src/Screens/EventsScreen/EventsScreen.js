@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     View,
     Text,
@@ -14,7 +14,7 @@ import AppGradient from '../../components/AppGradient';
 import RewardPointsModal from '../../components/RewardPointsModal';
 import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import CheckInModal from '../../components/CheckInModal'
 
 const { height, width } = Dimensions.get('window');
@@ -30,6 +30,16 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
 
     const navigation = useNavigation();
+    const route = useRoute();
+
+    useFocusEffect(
+        useCallback(() => {
+            const initialTab = route?.params?.initialTab;
+            if (initialTab) {
+                setActiveTab(initialTab);
+            }
+        }, [route?.params?.initialTab])
+    );
 
     const handleMenuPress = () => {
         if (onMenuPress) {

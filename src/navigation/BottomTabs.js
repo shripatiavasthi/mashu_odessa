@@ -92,6 +92,11 @@ const BottomTabs = () => {
       <Tab.Screen
         name="Events"
         component={EventsScreen}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Events', { initialTab: 'MY_EVENTS' });
+          },
+        })}
       />
       <Tab.Screen
         name="Rewards"

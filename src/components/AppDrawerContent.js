@@ -23,11 +23,13 @@ const drawerItems = [
     label: 'My Events',
     icon: require('../assets/Image/Icons/EventOn.png'),
     tab: 'Events',
+    initialTab: 'MY_EVENTS',
   },
   {
     label: 'Upcoming Events',
     icon: require('../assets/Image/Icons/EventOn.png'),
     tab: 'Events',
+    initialTab: 'UPCOMING_EVENTS',
   },
   {
     label: 'Rewards',
@@ -43,8 +45,8 @@ const drawerItems = [
 ];
 
 const AppDrawerContent = ({ navigation }) => {
-  const handleNavigate = tab => {
-    navigation.navigate('Home', { screen: tab });
+  const handleNavigate = (tab, initialTab) => {
+    navigation.navigate('Home', { screen: tab, params: { initialTab } });
   };
 
   const handleLogout = () => {
@@ -75,7 +77,7 @@ const AppDrawerContent = ({ navigation }) => {
             <TouchableOpacity
               key={item.label}
               style={styles.menuItem}
-              onPress={() => handleNavigate(item.tab)}
+              onPress={() => handleNavigate(item.tab, item.initialTab)}
             >
               <Image source={item.icon} style={styles.menuIcon} resizeMode='contain' />
               <Text style={styles.menuLabel}>{item.label}</Text>

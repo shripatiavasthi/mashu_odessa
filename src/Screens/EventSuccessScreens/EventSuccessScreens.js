@@ -106,10 +106,10 @@ const EventSuccessScreens = ({ navigation }) => {
 
 
           <View style={styles.buttonContainer}>
-           <TouchableOpacity
+ <TouchableOpacity
   style={styles.button}
   onPress={() =>
-    navigation.getParent()?.getParent()?.navigate('Events')
+    navigation.getParent()?.getParent()?.navigate('Events', { initialTab: 'MY_EVENTS' })
   }
 >
   <Text style={styles.buttonText}>Visit Events</Text>
@@ -266,4 +266,3 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 });
-

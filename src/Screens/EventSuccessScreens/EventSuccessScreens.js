@@ -118,8 +118,8 @@ const EventSuccessScreens = () => {
                   params: { initialTab: 'MY_EVENTS' },
                 },
               })
-            }
-          >
+            }>
+              
             <Text style={styles.buttonText}>Visit Events</Text>
           </TouchableOpacity>
 

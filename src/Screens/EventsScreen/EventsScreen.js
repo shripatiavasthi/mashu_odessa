@@ -35,7 +35,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     useFocusEffect(
 
         useCallback(() => {
-                    console.log("callback running")
+            console.log("callback running")
             const initialTab = route?.params?.initialTab;
             if (initialTab) {
                 setActiveTab(initialTab);
@@ -206,15 +206,13 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                     console.log('Event ID:', selectedEvent?.id);
                     console.log('Activity ID:', activityId);
 
-                    
+
                     // dispatch(checkInEvent({ eventId, activityId }))
                 }}
             />
 
 
-
             <AppGradient style={styles.gradient}>
-
                 <LinearGradient
                     colors={['#2E6FB6', '#4DA3DA']}
                     style={styles.header}>
@@ -233,6 +231,21 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                             resizeMode="contain"
                             style={styles.logo}
                         />
+                        
+                        {activeTab === 'MY_EVENTS' && (
+                            <View style={styles.filterContainer}>
+                                <TouchableOpacity style={styles.filterCon}>
+                                    <Text style={styles.filterTxt}>1000 Pts</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.dropDownCon}>
+                                    <Text style={styles.filterTxt}>25F1</Text>
+                                    <Image source={require('../../assets/Image/drop_down.png')} />
+                                </TouchableOpacity>
+                            </View>
+                        )}
+
+
                     </View>
                 </LinearGradient>
 
@@ -333,18 +346,22 @@ const styles = StyleSheet.create({
         width: width,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'cyan'
+        // backgroundColor: 'cyan'
     },
     menuContainer: {
         height: height / 18,
         width: width / 6,
         justifyContent: 'center',
         alignItems: 'center',
+        // backgroundColor: 'cyan'
     },
     logoContainer: {
         height: height / 12,
         width: width / 1.3,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        // backgroundColor: 'cyan',
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     menuIcon: {
         width: 30,
@@ -355,6 +372,45 @@ const styles = StyleSheet.create({
         width: 100,
         height: 60,
         resizeMode: 'contain',
+    },
+    filterContainer: {
+        height: height / 20,
+        width: width / 3.2,
+        // backgroundColor: 'cyan',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+
+    filterCon: {
+        height: height / 40,
+        width: width / 7,
+        justifyContent: 'center',
+        // backgroundColor: 'pink',
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: colors.white,
+        alignItems: 'center'
+    },
+    dropDownCon: {
+        height: height / 40,
+        width: width / 7,
+        justifyContent: 'center',
+        // backgroundColor: 'pink',
+        borderRadius: 32,
+        borderWidth: 1,
+        borderColor: colors.white,
+        alignItems: 'center',
+        flexDirection: 'row',
+
+    },
+
+
+    filterTxt: {
+        fontSize: 12,
+        fontWeight: '600',
+        fontFamily: typography.semiBold,
+        color: colors.white
     },
 
 
@@ -379,7 +435,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     activeTab: {
-       
+
         borderBottomColor: colors.primary,
 
     },
@@ -443,7 +499,7 @@ const styles = StyleSheet.create({
         fontFamily: typography.bold
     },
     pointsText: {
-        fontSize: typography.xs,
+        fontSize: 12,
         fontWeight: '700',
         color: colors.primary,
         fontFamily: typography.bold
@@ -515,7 +571,7 @@ const styles = StyleSheet.create({
         fontSize: typography.size.xx,
         color: colors.textDark,
         // marginBottom: height / 200,
-        
+
     },
     timeContainer: {
         height: height / 32,

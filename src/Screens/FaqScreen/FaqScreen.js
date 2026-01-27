@@ -22,8 +22,6 @@ const FaqScreen = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
   
-
-
   const faqData = [
     {
       question: 'What is OC All In?',
@@ -143,19 +141,20 @@ const styles = StyleSheet.create({
 
 
   card: {
-    // height: height/18,
+
     width: width / 1.1,
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#00A2E54D',
     paddingHorizontal: width / 24,
-    paddingVertical: height / 75,
-    marginBottom: height / 40,
+    paddingVertical: height / 60,
+    marginBottom: height / 30,
 
   },
 
   questionRow: {
+    // backgroundColor: 'cyan',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -163,10 +162,12 @@ const styles = StyleSheet.create({
   },
 
   questionText: {
+    
     width: width / 1.5,
     fontSize: 14,
     fontWeight: '600',
     color: '#414651',
+    lineHeight: 20
 
   },
 
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     fontSize: width / 17,
     fontWeight: '600',
     color: '#006BB6',
-    lineHeight: width / 16,
+    lineHeight: 20,
   },
 
   divider: {
@@ -187,8 +188,9 @@ const styles = StyleSheet.create({
   answerText: {
     fontSize: 12,
     color: '#414651',
-    lineHeight: 24,
-    fontFamily: 'OpenSons-Regular'
+    lineHeight: 20,
+    fontFamily: 'OpenSons-Regular',
+    fontWeight: '400'
   },
 
   fab: {

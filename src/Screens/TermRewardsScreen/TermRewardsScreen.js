@@ -16,17 +16,34 @@ import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
 import RewardPointsModal from '../../components/RewardPointsModal';
 import { colors, typography } from '../../styles/globalStyles';
+import { useNavigation } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+
 
 const { height, width } = Dimensions.get('window');
 
-const RewardsScreen = (props) => {
+const RewardsScreen = ({ onMenuPress }) => {
+
+  const navigation = useNavigation();
+
+  const handleMenuPress = () => {
+    if (onMenuPress) {
+      onMenuPress();
+    } else {
+      navigation.openDrawer?.() || navigation.getParent?.()?.openDrawer?.();
+    }
+  };
+
+
 
   const [showModal, setShowModal] = useState(false);
   const [showDecemberModal, setShowDecemberModal] = useState(false);
 
   const TermCard = ({ title, term, points, reward }) => (
     <View style={styles.cardContainer}>
-      <TouchableOpacity style={styles.card} onPress={() => { props.navigation.navigate('TermRewardDetailsScreen') }}>
+      <TouchableOpacity style={styles.card}
+        onPress={() => { navigation.navigate('TermRewardDetailsScreen') }}
+      >
         <View style={styles.cardTopRow}>
           <View>
             <View style={styles.titleRow}>
@@ -68,7 +85,43 @@ const RewardsScreen = (props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
-        <AppHeader />
+        {/* <AppHeader /> */}
+
+        <LinearGradient
+          colors={['#2E6FB6', '#4DA3DA']}
+          style={styles.header}>
+          <TouchableOpacity
+            style={styles.menuContainer}
+            onPress={handleMenuPress}>
+            <Image
+              source={require('../../assets/Image/Menu.png')}
+              resizeMode="contain"
+              style={styles.menuIcon} />
+          </TouchableOpacity>
+
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../../assets/Image/Menulogo.png')}
+              resizeMode="contain"
+              style={styles.logo}
+            />
+
+
+            <View style={styles.filterContainer}>
+              {/* <TouchableOpacity style={styles.filterCon}>
+                                            <Text style={styles.filterTxt}>1000 Pts</Text>
+                                        </TouchableOpacity> */}
+
+              <TouchableOpacity style={styles.dropDownCon}>
+                <Text style={styles.filterTxt}>2025</Text>
+                <Image source={require('../../assets/Image/drop_down.png')} resizeMode='contain' style={styles.dropImgStyle} />
+              </TouchableOpacity>
+            </View>
+
+
+
+          </View>
+        </LinearGradient>
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -166,7 +219,7 @@ const RewardsScreen = (props) => {
 
             <View style={styles.decSpaceContainer}>
               <TouchableOpacity style={styles.cardDecContainer}
-                onPress={() => { props.navigation.navigate('SuccessRewardBonus') }}>
+                onPress={() => { navigation.navigate('SuccessRewardBonus') }}>
                 <View style={styles.decebmerinfoCon}>
                   <View style={styles.decCon}>
                     <Text style={styles.cardTitle}>OC Success Reward Bonus</Text>
@@ -233,29 +286,29 @@ const RewardsScreen = (props) => {
                 </Text>
               </View>
 
-            <View style={styles.decContainer}>
-              <Text style={styles.decText}>
-                To be eligible, you must be a full-time employee with continuous
-                employment for the past year.
-              </Text>
+              <View style={styles.decContainer}>
+                <Text style={styles.decText}>
+                  To be eligible, you must be a full-time employee with continuous
+                  employment for the past year.
+                </Text>
               </View>
               <View style={styles.txtDecContainer}>
-              <Text style={styles.decText}>
-                For December 2025, you must have been full-time from September
-                2024 to December 2025 and earned at least 1,500 points in each
-                term (F1, F2, S1, S2).
-              </Text>
+                <Text style={styles.decText}>
+                  For December 2025, you must have been full-time from September
+                  2024 to December 2025 and earned at least 1,500 points in each
+                  term (F1, F2, S1, S2).
+                </Text>
               </View>
 
               <View style={styles.modalDivider} />
 
               <View style={styles.btnSpaceCon}>
-              <TouchableOpacity
-                style={styles.closeBtn}
-                onPress={() => setShowDecemberModal(false)}
-              >
-                <Text style={styles.closeText}>Close</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeBtn}
+                  onPress={() => setShowDecemberModal(false)}
+                >
+                  <Text style={styles.closeText}>Close</Text>
+                </TouchableOpacity>
               </View>
 
             </View>
@@ -278,6 +331,75 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
   },
+
+
+
+  header: {
+    height: height / 12,
+    width: width,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // backgroundColor: 'cyan'
+  },
+  menuContainer: {
+    height: height / 18,
+    width: width / 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'cyan'
+  },
+  logoContainer: {
+    height: height / 12,
+    width: width / 1.3,
+    justifyContent: 'space-between',
+    // backgroundColor: 'cyan',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  menuIcon: {
+    width: 30,
+    height: 30,
+    tintColor: colors.white,
+  },
+  logo: {
+    width: 100,
+    height: 60,
+    resizeMode: 'contain',
+  },
+  filterContainer: {
+    height: height / 20,
+    width: width / 3.2,
+    // backgroundColor: 'cyan',
+    // flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+
+  dropDownCon: {
+    height: height / 40,
+    width: width / 6.8,
+    justifyContent: 'center',
+    // backgroundColor: 'pink',
+    borderRadius: 32,
+    borderWidth: 1,
+    borderColor: colors.white,
+    alignItems: 'center',
+    flexDirection: 'row',
+
+  },
+
+
+  filterTxt: {
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: typography.semiBold,
+    color: colors.white
+  },
+  dropImgStyle: {
+    height: 20,
+    width: 20,
+  },
+
 
   scrollContent: {
     paddingTop: height / 40,
@@ -532,19 +654,19 @@ const styles = StyleSheet.create({
     fontWeight: '700'
     // marginBottom: 10,
   },
-decContainer:{
-  height: height / 17,
+  decContainer: {
+    height: height / 17,
     width: width / 1.3,
     // backgroundColor: "blue",
     alignSelf: 'center'
-},
+  },
 
-txtDecContainer:{
-  height: height / 9,
+  txtDecContainer: {
+    height: height / 9,
     width: width / 1.3,
     // backgroundColor: "blue",
     alignSelf: 'center'
-},
+  },
   decText: {
     // width: width / 1.2,
     fontSize: 14,
@@ -556,8 +678,8 @@ txtDecContainer:{
     fontWeight: '400'
   },
 
-  btnSpaceCon:{
-     height: height / 19,
+  btnSpaceCon: {
+    height: height / 19,
     width: width / 1.2,
     // backgroundColor: "blue",
     alignSelf: 'center',
@@ -566,11 +688,11 @@ txtDecContainer:{
   },
 
   closeBtn: {
-    
+
     borderWidth: 1,
     borderColor: colors.boderLight,
-    height: height /27,
-    width:  width / 5.5,
+    height: height / 27,
+    width: width / 5.5,
     // backgroundColor: 'cyan',
     borderRadius: 8,
     justifyContent: 'center',

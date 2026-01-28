@@ -18,7 +18,7 @@ import { colors, typography } from '../../styles/globalStyles';
 
 const { height, width } = Dimensions.get('window');
 
-const SuccessRewardBonus = (props) => {
+const SuccessRewardBonus = () => {
 
   const [showModal, setShowModal] = useState(false);
 

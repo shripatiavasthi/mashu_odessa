@@ -595,7 +595,7 @@ const styles = StyleSheet.create({
   },
 
   decModalContainer: {
-    height: height / 2.05,
+    height: height / 1.96,
     width: width / 1.1,
     backgroundColor: colors.white,
     borderRadius: 12,
@@ -644,6 +644,7 @@ const styles = StyleSheet.create({
     height: 80,
     width: 80,
     tintColor: colors.primary,
+
   },
 
   decHeading: {
@@ -655,16 +656,16 @@ const styles = StyleSheet.create({
     // marginBottom: 10,
   },
   decContainer: {
-    height: height / 17,
-    width: width / 1.3,
+    height: height / 14,
+    width: width / 1.2,
     // backgroundColor: "blue",
     alignSelf: 'center'
   },
 
   txtDecContainer: {
-    height: height / 9,
-    width: width / 1.3,
-    // backgroundColor: "blue",
+    height: height / 8.5,
+    width: width / 1.2,
+    // backgroundColor: "lightblue",
     alignSelf: 'center'
   },
   decText: {
@@ -673,7 +674,7 @@ const styles = StyleSheet.create({
     color: colors.textDark,
     lineHeight: 20,
     // marginBottom: 10,
-    // textAlign: 'center',
+    textAlign: 'center',
     fontFamily: typography.regular,
     fontWeight: '400'
   },

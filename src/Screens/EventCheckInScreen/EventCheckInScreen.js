@@ -32,7 +32,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
   const { user, accessToken: navToken } = route.params || {};
   const [showModal, setShowModal] = useState(false);
 
-  const isValidActivityId = /^\d{4}$/.test(activityId);
+  const isValidActivityId = /^\d{5}$/.test(activityId);
 
   const onCheckIn = async () => {
 
@@ -102,7 +102,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
                 placeholder="Enter Activity ID"
                 keyboardType="number-pad"
                 style={styles.input}
-                maxLength={4}
+                maxLength={5}
               />
             </View>
 
@@ -231,8 +231,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 18,
     backgroundColor: colors.white,
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: typography.regular,
+    color: colors.textDark
   },
   btnContainer: {
     height: height / 10,

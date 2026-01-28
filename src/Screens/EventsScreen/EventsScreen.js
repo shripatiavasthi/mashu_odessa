@@ -27,20 +27,17 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     const [showCheckInModal, setShowCheckInModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
-
-
     const navigation = useNavigation();
     const route = useRoute();
 
     useFocusEffect(
-
         useCallback(() => {
             console.log("callback running")
             const initialTab = route?.params?.initialTab;
             if (initialTab) {
                 setActiveTab(initialTab);
             }
-        }, [route?.params?.initialTab])
+        }, )
     );
 
 
@@ -132,7 +129,6 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             <TouchableOpacity style={styles.upcomingCard}>
                 <View style={styles.cardHeaderUpcome}>
                     <Text style={styles.cardTitle}>{title}</Text>
-
                     {isEarly && (
                         <View style={styles.ribbon}>
                             {/* <Text style={styles.ribbonText}>Early Check in</Text> */}
@@ -231,7 +227,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                             resizeMode="contain"
                             style={styles.logo}
                         />
-                        
+
                         {activeTab === 'MY_EVENTS' && (
                             <View style={styles.filterContainer}>
                                 <TouchableOpacity style={styles.filterCon}>
@@ -375,7 +371,7 @@ const styles = StyleSheet.create({
     },
     filterContainer: {
         height: height / 20,
-        width: width / 3.2,
+        width: width / 3,
         // backgroundColor: 'cyan',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -384,7 +380,7 @@ const styles = StyleSheet.create({
 
     filterCon: {
         height: height / 40,
-        width: width / 7,
+        width: width / 6.5,
         justifyContent: 'center',
         // backgroundColor: 'pink',
         borderRadius: 32,
@@ -394,7 +390,7 @@ const styles = StyleSheet.create({
     },
     dropDownCon: {
         height: height / 40,
-        width: width / 7,
+        width: width / 6.5,
         justifyContent: 'center',
         // backgroundColor: 'pink',
         borderRadius: 32,
@@ -407,7 +403,7 @@ const styles = StyleSheet.create({
 
 
     filterTxt: {
-        fontSize: 12,
+        fontSize: 11,
         fontWeight: '600',
         fontFamily: typography.semiBold,
         color: colors.white
@@ -534,7 +530,6 @@ const styles = StyleSheet.create({
         height: height / 14.4,
         width: width / 1.11,
         flexDirection: 'row',
-        // alignItems: 'center',
         backgroundColor: colors.surface,
         alignSelf: 'center',
         justifyContent: 'center',

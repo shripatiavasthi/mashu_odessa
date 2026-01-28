@@ -80,14 +80,14 @@ const styles = StyleSheet.create({
     paddingBottom: height / 4.9
   },
   container: {
-    height: height / 6,
+    height: height / 5.5,
     width: width * 0.8,
     borderRadius: 10,
     // padding: 22,
     // backgroundColor: 'cyan'
   },
   titleContainer:{
-    height: height / 25,
+    height: height / 23,
     width: width * 0.7,
     // backgroundColor: 'cyan',
     justifyContent: 'center',

@@ -37,8 +37,10 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     useFocusEffect(
         useCallback(() => {
             const initialTab = route?.params?.initialTab;
-            if (initialTab) {
+            if (initialTab === 'MY_EVENTS' || initialTab === 'UPCOMING_EVENTS') {
                 setActiveTab(prev => (prev === initialTab ? prev : initialTab));
+                // Clear the param so it doesn't keep overriding direct tab presses
+                navigation.setParams?.({ initialTab: undefined });
             }
         }, [route?.params?.initialTab])
     );

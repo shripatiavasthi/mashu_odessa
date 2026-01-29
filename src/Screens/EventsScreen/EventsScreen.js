@@ -17,6 +17,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import CheckInModal from '../../components/CheckInModal'
 
+// import Icon from 'react-native-vector-icons/FontAwesome';
+
+
 const { height, width } = Dimensions.get('window');
 
 const EventsScreen = ({ showMenu = true, onMenuPress }) => {
@@ -37,7 +40,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             if (initialTab) {
                 setActiveTab(initialTab);
             }
-        }, )
+        },)
     );
 
 
@@ -182,8 +185,6 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                     </View>
                 </View>
 
-
-
                 {/* </View> */}
             </TouchableOpacity>
         </View>
@@ -252,6 +253,8 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                         active={activeTab === 'MY_EVENTS'}
                         onPress={() => setActiveTab('MY_EVENTS')}
                     />
+
+
                     <TabItem
                         title="Upcoming Events"
                         active={activeTab === 'UPCOMING_EVENTS'}
@@ -259,6 +262,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                     />
                 </View>
 
+                {/* <Icon name="rocket" size={30} color="#900" />; */}
                 {/* Content */}
                 <ScrollView
                     contentContainerStyle={styles.scrollContent}

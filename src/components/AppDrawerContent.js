@@ -17,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { colors, typography } from '../styles/globalStyles';
 
+import LogoutModal from './LogoutModal'
+
 const { height, width } = Dimensions.get('window');
 const LOCAL_IMAGE_KEY = 'profileImageUri';
 
@@ -54,6 +56,9 @@ const AppDrawerContent = ({ navigation }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
+
+
 
   useEffect(() => {
     loadProfileImage();
@@ -167,7 +172,7 @@ const AppDrawerContent = ({ navigation }) => {
     try {
       await AsyncStorage.removeItem(LOCAL_IMAGE_KEY);
       setProfileImage(null);
-      Alert.alert('Profile photo removed');
+      console.log('Profile photo removed');
     } catch (error) {
       Alert.alert('Delete failed', error.message);
     }
@@ -184,7 +189,8 @@ const AppDrawerContent = ({ navigation }) => {
   };
 
   const handleLogout = () => {
-    navigation.getParent?.()?.navigate('ChooseRoleScreen');
+    
+    setShowLogout(true);
   };
 
   if (loading) {
@@ -276,6 +282,16 @@ const AppDrawerContent = ({ navigation }) => {
         <View style={styles.footer}>
           <Text style={styles.versionText}>Version 1.0.0</Text>
         </View>
+
+
+        <LogoutModal
+          visible={showLogout}
+          onCancel={() => setShowLogout(false)}
+          onConfirm={() => {
+            setShowLogout(false);
+            navigation.getParent?.()?.navigate('ChooseRoleScreen'); 
+          }}
+        />
       </SafeAreaView>
     </LinearGradient>
   );

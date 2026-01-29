@@ -36,10 +36,10 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     useFocusEffect(
         useCallback(() => {
             const initialTab = route?.params?.initialTab;
-            if (initialTab && initialTab !== activeTab) {
-                setActiveTab(initialTab);
+            if (initialTab) {
+                setActiveTab(prev => (prev === initialTab ? prev : initialTab));
             }
-        }, [route?.params?.initialTab, activeTab])
+        }, [route?.params?.initialTab])
     );
 
 

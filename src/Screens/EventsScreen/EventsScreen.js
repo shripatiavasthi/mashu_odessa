@@ -6,6 +6,7 @@ import {
     Dimensions,
     ScrollView,
     TouchableOpacity,
+    Pressable,
     Image,
     Platform
 } from 'react-native';
@@ -53,14 +54,19 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
 
     const TabItem = ({ title, active, onPress }) => (
-        <TouchableOpacity
-            style={[styles.tabItem, active && styles.activeTab]}
-            onPress={onPress}>
-
+        <Pressable
+            onPress={onPress}
+            hitSlop={8}
+            style={({ pressed }) => [
+                styles.tabItem,
+                active && styles.activeTab,
+                pressed && { opacity: 0.85 },
+            ]}
+        >
             <Text style={[styles.tabText, active && styles.activeTabText]}>
                 {title}
             </Text>
-        </TouchableOpacity>
+        </Pressable>
     );
 
     const goToEventDetails = () => {

@@ -15,7 +15,7 @@ import AppGradient from '../../components/AppGradient';
 import RewardPointsModal from '../../components/RewardPointsModal';
 import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import CheckInModal from '../../components/CheckInModal'
 
 // import Icon from 'react-native-vector-icons/FontAwesome';
@@ -33,17 +33,19 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
     const navigation = useNavigation();
     const route = useRoute();
+    const isFocused = useIsFocused();
 
-    useFocusEffect(
-        useCallback(() => {
-            const initialTab = route?.params?.initialTab;
-            if (initialTab === 'MY_EVENTS' || initialTab === 'UPCOMING_EVENTS') {
-                setActiveTab(prev => (prev === initialTab ? prev : initialTab));
-                // Clear the param so it doesn't keep overriding direct tab presses
-                navigation.setParams?.({ initialTab: undefined });
-            }
-        }, [route?.params?.initialTab])
-    );
+    React.useEffect(() => {
+        if (!isFocused) {
+            return;
+        }
+        const initialTab = route?.params?.initialTab;
+        if (initialTab === 'MY_EVENTS' || initialTab === 'UPCOMING_EVENTS') {
+            setActiveTab(prev => (prev === initialTab ? prev : initialTab));
+            // Clear the param so it doesn't keep overriding direct tab presses
+            navigation.setParams?.({ initialTab: undefined });
+        }
+    }, [isFocused, route?.params?.initialTab, navigation]);
 
 
     const handleMenuPress = () => {

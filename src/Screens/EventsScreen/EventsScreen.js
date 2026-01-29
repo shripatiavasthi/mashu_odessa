@@ -57,22 +57,6 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     };
 
 
-    const TabItem = ({ title, active, onPress }) => (
-        <Pressable
-            onPress={onPress}
-            hitSlop={8}
-            style={({ pressed }) => [
-                styles.tabItem,
-                active && styles.activeTab,
-                pressed && { opacity: 0.85 },
-            ]}
-        >
-            <Text style={[styles.tabText, active && styles.activeTabText]}>
-                {title}
-            </Text>
-        </Pressable>
-    );
-
     const goToEventDetails = () => {
         navigation.navigate('EventDetailsScreen');
     };
@@ -257,18 +241,43 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
 
                 <View style={styles.tabContainer}>
-                    <TabItem
-                        title="My Events"
-                        active={activeTab === 'MY_EVENTS'}
+                    <Pressable
                         onPress={() => setActiveTab('MY_EVENTS')}
-                    />
+                        hitSlop={8}
+                        style={({ pressed }) => [
+                            styles.tabItem,
+                            activeTab === 'MY_EVENTS' && styles.activeTab,
+                            pressed && { opacity: 0.85 },
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.tabText,
+                                activeTab === 'MY_EVENTS' && styles.activeTabText,
+                            ]}
+                        >
+                            My Events
+                        </Text>
+                    </Pressable>
 
-
-                    <TabItem
-                        title="Upcoming Events"
-                        active={activeTab === 'UPCOMING_EVENTS'}
+                    <Pressable
                         onPress={() => setActiveTab('UPCOMING_EVENTS')}
-                    />
+                        hitSlop={8}
+                        style={({ pressed }) => [
+                            styles.tabItem,
+                            activeTab === 'UPCOMING_EVENTS' && styles.activeTab,
+                            pressed && { opacity: 0.85 },
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.tabText,
+                                activeTab === 'UPCOMING_EVENTS' && styles.activeTabText,
+                            ]}
+                        >
+                            Upcoming Events
+                        </Text>
+                    </Pressable>
                 </View>
 
                 {/* <Icon name="rocket" size={30} color="#900" />; */}

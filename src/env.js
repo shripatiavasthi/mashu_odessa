@@ -27,6 +27,8 @@ const CONFIG = {
 
 const ENDPOINTS = {
   activityCheckIn: '/activities/check-in',
+  authLogin:
+    'https://odessa-dev.infojinicloud.com/api/v1/oc/app/authentication/login',
 };
 
 const getConfig = () => CONFIG[ENVIRONMENT] || CONFIG.production;

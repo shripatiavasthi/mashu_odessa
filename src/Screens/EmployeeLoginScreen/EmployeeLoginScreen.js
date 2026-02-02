@@ -14,7 +14,7 @@ import { authorize } from 'react-native-app-auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { env } from '../../env';
-import { setAuthData } from '../../store/slices/authSlice';
+import { loginWithIdToken } from '../../store/slices/authSlice';
 
 const config = {
     clientId: env.azure.clientId,
@@ -76,43 +76,25 @@ const EmployeeLoginScreen = ({ navigation }) => {
             console.log('Expires In:', result.accessTokenExpirationDate);
 
 
-            const graphResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${result.accessToken}`,
-                    'Content-Type': 'application/json',
+            const loginResponse = await dispatch(
+                loginWithIdToken({ idToken: result.idToken }),
+            ).unwrap();
+
+            const userData = loginResponse?.data || {};
+            console.log('Backend User Details:', userData);
+
+            navigation.navigate('MainTabs', {
+                user: {
+                    id: userData.id,
+                    email: userData.email,
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    userType: userData.userType,
+                    role: userData.role,
+                    isActive: userData.isActive,
                 },
+                accessToken: userData.accessToken,
             });
-
-            if (graphResponse.ok) {
-                const userData = await graphResponse.json();
-
-                const userPayload = {
-                    displayName: userData.displayName || 'Employee',
-                    email: userData.mail || userData.userPrincipalName || '',
-                    jobTitle: userData.jobTitle || '',
-                    officeLocation: userData.officeLocation || '',
-                    mobilePhone: userData.mobilePhone || '',
-                };
-                console.log("User Details: ", userData)
-
-                dispatch(
-                    setAuthData({
-                        accessToken: result.accessToken,
-                        refreshToken: result.refreshToken,
-                        user: userPayload,
-                    }),
-                );
-
-                navigation.navigate('MainTabs', {
-                    user: userPayload,
-                    accessToken: result.accessToken,
-                });
-            } else {
-                const errorText = await graphResponse.text();
-                console.error('Graph API Error:', graphResponse.status, errorText);
-                Alert.alert('Error', 'Failed to fetch user profile.');
-            }
         } catch (error) {
             console.error('Login Error:', error);
             Alert.alert('Login Failed', error.message || 'Something went wrong');

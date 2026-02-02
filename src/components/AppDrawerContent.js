@@ -16,6 +16,8 @@ import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { colors, typography } from '../styles/globalStyles';
+import { useSelector } from 'react-redux';
+import { selectAuth } from '../store';
 
 import LogoutModal from './LogoutModal'
 
@@ -57,6 +59,13 @@ const AppDrawerContent = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
+  const { user } = useSelector(selectAuth);
+
+  const fullName =
+    [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
+    user?.displayName ||
+    'Employee';
+  const email = user?.email || '';
 
 
 
@@ -212,8 +221,8 @@ const AppDrawerContent = ({ navigation }) => {
               resizeMode='cover'
             />
           </TouchableOpacity>
-          <Text style={styles.nameText}>Mashu Alam</Text>
-          <Text style={styles.emailText}>mashu.alam@infojiniconsulting.com</Text>
+          <Text style={styles.nameText}>{fullName}</Text>
+          <Text style={styles.emailText}>{email}</Text>
         </View>
 
         <Modal

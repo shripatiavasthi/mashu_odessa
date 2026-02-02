@@ -18,6 +18,8 @@ import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { colors, typography } from '../styles/globalStyles';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../store';
+import { useDispatch } from 'react-redux';
+import { logoutWithAccessToken, clearAuth } from '../store/slices/authSlice';
 
 import LogoutModal from './LogoutModal'
 
@@ -59,7 +61,8 @@ const AppDrawerContent = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  const { user } = useSelector(selectAuth);
+  const dispatch = useDispatch();
+  const { user, accessToken } = useSelector(selectAuth);
 
   const fullName =
     [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
@@ -202,6 +205,21 @@ const AppDrawerContent = ({ navigation }) => {
     setShowLogout(true);
   };
 
+  const handleConfirmLogout = async () => {
+    setShowLogout(false);
+    try {
+      if (accessToken) {
+        await dispatch(logoutWithAccessToken({ accessToken })).unwrap();
+      }
+    } catch (error) {
+      const message = error?.message || 'Logout failed';
+      Alert.alert('Logout Failed', message);
+    } finally {
+      dispatch(clearAuth());
+      navigation.getParent?.()?.navigate('ChooseRoleScreen');
+    }
+  };
+
   if (loading) {
     return (
       <LinearGradient colors={[colors.primary, colors.primaryLight]} style={styles.fill}>
@@ -296,10 +314,7 @@ const AppDrawerContent = ({ navigation }) => {
         <LogoutModal
           visible={showLogout}
           onCancel={() => setShowLogout(false)}
-          onConfirm={() => {
-            setShowLogout(false);
-            navigation.getParent?.()?.navigate('ChooseRoleScreen'); 
-          }}
+          onConfirm={handleConfirmLogout}
         />
       </SafeAreaView>
     </LinearGradient>

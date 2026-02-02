@@ -2,7 +2,7 @@ const ENVIRONMENT = __DEV__ ? 'debug' : 'production';
 
 const CONFIG = {
   debug: {
-    apiBaseUrl: 'https://api.debug.odessa.example.com',
+    apiBaseUrl: 'https://odessa-dev.infojinicloud.com',
     azure: {
       clientId: '84f6ef89-463c-4e4d-b92b-637b9f42fad7',
       tenantId: 'bdd49817-9db8-4c1c-8269-0cd1044427df',
@@ -27,8 +27,8 @@ const CONFIG = {
 
 const ENDPOINTS = {
   activityCheckIn: '/activities/check-in',
-  authLogin:
-    'https://odessa-dev.infojinicloud.com/api/v1/oc/app/authentication/login',
+  authLogin: '/api/v1/oc/app/authentication/login',
+  authLogout: '/api/v1/oc/app/authentication/logout',
 };
 
 const getConfig = () => CONFIG[ENVIRONMENT] || CONFIG.production;

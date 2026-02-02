@@ -1,15 +1,17 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {apiClient} from '../../api/client';
-import {endpoints} from '../../env';
+import {env, endpoints} from '../../env';
 
 export const submitActivityId = createAsyncThunk(
   'checkIn/submitActivityId',
   async ({activityId, token}, {rejectWithValue}) => {
     try {
       const payload = {activityId};
-      const response = await apiClient.post(endpoints.activityCheckIn, payload, {
-        token,
-      });
+      const response = await apiClient.post(
+        `${env.apiBaseUrl}${endpoints.activityCheckIn}`,
+        payload,
+        {token},
+      );
       return response;
     } catch (error) {
       return rejectWithValue({

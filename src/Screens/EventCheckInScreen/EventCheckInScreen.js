@@ -33,7 +33,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
   const [showModal, setShowModal] = useState(false);
 
   const isValidActivityId = /^\d{6}$/.test(activityId);
-
+  
   const onCheckIn = async () => {
     const trimmedId = activityId.trim();
 
@@ -54,7 +54,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
         }),
       ).unwrap();
 
-      dispatch(resetCheckIn());
+      // dispatch(resetCheckIn());
       navigation.navigate('CheckInSuccessScreen', {
         activityId: trimmedId,
         user: user || authUser,

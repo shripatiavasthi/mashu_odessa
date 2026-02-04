@@ -10,11 +10,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
+import { useRoute } from "@react-navigation/native";
 // import Icon from 'react-native-vector-icons/Ionicons';
 
 const { height, width } = Dimensions.get('window');
 
 const CheckInSuccessScreen = ({ navigation }) => {
+  const route = useRoute();
+  const data = route?.params?.response?.data
+ 
   const handleVisitEvents = () => {
     const parentNav = navigation.getParent?.();
     if (parentNav) {
@@ -57,34 +61,34 @@ const CheckInSuccessScreen = ({ navigation }) => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
-                Event Name: <Text style={styles.detailBold}>Convocation</Text>
+                Event Name: <Text style={styles.detailBold}>{data.eventName}</Text>
               </Text>
             </View>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Date:{' '}
                 <Text style={styles.detailBold}>
-                  2025 - 08 - 12 | 10:00 AM
+                   {data.date} | {data.startTime}
                 </Text>
               </Text>
             </View>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Location:{' '}
-                <Text style={styles.detailBold}>Sports Center</Text>
+                <Text style={styles.detailBold}>{data.eventLocation}</Text>
               </Text>
             </View>
 
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
-                Term : <Text style={styles.detailBold}>25S1</Text>
+                Term : <Text style={styles.detailBold}>{data.termCode}</Text>
               </Text>
             </View>
             
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Points :{' '}
-                <Text style={styles.detailBold}>500 Points</Text>
+                <Text style={styles.detailBold}>{data.eventPoints}</Text>
               </Text>
             </View>
           </View>

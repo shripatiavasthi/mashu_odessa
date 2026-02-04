@@ -19,7 +19,7 @@ import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import CheckInModal from '../../components/CheckInModal'
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchTermCodes} from '../../store/slices/termSlice';
-import {fetchEventsByTerm} from '../../store/slices/eventsSlice';
+import {fetchEventsByTerm, fetchUpcomingEvents} from '../../store/slices/eventsSlice';
 import {selectAuth, selectEvents, selectTerms} from '../../store';
 
 // import Icon from 'react-native-vector-icons/FontAwesome';
@@ -41,7 +41,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     const dispatch = useDispatch();
     const {accessToken, user} = useSelector(selectAuth);
     const {items: termItems, status: termStatus} = useSelector(selectTerms);
-    const {items: eventItems, totalPoints} = useSelector(selectEvents);
+    const {items: eventItems, upcomingItems, totalPoints} = useSelector(selectEvents);
 
     const navigation = useNavigation();
     const route = useRoute();
@@ -109,6 +109,17 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         );
     }, [accessToken, dispatch, isFocused, selectedTermId, user?.id]);
 
+    React.useEffect(() => {
+        if (!isFocused || !accessToken || !user?.id) {
+            return;
+        }
+        dispatch(
+            fetchUpcomingEvents({
+                accessToken,
+                userId: user.id,
+            }),
+        );
+    }, [accessToken, dispatch, isFocused, user?.id]);
 
     const handleMenuPress = () => {
         if (onMenuPress) {

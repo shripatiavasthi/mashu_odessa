@@ -40,6 +40,7 @@ local.properties
 node_modules/
 npm-debug.log
 yarn-error.log
+*.log
 
 # fastlane
 #
@@ -59,6 +60,11 @@ yarn-error.log
 # Ruby / CocoaPods
 **/Pods/
 /vendor/bundle/
+
+# Build outputs
+android/app/build/
+android/build/
+ios/build/
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*

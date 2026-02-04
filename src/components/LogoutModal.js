@@ -20,34 +20,30 @@ const LogoutModal = ({ visible, onCancel, onConfirm }) => {
             animationType="fade"
             visible={visible}
             statusBarTranslucent
-        >
+            >
             <View style={styles.overlay}>
                 <View style={styles.container}>
-
-                    {/* Header */}
                     <View style={styles.header}>
                         <Text style={styles.headerText}>Logout</Text>
                     </View>
                     <View style={styles.boderContainer} />
-
-                    {/* Body */}
                     <View style={styles.body}>
-
-                        {/* Icon */}
+                        <View style={styles.imgConatainer}>
                         <View style={styles.iconContainer}>
                             <Ionicons name="log-out-outline" size={40} color={colors.primary} />
                         </View>
-
-                        {/* Message */}
+                        </View>
+                        <View style={styles.msgCon}>
                         <Text style={styles.message}>
                             Are you sure do you want to
                         </Text>
-
+                        </View>
+                <View style={styles.msgCon}>
                         <Text style={styles.headerText}>Logout</Text>
-
+</View>
                     </View>
                     <View style={styles.boderContainer} />
-                    {/* Footer Buttons */}
+
                     <View style={styles.footer}>
                         <View style={styles.btnSpace}>
                         <TouchableOpacity
@@ -60,8 +56,7 @@ const LogoutModal = ({ visible, onCancel, onConfirm }) => {
                         <View style={styles.btnSpace}>
                             <TouchableOpacity
                                 style={styles.yesBtn}
-                                onPress={onConfirm}
-                            >
+                                onPress={onConfirm}>
                                 <Text style={styles.yesText}>Yes</Text>
                             </TouchableOpacity>
                         </View>
@@ -90,6 +85,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         borderRadius: 16,
         overflow: 'hidden',
+        // backgroundColor: 'cyan'
     },
 
     /* Header */
@@ -119,10 +115,23 @@ const styles = StyleSheet.create({
     },
     /* Body */
     body: {
-        alignItems: 'center',
-        paddingVertical: 25,
+        height: height/4.5,
+        width: width/1.1,
+        // alignItems: 'center',
+        // paddingVertical: 25,
+        // backgroundColor: 'cyan',
+        // justifyContent: 'center',
+        alignItems: 'center'
     },
-
+    imgConatainer:{
+        height: height/7,
+        width: width/1.1,
+        // alignItems: 'center',
+        // paddingVertical: 25,
+        // backgroundColor: 'lightblue',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     iconContainer: {
         width: 80,
         height: 80,
@@ -131,7 +140,16 @@ const styles = StyleSheet.create({
         borderColor: '#005A9C',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 15,
+        // marginBottom: 15,
+    },
+    msgCon:{
+        height: height/30,
+        width: width/1.1,
+        // alignItems: 'center',
+        // paddingVertical: 25,
+        // backgroundColor: 'lightpink',
+        // justifyContent: 'center',
+        alignItems: 'center'
     },
 
     message: {

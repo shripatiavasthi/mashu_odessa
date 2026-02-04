@@ -19,7 +19,8 @@ export const colors = {
   white: '#FFFFFF',
   border: '#006BB640',
   surface: '#F5F9FF',
-  boderLight: '#99999980'
+  boderLight: '#99999980',
+  redColor: '#FF0000'
 };
 
 export const typography = {

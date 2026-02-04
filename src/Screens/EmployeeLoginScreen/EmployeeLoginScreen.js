@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 import { env } from '../../env';
 import { loginWithIdToken } from '../../store/slices/authSlice';
+import { colors } from '../../styles/globalStyles';
 
 const config = {
     clientId: env.azure.clientId,
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
         // paddingVertical: height * 0.02,
     },
     disabledButton: {
-        backgroundColor: '#8ab4f8',
+        backgroundColor: colors.primaryLight,
     },
     microsoftText: {
         fontSize: 14,

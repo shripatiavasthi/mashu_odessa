@@ -17,7 +17,7 @@ import DrawerNavigator from './src/navigation/DrawerNavigator';
 
 import { persistor, store } from './src/store';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator(); 
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Splash"
+            initialRouteName="EventSuccessScreens"
             screenOptions={{ headerShown: false }}>
             
             <Stack.Screen name="Splash" component={Splash} />

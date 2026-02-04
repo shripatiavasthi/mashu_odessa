@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,18 +6,41 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 import AppGradient from '../../components/AppGradient';
 import Group from '../../assets/svg/Group.svg';
 import Svg, { Circle, Rect } from 'react-native-svg';
-
+import EmployeeLoginModal from '../../components/EmployeeLoginModal'
 
 
 const { height, width } = Dimensions.get('screen');
 
 const ChooseRoleScreen = ({ navigation }) => {
+
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+
+
+  
+
   return (
     <AppGradient style={styles.container}>
+
+<EmployeeLoginModal
+        visible={showEmployeeModal}
+        onClose={() => setShowEmployeeModal(false)}
+        onAllIn={() => {
+          setShowEmployeeModal(false);
+          navigation.navigate('EmployeeLoginScreen')
+        }}
+        onPLC={() => {
+          setShowEmployeeModal(false);
+          // navigation.navigate('EmployeeLoginScreen')
+          Alert.alert('PLC Under Construction site', 'Proval Nhi Aaya hai!')
+        }}
+      />
+
+
       <View style={styles.imageContainer}>
         <Image
           source={require('../../assets/Image/SplashLogo.png')}
@@ -58,7 +81,8 @@ const ChooseRoleScreen = ({ navigation }) => {
       <View style={styles.boxContainer}>
         <TouchableOpacity
           style={styles.card}
-          onPress={() => navigation.navigate('EmployeeLoginScreen')}
+          
+                 onPress={() => setShowEmployeeModal(true)}
         >
           <View style={styles.iconContainer}>
             <Image
@@ -112,6 +136,7 @@ const ChooseRoleScreen = ({ navigation }) => {
 
 
 
+
     </AppGradient>
   );
 };
@@ -160,12 +185,12 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#006BB60D',
+    // backgroundColor: 'blue',
     borderRadius: 8,
     height: height / 9,
     width: width / 1.1,
     alignSelf: 'center',
-    // marginBottom: height * 0.02,
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#00A2E5',
   },
@@ -180,19 +205,20 @@ const styles = StyleSheet.create({
   icon: {
     width: width * 0.16,
     height: height / 20,
-    // marginRight: width * 0.04,
-    // tintColor: '#1E63B5',
+   
   },
   textBox: {
     height: height / 10,
-    width: width / 1.4,
+    width: width / 1.6,
     // backgroundColor: 'lightblue',
+    // justifyContent: 'center'
   },
   cardBox: {
-    height: height / 20,
+    height: height / 25,
     width: width / 1.9,
     // backgroundColor: 'magenta',
     justifyContent: 'flex-end',
+    marginBottom: 5
   },
   cardTitle: {
     fontSize: 16,
@@ -202,10 +228,10 @@ const styles = StyleSheet.create({
 
   },
   cardDescBox: {
-    // height: height / 20,
+    height: height / 20,
     width: width / 1.9,
     // backgroundColor: 'lime',
-    justifyContent: 'center',
+    // justifyContent: 'center',
 
   },
   cardDesc: {
@@ -213,7 +239,9 @@ const styles = StyleSheet.create({
     color: '#414651',
     fontWeight: '600',
     // marginTop: height * 0.004,
-    lineHeight: 18,
+    lineHeight: 20,
     fontFamily: 'Open Sans',
   },
 });
+
+

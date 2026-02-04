@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
 import { colors, typography } from '../../styles/globalStyles';
 
 
@@ -18,6 +18,10 @@ const { width, height } = Dimensions.get('window');
 
 const EventDetailsScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const data = route?.params?.data;
+  const terms = route?.params?.terms
 
   const Section = ({ label, value }) => (
     <View style={styles.section}>
@@ -44,6 +48,28 @@ const EventDetailsScreen = () => {
   const Divider = () => <View style={styles.divider} />;
 
 
+
+// checkInTime
+// : 
+// "2026-02-04T07:31:19.225Z"
+// date
+// : 
+// "2026-02-03"
+// eventPoints
+// : 
+// 1500
+// id
+// : 
+// "9affc615-9cde-4e4e-b065-ec0583ed9e8d"
+// location
+// : 
+// "Sports Center"
+// name
+// : 
+// "Board Meeting 3"
+// startTime
+// : 
+// "11:00:00"
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -72,31 +98,31 @@ const EventDetailsScreen = () => {
         >
           <Section
             label="Event Name"
-            value="Graduation Ceremony"
+            value={data.name}
           />
 
           {/* <Divider /> */}
 
-          <Row label="Term" value="25S1" />
-          <Row label="Event Location" value="Sports Center" />
+          <Row label="Term" value={terms} />
+          <Row label="Event Location" value={data.location} />
 
           <Divider />
 
           <Section
             label="Event Date"
-            value="2025 - 08 - 12  |  10:00 AM"
+            value={`${data.date } | ${data.startTime}`}
           />
 
           <Section
             label="Event Check- In Date"
-            value="2025 - 08 - 12  |  10:00 AM"
+            value={data.checkInTime}
           />
 
           <Divider />
 
           <Row
             label="Event Points"
-            value="500 Points"
+            value={data.eventPoints}
             boldValue
           />
         </ScrollView>

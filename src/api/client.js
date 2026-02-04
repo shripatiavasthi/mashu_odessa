@@ -1,4 +1,3 @@
-/* Basic fetch wrapper for API calls. */
 import {env} from '../env';
 
 const defaultHeaders = {

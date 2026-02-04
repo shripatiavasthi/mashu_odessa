@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
     View,
     Text,
@@ -17,6 +17,10 @@ import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import CheckInModal from '../../components/CheckInModal'
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchTermCodes} from '../../store/slices/termSlice';
+import {fetchEventsByTerm} from '../../store/slices/eventsSlice';
+import {selectAuth, selectEvents, selectTerms} from '../../store';
 
 // import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -27,13 +31,33 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
     const [activeTab, setActiveTab] = useState('MY_EVENTS');
     const [showModal, setShowModal] = useState(false);
+    const [isTermOpen, setIsTermOpen] = useState(false);
+    const [selectedTerm, setSelectedTerm] = useState(null);
+    const [selectedTermId, setSelectedTermId] = useState(null);
 
     const [showCheckInModal, setShowCheckInModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
+    const dispatch = useDispatch();
+    const {accessToken, user} = useSelector(selectAuth);
+    const {items: termItems, status: termStatus} = useSelector(selectTerms);
+    const {items: eventItems, totalPoints} = useSelector(selectEvents);
+
     const navigation = useNavigation();
     const route = useRoute();
     const isFocused = useIsFocused();
+
+    const termOptions = useMemo(() => {
+        if (!Array.isArray(termItems) || !termItems.length) {
+            return [{id: null, termCode: 'null'}];
+        }
+        return termItems
+            .map(item => ({
+                id: item?.id || null,
+                termCode: item?.termCode || null,
+            }))
+            .filter(item => item.termCode);
+    }, [termItems]);
 
     React.useEffect(() => {
         if (!isFocused) {
@@ -47,6 +71,44 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         }
     }, [isFocused, route?.params?.initialTab, navigation]);
 
+    React.useEffect(() => {
+        if (!isFocused || !accessToken) {
+            return;
+        }
+        if (termStatus === 'idle') {
+            dispatch(fetchTermCodes({accessToken}));
+        }
+    }, [accessToken, dispatch, isFocused, termStatus]);
+
+    React.useEffect(() => {
+        if (!termOptions.length) {
+            return;
+        }
+        const current = termOptions.find(option => option.termCode === selectedTerm);
+        if (!current) {
+            const next = termOptions[0];
+            setSelectedTerm(next.termCode);
+            setSelectedTermId(next.id);
+            return;
+        }
+        if (current.id !== selectedTermId) {
+            setSelectedTermId(current.id);
+        }
+    }, [selectedTerm, selectedTermId, termOptions]);
+
+    React.useEffect(() => {
+        if (!isFocused || !accessToken || !user?.id || !selectedTermId) {
+            return;
+        }
+        dispatch(
+            fetchEventsByTerm({
+                accessToken,
+                userId: user.id,
+                termId: selectedTermId,
+            }),
+        );
+    }, [accessToken, dispatch, isFocused, selectedTermId, user?.id]);
+
 
     const handleMenuPress = () => {
         if (onMenuPress) {
@@ -57,11 +119,13 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     };
 
 
-    const goToEventDetails = () => {
-        navigation.navigate('EventDetailsScreen');
+    const goToEventDetails = (event) => {
+        
+        navigation.navigate('EventDetailsScreen',{data : event, terms : selectedTerm });
     };
 
     const MyEventCard = ({
+        event,
         title,
         location,
         points,
@@ -70,7 +134,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     }) => (
         <View style={styles.spaceConatiner}>
             <TouchableOpacity
-                onPress={goToEventDetails}
+                onPress={()=> goToEventDetails(event)}
                 style={styles.card}>
                 {/* <View style={styles.card}> */}
                 <View style={styles.cardHeader}>
@@ -225,13 +289,47 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                         {activeTab === 'MY_EVENTS' && (
                             <View style={styles.filterContainer}>
                                 <TouchableOpacity style={styles.filterCon}>
-                                    <Text style={styles.filterTxt}>1000 Pts</Text>
+                                    <Text style={styles.filterTxt}>
+                                        {Number.isFinite(totalPoints)
+                                            ? `${totalPoints} Pts`
+                                            : '0 Pts'}
+                                    </Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.dropDownCon}>
-                                    <Text style={styles.filterTxt}>25F1</Text>
-                                    <Image source={require('../../assets/Image/drop_down.png')} />
-                                </TouchableOpacity>
+                                <View style={styles.dropDownWrapper}>
+                                    <Pressable
+                                        onPress={() => setIsTermOpen(prev => !prev)}
+                                        style={({ pressed }) => [
+                                            styles.dropDownCon,
+                                            pressed && styles.dropDownPressed,
+                                        ]}
+                                    >
+                                        <Text style={styles.filterTxt}>{selectedTerm}</Text>
+                                        <Image source={require('../../assets/Image/drop_down.png')} />
+                                    </Pressable>
+
+                                    {isTermOpen && (
+                                        <View style={styles.dropDownMenu}>
+                                            {termOptions.map((term, index) => (
+                                                <Pressable
+                                                    key={term.termCode}
+                                                    onPress={() => {
+                                                        setSelectedTerm(term.termCode);
+                                                        setSelectedTermId(term.id);
+                                                        setIsTermOpen(false);
+                                                    }}
+                                                    style={({ pressed }) => [
+                                                        styles.dropDownItem,
+                                                        index === termOptions.length - 1 && styles.dropDownItemLast,
+                                                        pressed && styles.dropDownItemPressed,
+                                                    ]}
+                                                >
+                                                    <Text style={styles.dropDownItemText}>{term.termCode}</Text>
+                                                </Pressable>
+                                            ))}
+                                        </View>
+                                    )}
+                                </View>
                             </View>
                         )}
 
@@ -288,21 +386,38 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                 >
                     {activeTab === 'MY_EVENTS' ? (
                         <>
-                            <MyEventCard
-                                title="Graduation Ceremony"
-                                location="Main Auditorium"
-                                points="500 Pts"
-                                eventDate="2025-06-15 | 1:00 PM"
-                                checkInDate="2025-06-15 | 11:00 AM"
-                            />
+                            {eventItems.map((event, index) => {
+                                const title =
+                                    event?.title ||
+                                    event?.eventName ||
+                                    event?.name ||
+                                    `Event ${index + 1}`;
+                                const location =
+                                    event?.location ||
+                                    'TBD';
+                                const points =
+                                    event?.eventPoints ||
+                                    0;
+                                const eventDate =
+                                    `${event?.date} | ${event?.startTime}` || 'TBD';
+                                const checkInDate =
+                                    event?.checkInDate ||
+                                    event?.checkInAt ||
+                                    event?.checkInTime ||
+                                    'TBD';
 
-                            <MyEventCard
-                                title="Innovation Summit"
-                                location="Conference Room A"
-                                points="300 Pts"
-                                eventDate="2025-09-30 | 9:00 AM"
-                                checkInDate="2025-09-30 | 8:00 AM"
-                            />
+                                return (
+                                    <MyEventCard
+                                        event={event}
+                                        key={event?.id || `${title}-${index}`}
+                                        title={title}
+                                        location={location}
+                                        points={`${points} Pts`}
+                                        eventDate={eventDate}
+                                        checkInDate={checkInDate}
+                                    />
+                                );
+                            })}
                         </>
                     ) : (
                         <>
@@ -421,6 +536,50 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
 
+    },
+    dropDownWrapper: {
+        position: 'relative',
+        alignItems: 'flex-end',
+    },
+    dropDownPressed: {
+        opacity: 0.9,
+    },
+    dropDownMenu: {
+        position: 'absolute',
+        top: height / 40 + 6,
+        right: 0,
+        minWidth: width / 6.5,
+        backgroundColor: colors.white,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: colors.border,
+        overflow: 'hidden',
+        shadowColor: '#000',
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 6,
+        zIndex: 10,
+    },
+    dropDownItem: {
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.boderLight,
+        backgroundColor: colors.white,
+    },
+    dropDownItemLast: {
+        borderBottomWidth: 0,
+    },
+    dropDownItemPressed: {
+        backgroundColor: colors.surface,
+    },
+    dropDownItemText: {
+        fontSize: 11,
+        fontWeight: '600',
+        fontFamily: typography.semiBold,
+        color: colors.primary,
+        textAlign: 'center',
     },
 
 
@@ -693,8 +852,8 @@ const styles = StyleSheet.create({
     },
 
     checkInBtn: {
-        height: height / 23,
-        width: width / 2.6,
+        height: height / 24,
+        width: width / 2.9,
         backgroundColor: colors.primary,
         borderRadius: 8,
         justifyContent: 'center',

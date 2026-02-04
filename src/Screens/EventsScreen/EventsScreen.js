@@ -19,7 +19,7 @@ import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import CheckInModal from '../../components/CheckInModal'
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchTermCodes} from '../../store/slices/termSlice';
-import {fetchEventsByTerm} from '../../store/slices/eventsSlice';
+import {fetchEventsByTerm, fetchUpcomingEvents} from '../../store/slices/eventsSlice';
 import {selectAuth, selectEvents, selectTerms} from '../../store';
 
 // import Icon from 'react-native-vector-icons/FontAwesome';
@@ -41,7 +41,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     const dispatch = useDispatch();
     const {accessToken, user} = useSelector(selectAuth);
     const {items: termItems, status: termStatus} = useSelector(selectTerms);
-    const {items: eventItems, totalPoints} = useSelector(selectEvents);
+    const {items: eventItems, upcomingItems, totalPoints} = useSelector(selectEvents);
 
     const navigation = useNavigation();
     const route = useRoute();
@@ -108,6 +108,18 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             }),
         );
     }, [accessToken, dispatch, isFocused, selectedTermId, user?.id]);
+
+    React.useEffect(() => {
+        if (!isFocused || !accessToken || !user?.id) {
+            return;
+        }
+        dispatch(
+            fetchUpcomingEvents({
+                accessToken,
+                userId: user.id,
+            }),
+        );
+    }, [accessToken, dispatch, isFocused, user?.id]);
 
 
     const handleMenuPress = () => {
@@ -425,22 +437,29 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                         </>
                     ) : (
                         <>
-                            <UpcomingEventCard
-                                title="Alumni Gathering"
-                                location="Conference Hall B"
-                                term="25F1"
-                                points="500 Pts"
-                                eventDate="2025-08-22 | 3:00 PM"
-                                isEarly
-                            />
+                            {upcomingItems.map((event, index) => {
+                                const title = event?.name || `Event ${index + 1}`;
+                                const location = event?.location || 'TBD';
+                                const term = event?.termCode || selectedTerm || 'N/A';
+                                const points = Number.isFinite(event?.eventPoints)
+                                    ? `${event.eventPoints} Pts`
+                                    : '0 Pts';
+                                const eventDate = [event?.date, event?.startTime]
+                                    .filter(Boolean)
+                                    .join(' | ') || 'TBD';
 
-                            <UpcomingEventCard
-                                title="Career Fair"
-                                location="Exhibition Center"
-                                term="25F1"
-                                points="100 Pts"
-                                eventDate="2025-09-10 | 10:00 AM"
-                            />
+                                return (
+                                    <UpcomingEventCard
+                                        key={event?.id || `${title}-${index}`}
+                                        title={title}
+                                        location={location}
+                                        term={term}
+                                        points={points}
+                                        eventDate={eventDate}
+                                        isEarly={Boolean(event?.earlyCheckinAllowed)}
+                                    />
+                                );
+                            })}
                         </>
                     )}
                 </ScrollView>

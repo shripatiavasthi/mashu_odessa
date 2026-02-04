@@ -2,15 +2,13 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {apiClient} from '../../api/client';
 import {env, endpoints} from '../../env';
 
-export const submitEventCheckIn = createAsyncThunk(
-  'checkIn/submitEventCheckIn',
-  async ({eventCode, userId, token}, {rejectWithValue}) => {
+export const fetchTermCodes = createAsyncThunk(
+  'terms/fetchTermCodes',
+  async ({accessToken}, {rejectWithValue}) => {
     try {
-      const payload = {eventCode, userId};
-      const response = await apiClient.post(
-        `${env.apiBaseUrl}${endpoints.eventCheckIn}`,
-        payload,
-        {token},
+      const response = await apiClient.get(
+        `${env.apiBaseUrl}${endpoints.termCodesList}`,
+        {token: accessToken},
       );
       return response;
     } catch (error) {
@@ -24,37 +22,40 @@ export const submitEventCheckIn = createAsyncThunk(
 );
 
 const initialState = {
-  lastCheckIn: null,
+  items: [],
   status: 'idle',
   error: null,
 };
 
-const checkInSlice = createSlice({
-  name: 'checkIn',
+const termSlice = createSlice({
+  name: 'terms',
   initialState,
   reducers: {
-    resetCheckIn: state => {
-      state.lastCheckIn = null;
+    resetTerms: state => {
+      state.items = [];
       state.status = 'idle';
       state.error = null;
     },
   },
   extraReducers: builder => {
     builder
-      .addCase(submitEventCheckIn.pending, state => {
+      .addCase(fetchTermCodes.pending, state => {
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(submitEventCheckIn.fulfilled, (state, action) => {
+      .addCase(fetchTermCodes.fulfilled, (state, action) => {
+        const payload = action.payload || {};
+        const data = payload.data || [];
+
         state.status = 'succeeded';
-        state.lastCheckIn = action.payload;
+        state.items = Array.isArray(data) ? data : [];
       })
-      .addCase(submitEventCheckIn.rejected, (state, action) => {
+      .addCase(fetchTermCodes.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload || {message: 'Request failed'};
       });
   },
 });
 
-export const {resetCheckIn} = checkInSlice.actions;
-export default checkInSlice.reducer;
+export const {resetTerms} = termSlice.actions;
+export default termSlice.reducer;

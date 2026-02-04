@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { submitActivityId, resetCheckIn } from '../../store/slices/checkInSlice';
+import { submitEventCheckIn, resetCheckIn } from '../../store/slices/checkInSlice';
 import { selectAuth, selectCheckIn } from '../../store';
 import InvalidActivityModal from '../../components/InvalidActivityModal';
 import AppHeader from '../../components/AppHeader';
@@ -35,33 +35,34 @@ const EventCheckInScreen = ({ navigation, route }) => {
   const isValidActivityId = /^\d{5}$/.test(activityId);
 
   const onCheckIn = async () => {
+    const trimmedId = activityId.trim();
 
-    navigation.navigate('CheckInSuccessScreen')
+    if (!trimmedId) {
+      Alert.alert('Invalid Activity ID', 'Please enter an Activity ID.');
+      return;
+    }
 
-    // const trimmedId = activityId.trim();
+    try {
+      const token = navToken || accessToken;
+      const resolvedUserId = user?.id || authUser?.id;
 
-    // if (!/^\d{4}$/.test(trimmedId)) {
-    //   Alert.alert('Invalid Activity ID', 'Activity ID must be exactly 4 digits.');
-    //   return;
-    // }
+      const response = await dispatch(
+        submitEventCheckIn({
+          eventCode: trimmedId,
+          userId: resolvedUserId,
+          token,
+        }),
+      ).unwrap();
 
-    // console.log('Activity ID:', trimmedId);
-
-    // try {
-    //   const token = navToken || accessToken;
-    //   const response = await dispatch(
-    //     submitActivityId({activityId: trimmedId, token}),
-    //   ).unwrap();
-
-    //   dispatch(resetCheckIn());
-    //   navigation.navigate('CheckInSuccessScreen', {
-    //     activityId: trimmedId,
-    //     user: user || authUser,
-    //     response,
-    //   });
-    // } catch (err) {
-    //   setModalVisible(true);
-    // }
+      dispatch(resetCheckIn());
+      navigation.navigate('CheckInSuccessScreen', {
+        activityId: trimmedId,
+        user: user || authUser,
+        response,
+      });
+    } catch (err) {
+      setModalVisible(true);
+    }
   };
 
   return (

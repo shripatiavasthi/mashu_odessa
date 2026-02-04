@@ -27,8 +27,12 @@ const CONFIG = {
 
 const ENDPOINTS = {
   activityCheckIn: '/activities/check-in',
+  eventCheckIn: '/api/v1/oc/app/events/check-in',
   authLogin: '/api/v1/oc/app/authentication/login',
   authLogout: '/api/v1/oc/app/authentication/logout',
+  termCodesList: '/api/v1/oc/app/term-data/term-codes/list',
+  userEventsByTerm: (userId, termId) =>
+    `/api/v1/oc/app/events/user/${userId}/term/${termId}`,
 };
 
 const getConfig = () => CONFIG[ENVIRONMENT] || CONFIG.production;

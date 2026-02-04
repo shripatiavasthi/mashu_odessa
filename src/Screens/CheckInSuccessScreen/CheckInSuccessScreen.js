@@ -35,7 +35,7 @@ const CheckInSuccessScreen = ({ navigation }) => {
           <View style={styles.iconOuter}>
             {/* <View style={styles.iconCircle}> */}
             <Image
-              source={require('../../assets/Image/Calendar.png')}
+              source={require('../../assets/Image/Calendar.gif')}
               resizeMode="contain"
               style={styles.checkIcon}
             />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,9 @@ import RewardPointsModal from '../../components/RewardPointsModal';
 import { colors, typography } from '../../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchRewards} from '../../store/slices/rewardsSlice';
+import {selectAuth, selectRewards} from '../../store';
 
 
 const { height, width } = Dimensions.get('window');
@@ -25,6 +28,9 @@ const { height, width } = Dimensions.get('window');
 const RewardsScreen = ({ onMenuPress }) => {
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {accessToken, user} = useSelector(selectAuth);
+  const {terms: rewardTerms, ocSuccessReward, status: rewardsStatus} = useSelector(selectRewards);
 
   const handleMenuPress = () => {
     if (onMenuPress) {
@@ -39,7 +45,31 @@ const RewardsScreen = ({ onMenuPress }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDecemberModal, setShowDecemberModal] = useState(false);
 
-  const TermCard = ({ title, term, points, reward }) => (
+  useEffect(() => {
+    if (!accessToken || !user?.id || rewardsStatus !== 'idle') {
+      return;
+    }
+    dispatch(fetchRewards({accessToken, userId: user.id}));
+  }, [accessToken, dispatch, rewardsStatus, user?.id]);
+
+  const termCards = useMemo(
+    () =>
+      Array.isArray(rewardTerms)
+        ? rewardTerms.map(term => ({
+            key: term?.termCodeId || term?.termCode,
+            title: term?.displayName || term?.termCode || 'Term',
+            term: term?.termCode || '',
+            points: Number.isFinite(term?.points) ? `${term.points}` : '0',
+            status: term?.status || '',
+            reward: Number.isFinite(term?.rewardAmount)
+              ? `$ ${term.rewardAmount}`
+              : '$ 0',
+          }))
+        : [],
+    [rewardTerms],
+  );
+
+  const TermCard = ({ title, term, points, reward, status }) => (
     <View style={styles.cardContainer}>
       <TouchableOpacity style={styles.card}
         onPress={() => { navigation.navigate('TermRewardDetailsScreen') }}
@@ -69,9 +99,9 @@ const RewardsScreen = ({ onMenuPress }) => {
               <View style={styles.pointCon}>
                 <Text style={styles.pointsText}>
                   Points: {points}{' '}
-                  <Text style={styles.pointsItalic}>
-                    (Met Challenge Score Points)
-                  </Text>
+                  {status ? (
+                    <Text style={styles.pointsItalic}>({status})</Text>
+                  ) : null}
                 </Text>
               </View>
             )}
@@ -131,33 +161,16 @@ const RewardsScreen = ({ onMenuPress }) => {
             <View style={styles.headerContainer}>
               <Text style={styles.sectionTitle}>Term Rewards</Text>
             </View>
-            <TermCard
-              title="Fall 1"
-              term="25F1"
-              points="3500"
-              reward="$ 100"
-            />
-
-            <TermCard
-              title="Fall 2"
-              term="25F2"
-              points="3700"
-              reward="$ 100"
-            />
-
-            <TermCard
-              title="Spring 1"
-              term="26S1"
-              points="4500"
-              reward="$ 250"
-            />
-
-            <TermCard
-              title="Spring 2"
-              term="26S2"
-              points="4800"
-              reward="$ 75"
-            />
+            {termCards.map(term => (
+              <TermCard
+                key={term.key}
+                title={term.title}
+                term={term.term}
+                points={term.points}
+                reward={term.reward}
+                status={term.status}
+              />
+            ))}
           </View>
 
           <View style={styles.sectionContainer}>
@@ -209,7 +222,11 @@ const RewardsScreen = ({ onMenuPress }) => {
                     <ImageBackground source={require('../../assets/Image/RewardIcon.png')}
                       style={styles.rewardTag}
                       resizeMode='contain'>
-                      <Text style={styles.rewardText}>$25</Text>
+                      <Text style={styles.rewardText}>
+                        {Number.isFinite(ocSuccessReward?.ocSuccessReward)
+                          ? `$ ${ocSuccessReward.ocSuccessReward}`
+                          : '$ 0'}
+                      </Text>
                     </ImageBackground>
                   </View>
                 </View>
@@ -229,7 +246,11 @@ const RewardsScreen = ({ onMenuPress }) => {
                       style={styles.rewardTag}
                       resizeMode='contain'
                     >
-                      <Text style={styles.rewardText}>$ 200</Text>
+                      <Text style={styles.rewardText}>
+                        {Number.isFinite(ocSuccessReward?.ocSuccessRewardBonus)
+                          ? `$ ${ocSuccessReward.ocSuccessRewardBonus}`
+                          : '$ 0'}
+                      </Text>
                     </ImageBackground>
                   </View>
                 </View>

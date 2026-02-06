@@ -22,6 +22,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchRewards} from '../../store/slices/rewardsSlice';
 import {selectAuth, selectRewards} from '../../store';
 
+import Icon from 'react-native-vector-icons/Entypo';
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -103,6 +105,10 @@ const RewardsScreen = ({ onMenuPress }) => {
                     <Text style={styles.pointsItalic}>({status})</Text>
                   ) : null}
                 </Text>
+                
+                                                <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+                
+
               </View>
             )}
           </View>
@@ -577,8 +583,10 @@ const styles = StyleSheet.create({
     height: height / 28,
     width: width / 1.27,
     // backgroundColor: 'yellow',
-    justifyContent: 'center',
-    alignSelf: 'center'
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   pointsText: {
     fontSize: 12,

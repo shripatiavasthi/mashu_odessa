@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,9 @@ import Group from '../../assets/svg/Group.svg';
 import Svg, { Circle, Rect } from 'react-native-svg';
 import EmployeeLoginModal from '../../components/EmployeeLoginModal'
 
+import Icon from 'react-native-vector-icons/Entypo';
+import { colors } from '../../styles/globalStyles';
+
 
 const { height, width } = Dimensions.get('screen');
 
@@ -21,12 +24,12 @@ const ChooseRoleScreen = ({ navigation }) => {
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
 
 
-  
+
 
   return (
     <AppGradient style={styles.container}>
 
-<EmployeeLoginModal
+      <EmployeeLoginModal
         visible={showEmployeeModal}
         onClose={() => setShowEmployeeModal(false)}
         onAllIn={() => {
@@ -74,6 +77,8 @@ const ChooseRoleScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
+          <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+
         </TouchableOpacity>
       </View>
 
@@ -81,8 +86,8 @@ const ChooseRoleScreen = ({ navigation }) => {
       <View style={styles.boxContainer}>
         <TouchableOpacity
           style={styles.card}
-          
-                 onPress={() => setShowEmployeeModal(true)}
+
+          onPress={() => setShowEmployeeModal(true)}
         >
           <View style={styles.iconContainer}>
             <Image
@@ -105,6 +110,8 @@ const ChooseRoleScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
+          <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+
         </TouchableOpacity>
       </View>
 
@@ -131,6 +138,8 @@ const ChooseRoleScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
+          <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+
         </TouchableOpacity>
       </View>
 
@@ -192,7 +201,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#00A2E5',
+    borderColor: colors.primaryLight,
   },
   iconContainer: {
     width: width * 0.2,
@@ -205,7 +214,7 @@ const styles = StyleSheet.create({
   icon: {
     width: width * 0.16,
     height: height / 20,
-   
+
   },
   textBox: {
     height: height / 10,

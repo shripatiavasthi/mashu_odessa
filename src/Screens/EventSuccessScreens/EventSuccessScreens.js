@@ -20,9 +20,7 @@ const { height, width } = Dimensions.get('window');
 const EventSuccessScreens = () => {
   const navigation = useNavigation();
 
-  const navHandle= () =>{
-    
-  }
+ 
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -52,7 +50,7 @@ const EventSuccessScreens = () => {
           <View style={styles.iconOuter}>
             {/* <View style={styles.iconCircle}> */}
             <Image
-              source={require('../../assets/Image/Calendar.png')}
+              source={require('../../assets/Image/Calendar.gif')}
               resizeMode="contain"
               style={styles.checkIcon}
             />
@@ -184,7 +182,7 @@ const styles = StyleSheet.create({
 
 
   iconOuter: {
-    height: height / 6,
+    height: height / 6.5,
     justifyContent: 'flex-end',
     alignItems: 'center',
     // backgroundColor: 'green',
@@ -200,7 +198,8 @@ const styles = StyleSheet.create({
   },
   checkIcon: {
 
-    // backgroundColor: 'cyan'
+     height: 100,
+      width: 100
   },
 
   /* Text */
@@ -254,16 +253,16 @@ const styles = StyleSheet.create({
 
   /* Button */
   buttonContainer: {
-    height: height / 6,
+    height: height / 3.2,
     width: width / 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     // backgroundColor: 'yellow',
   },
   button: {
-    height: height / 22,
+    height: height / 20,
     width: width / 1.2,
-    backgroundColor: '#2E6FB6',
+    backgroundColor: '#006BB6',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',

@@ -77,7 +77,7 @@ const FaqScreen = () => {
           })}
         </ScrollView>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => setShowModal(prev => !prev)}
           style={styles.fab}
           activeOpacity={0.8}
@@ -94,7 +94,7 @@ const FaqScreen = () => {
         <RewardPointsModal
           visible={showModal}
           onClose={() => setShowModal(false)}
-        />
+        /> */}
 
 
       </AppGradient>
@@ -173,26 +173,26 @@ const styles = StyleSheet.create({
     fontWeight: '400'
   },
 
-  fab: {
-    position: 'absolute',
-    right: width / 18,
-    bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
-    height: width / 7,
-    width: width / 7,
-    borderRadius: width / 12,
-    backgroundColor: '#006BB6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
+  // fab: {
+  //   position: 'absolute',
+  //   right: width / 18,
+  //   bottom: Platform.OS === 'ios' ? height / 10 : height / 10,
+  //   height: width / 7,
+  //   width: width / 7,
+  //   borderRadius: width / 12,
+  //   backgroundColor: '#006BB6',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   elevation: 6,
+  //   shadowColor: '#000',
+  //   shadowOpacity: 0.2,
+  //   shadowRadius: 5,
+  //   shadowOffset: { width: 0, height: 3 },
+  // },
 
-  fabText: {
-    color: '#FFFFFF',
-    fontSize: width / 18,
-    fontWeight: '700',
-  },
+  // fabText: {
+  //   color: '#FFFFFF',
+  //   fontSize: width / 18,
+  //   fontWeight: '700',
+  // },
 });

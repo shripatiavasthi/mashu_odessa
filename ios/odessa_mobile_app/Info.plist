@@ -64,6 +64,7 @@
     <string>MaterialCommunityIcons.ttf</string>
     <string>MaterialIcons.ttf</string>
     <string>AntDesign.ttf</string>
+    <string>Entypo.ttf</string>
 	</array>
 	<key>RCTNewArchEnabled</key>
 	<true/>

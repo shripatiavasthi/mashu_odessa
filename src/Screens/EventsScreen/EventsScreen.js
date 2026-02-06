@@ -22,7 +22,8 @@ import {fetchTermCodes} from '../../store/slices/termSlice';
 import {fetchEventsByTerm, fetchUpcomingEvents} from '../../store/slices/eventsSlice';
 import {selectAuth, selectEvents, selectTerms} from '../../store';
 
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Entypo';
+
 
 
 const { height, width } = Dimensions.get('window');
@@ -155,9 +156,11 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                         <View style={styles.dot} />
                         <Text style={styles.pointsText}>{points}</Text>
                     </View>
+                     
                 </View>
                 <View style={styles.locationCon}>
                     <Text style={styles.locationText}>Location: {location}</Text>
+                    <Icon name="chevron-with-circle-right" size={18} color="#666666" />
                 </View>
 
                 <View style={styles.cardDivider} />
@@ -189,6 +192,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
 
     const UpcomingEventCard = ({
+        earlyCheckinAllowed,
         title,
         location,
         term,
@@ -200,7 +204,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             <TouchableOpacity style={styles.upcomingCard}>
                 <View style={styles.cardHeaderUpcome}>
                     <Text style={styles.cardTitle}>{title}</Text>
-                    {isEarly && (
+                    {earlyCheckinAllowed && (
                         <View style={styles.ribbon}>
                             {/* <Text style={styles.ribbonText}>Early Check in</Text> */}
                             <Image source={require('../../assets/Image/ArrowStyle.png')} />
@@ -217,6 +221,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
                 <View style={styles.termContainer}>
                     <Text style={styles.termText}>Event Term : {term}</Text>
+                    <Icon name="chevron-with-circle-right" size={18} color="#666666" />
                 </View>
 
                 {/* Footer */}
@@ -389,7 +394,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                     </Pressable>
                 </View>
 
-                {/* <Icon name="rocket" size={30} color="#900" />; */}
+                
                 {/* Content */}
                 <ScrollView
                     contentContainerStyle={styles.scrollContent}
@@ -433,6 +438,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                     ) : (
                         <>
                             {upcomingItems.map((event, index) => {
+                                const earlyCheckinAllowed = event.earlyCheckinAllowed
                                 const title = event?.name || `Event ${index + 1}`;
                                 const location = event?.location || 'TBD';
                                 const term = event?.termCode || selectedTerm || 'N/A';
@@ -445,6 +451,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
                                 return (
                                     <UpcomingEventCard
+                                        earlyCheckinAllowed={earlyCheckinAllowed}
                                         key={event?.id || `${title}-${index}`}
                                         title={title}
                                         location={location}
@@ -648,7 +655,7 @@ const styles = StyleSheet.create({
     /* Scroll */
     scrollContent: {
         // paddingTop: height / 50,
-        paddingBottom: height / 20,
+        paddingBottom: height / 10,
         // alignItems: 'center',
     },
 
@@ -702,10 +709,11 @@ const styles = StyleSheet.create({
     locationCon: {
         height: height / 25,
         width: width / 1.2,
-        justifyContent: 'center',
-        // alignItems: 'center',
-        // backgroundColor: 'blue',
-        alignSelf: 'center'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        // backgroundColor: 'lightblue',
+        alignSelf: 'center',
+        flexDirection: 'row'
     },
 
 
@@ -824,12 +832,13 @@ const styles = StyleSheet.create({
     },
 
     termContainer: {
-        height: height / 20,
+        height: height / 25,
         width: width / 1.2,
-        // justifyContent: 'center',
+        justifyContent: 'space-between',
         // alignItems: 'center',
-        // backgroundColor: 'blue',
-        alignSelf: 'center'
+        // backgroundColor: 'lightblue',
+        alignSelf: 'center',
+        flexDirection: 'row'
     },
 
     termText: {

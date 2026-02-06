@@ -198,6 +198,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
 
     const UpcomingEventCard = ({
+        event,
         earlyCheckinAllowed,
         title,
         location,
@@ -205,9 +206,13 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         points,
         eventDate,
         isEarly,
+        showCheckInButton,
     }) => (
         <View style={styles.upcomingContainer}>
-            <TouchableOpacity style={styles.upcomingCard}>
+            <TouchableOpacity
+                style={styles.upcomingCard}
+                onPress={() => goToEventDetails(event)}
+            >
                 <View style={styles.cardHeaderUpcome}>
                     <Text style={styles.cardTitle}>{title}</Text>
                     {earlyCheckinAllowed && (
@@ -244,19 +249,20 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                     <View style={styles.verticalDivider} />
                     <View style={styles.dateBlock}>
                         <View style={styles.btnContainer}>
-                            <TouchableOpacity
-                                style={styles.checkInBtn}
-                                onPress={() => {
-                                    setSelectedEvent({
-                                        id: 'event_123',
-                                        name: 'Alumni Gathering',
-                                    });
-                                    setShowCheckInModal(true);
-                                }}
-                            >
-                                <Text style={styles.checkInText}>Check In Now</Text>
-                            </TouchableOpacity>
-
+                            {showCheckInButton && (
+                                <TouchableOpacity
+                                    style={styles.checkInBtn}
+                                    onPress={() => {
+                                        setSelectedEvent({
+                                            id: event?.id,
+                                            name: title,
+                                        });
+                                        setShowCheckInModal(true);
+                                    }}
+                                >
+                                    <Text style={styles.checkInText}>Check In Now</Text>
+                                </TouchableOpacity>
+                            )}
                         </View>
                         {/* <View style={styles.checkInvalueCon}>
                             <Text style={styles.dateValue}>{checkInDate}</Text>
@@ -461,12 +467,14 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                                     <UpcomingEventCard
                                         earlyCheckinAllowed={earlyCheckinAllowed}
                                         key={event?.id || `${title}-${index}`}
+                                        event={event}
                                         title={title}
                                         location={location}
                                         term={term}
                                         points={points}
                                         eventDate={eventDate}
                                         isEarly={Boolean(event?.earlyCheckinAllowed)}
+                                        showCheckInButton={Boolean(event?.showCheckInButton)}
                                     />
                                 );
                             })}

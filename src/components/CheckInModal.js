@@ -11,6 +11,10 @@ import {
 } from 'react-native';
 import { colors, typography } from '../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
+import InvalidActivityModal from './InvalidActivityModal';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {submitEventCheckIn, resetCheckIn} from '../store/slices/checkInSlice';
+import {selectAuth, selectCheckIn} from '../store';
 
 const { height, width } = Dimensions.get('window')
 
@@ -22,16 +26,51 @@ const CheckInModal = ({
 }) => {
   const [step, setStep] = useState(1);
   const [activityId, setActivityId] = useState('');
+  const [errorVisible, setErrorVisible] = useState(false);
 
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const {status} = useAppSelector(selectCheckIn);
+  const {accessToken, user: authUser} = useAppSelector(selectAuth);
 
 
   useEffect(() => {
     if (!visible) {
       setStep(1);
       setActivityId('');
+      setErrorVisible(false);
     }
   }, [visible]);
+
+  const isValidActivityId = /^\d{6}$/.test(activityId);
+
+  const handleCheckIn = async () => {
+    const trimmedId = activityId.trim();
+    if (!trimmedId) {
+      setErrorVisible(true);
+      return;
+    }
+    try {
+      const response = await dispatch(
+        submitEventCheckIn({
+          eventCode: trimmedId,
+          userId: authUser?.id,
+          token: accessToken,
+        }),
+      ).unwrap();
+
+      dispatch(resetCheckIn());
+      onSubmit?.(trimmedId, response);
+      onClose?.();
+      navigation.navigate('CheckInSuccessScreen', {
+        activityId: trimmedId,
+        user: authUser,
+        response,
+      });
+    } catch (err) {
+      setErrorVisible(true);
+    }
+  };
 
   return (
     <Modal
@@ -97,8 +136,12 @@ const CheckInModal = ({
               <TextInput
                 placeholder="Enter activity ID"
                 value={activityId}
-                onChangeText={setActivityId}
+                onChangeText={text =>
+                  setActivityId(text.replace(/[^0-9]/g, ''))
+                }
                 style={styles.input}
+                keyboardType="number-pad"
+                maxLength={6}
               />
               </View>
 
@@ -114,16 +157,14 @@ const CheckInModal = ({
                   <TouchableOpacity
                     style={[
                       styles.confirmBtn,
-                      !activityId && { opacity: 0.5 },
+                      (!isValidActivityId || status === 'loading') && { opacity: 0.5 },
                     ]}
-                    disabled={!activityId}
-                    onPress={() => {
-                      onSubmit(activityId);
-                      onClose();
-                      navigation.navigate('EventSuccessScreens')
-                    }}
+                    disabled={!isValidActivityId || status === 'loading'}
+                    onPress={handleCheckIn}
                   >
-                    <Text style={styles.confirmText}>Check In</Text>
+                    <Text style={styles.confirmText}>
+                      {status === 'loading' ? 'Checking in...' : 'Check In'}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -131,6 +172,16 @@ const CheckInModal = ({
           )}
         </View>
       </View>
+
+      <InvalidActivityModal
+        visible={errorVisible}
+        onCancel={() => setErrorVisible(false)}
+        onRetry={() => {
+          setErrorVisible(false);
+          setActivityId('');
+          dispatch(resetCheckIn());
+        }}
+      />
     </Modal>
   );
 };
@@ -323,4 +374,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

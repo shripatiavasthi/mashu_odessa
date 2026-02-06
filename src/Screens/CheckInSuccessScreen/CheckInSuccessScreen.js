@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
 import { useRoute } from "@react-navigation/native";
-// import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Entypo';
 
 const { height, width } = Dimensions.get('window');
 
@@ -141,7 +141,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkIcon: {
-
+      height: 100,
+      width: 100
     // backgroundColor: 'cyan'
   },
 

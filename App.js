@@ -25,7 +25,7 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="EventSuccessScreens"
+            initialRouteName="Splash"
             screenOptions={{ headerShown: false }}>
             
             <Stack.Screen name="Splash" component={Splash} />

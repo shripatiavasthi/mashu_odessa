@@ -19,6 +19,8 @@ import { colors, typography } from '../../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 
+import Icon from 'react-native-vector-icons/Entypo';
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -73,6 +75,10 @@ const RewardsScreen = ({ onMenuPress }) => {
                     (Met Challenge Score Points)
                   </Text>
                 </Text>
+                
+                                                <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+                
+
               </View>
             )}
           </View>
@@ -556,8 +562,10 @@ const styles = StyleSheet.create({
     height: height / 28,
     width: width / 1.27,
     // backgroundColor: 'yellow',
-    justifyContent: 'center',
-    alignSelf: 'center'
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center'
   },
   pointsText: {
     fontSize: 12,

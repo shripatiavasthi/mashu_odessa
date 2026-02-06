@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors, typography } from '../styles/globalStyles';
+import Icon from 'react-native-vector-icons/Entypo';
+
 
 const { height, width } = Dimensions.get('screen')
 
@@ -60,21 +62,18 @@ const EmployeeLoginModal = ({
                                     </View>
                                 </View>
 
-                                <Ionicons
-                                    name="chevron-forward"
-                                    size={22}
-                                    color="#666"
-                                />
+                                <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+
 
                             </View>
                         </TouchableOpacity>
                     </View>
 
 
-                        <View style={styles.cardSpace}>
+                    <View style={styles.cardSpace}>
                         <TouchableOpacity
                             style={styles.card}
-                             onPress={onPLC}>
+                            onPress={onPLC}>
                             <View style={styles.row}>
                                 <View style={styles.iconContainer}>
                                     <Ionicons
@@ -90,16 +89,13 @@ const EmployeeLoginModal = ({
                                     </View>
                                     <View style={styles.cardDescBox}>
                                         <Text style={styles.subText}>
-                                             Please log in to access the PLC credits
+                                            Please log in to access the PLC credits
                                         </Text>
                                     </View>
                                 </View>
 
-                                <Ionicons
-                                    name="chevron-forward"
-                                    size={22}
-                                    color="#666"
-                                />
+                                <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -124,7 +120,7 @@ const styles = StyleSheet.create({
 
     backdrop: {
         flex: 1,
-        
+
     },
 
 
@@ -219,9 +215,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Open Sans',
     },
     iOSBoxCon: {
-      height: height/35,
-    //   backgroundColor: 'cyan',
-      justifyContent: 'flex-end'
+        height: height / 35,
+        //   backgroundColor: 'cyan',
+        justifyContent: 'flex-end'
     },
 });
 

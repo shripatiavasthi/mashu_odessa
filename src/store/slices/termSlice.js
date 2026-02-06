@@ -21,10 +21,33 @@ export const fetchTermCodes = createAsyncThunk(
   },
 );
 
+export const fetchGoalPoints = createAsyncThunk(
+  'terms/fetchGoalPoints',
+  async ({accessToken, termCodeId}, {rejectWithValue}) => {
+    try {
+      const response = await apiClient.get(
+        `${env.apiBaseUrl}${endpoints.termGoalPoints(termCodeId)}`,
+        {token: accessToken},
+      );
+      return response;
+    } catch (error) {
+      return rejectWithValue({
+        message: error.message,
+        status: error.status,
+        data: error.data,
+      });
+    }
+  },
+);
+
 const initialState = {
   items: [],
   status: 'idle',
   error: null,
+  goalPoints: [],
+  ocSuccessRewards: null,
+  goalPointsStatus: 'idle',
+  goalPointsError: null,
 };
 
 const termSlice = createSlice({
@@ -35,6 +58,10 @@ const termSlice = createSlice({
       state.items = [];
       state.status = 'idle';
       state.error = null;
+      state.goalPoints = [];
+      state.ocSuccessRewards = null;
+      state.goalPointsStatus = 'idle';
+      state.goalPointsError = null;
     },
   },
   extraReducers: builder => {
@@ -53,6 +80,22 @@ const termSlice = createSlice({
       .addCase(fetchTermCodes.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload || {message: 'Request failed'};
+      })
+      .addCase(fetchGoalPoints.pending, state => {
+        state.goalPointsStatus = 'loading';
+        state.goalPointsError = null;
+      })
+      .addCase(fetchGoalPoints.fulfilled, (state, action) => {
+        const payload = action.payload || {};
+        const data = payload.data || {};
+
+        state.goalPointsStatus = 'succeeded';
+        state.goalPoints = Array.isArray(data.goalPoints) ? data.goalPoints : [];
+        state.ocSuccessRewards = data.ocSuccessRewards || null;
+      })
+      .addCase(fetchGoalPoints.rejected, (state, action) => {
+        state.goalPointsStatus = 'failed';
+        state.goalPointsError = action.payload || {message: 'Request failed'};
       });
   },
 });

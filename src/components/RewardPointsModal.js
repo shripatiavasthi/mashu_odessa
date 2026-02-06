@@ -13,7 +13,34 @@ import { colors, typography } from '../styles/globalStyles';
 
 const { height, width } = Dimensions.get('screen');
 
-const RewardPointsModal = ({ visible, onClose }) => {
+const RewardPointsModal = ({
+  visible,
+  onClose,
+  goalPointsData,
+  ocSuccessRewards,
+}) => {
+  const resolvedGoalPoints = goalPointsData || {};
+  const goalPoints =
+    Number.isFinite(resolvedGoalPoints.goalPoints) ? resolvedGoalPoints.goalPoints : 1500;
+  const goalRewards =
+    Number.isFinite(resolvedGoalPoints.goalRewards) ? resolvedGoalPoints.goalRewards : 25;
+  const ddPoints =
+    Number.isFinite(resolvedGoalPoints.ddPoints) ? resolvedGoalPoints.ddPoints : 3000;
+  const ddRewards =
+    Number.isFinite(resolvedGoalPoints.ddRewards) ? resolvedGoalPoints.ddRewards : 50;
+  const csPoints =
+    Number.isFinite(resolvedGoalPoints.csPoints) ? resolvedGoalPoints.csPoints : 3200;
+  const csRewards =
+    Number.isFinite(resolvedGoalPoints.csRewards) ? resolvedGoalPoints.csRewards : 100;
+  const ocReward =
+    Number.isFinite(ocSuccessRewards?.ocSuccessReward)
+      ? ocSuccessRewards.ocSuccessReward
+      : null;
+  const ocBonus =
+    Number.isFinite(ocSuccessRewards?.ocSuccessRewardBonus)
+      ? ocSuccessRewards.ocSuccessRewardBonus
+      : null;
+
   return (
     <Modal
       visible={visible}
@@ -36,26 +63,46 @@ const RewardPointsModal = ({ visible, onClose }) => {
             <View style={styles.row}>
               <Text style={styles.label}>Goal Points</Text>
               <Text style={styles.divider}>|</Text>
-              <Text style={styles.points}>🏁 1500</Text>
+              <Text style={styles.points}>🏁 {goalPoints}</Text>
               <Text style={styles.divider}>|</Text>
-              <Text style={styles.amount}>$ 25</Text>
+              <Text style={styles.amount}>$ {goalRewards}</Text>
             </View>
 
             <View style={styles.row}>
               <Text style={styles.label}>Double Down Points</Text>
               <Text style={styles.divider}>|</Text>
-              <Text style={styles.points}>🏁 3000</Text>
+              <Text style={styles.points}>🏁 {ddPoints}</Text>
               <Text style={styles.divider}>|</Text>
-              <Text style={styles.amount}>$ 50</Text>
+              <Text style={styles.amount}>$ {ddRewards}</Text>
             </View>
 
             <View style={styles.row}>
               <Text style={styles.label}>Challenge Score Points</Text>
               <Text style={styles.divider}>|</Text>
-              <Text style={styles.points}>🏁 3200</Text>
+              <Text style={styles.points}>🏁 {csPoints}</Text>
               <Text style={styles.divider}>|</Text>
-              <Text style={styles.amount}>$ 100</Text>
+              <Text style={styles.amount}>$ {csRewards}</Text>
             </View>
+
+            {ocReward !== null && (
+              <View style={styles.row}>
+                <Text style={styles.label}>OC Success Reward</Text>
+                <Text style={styles.divider}>|</Text>
+                <Text style={styles.points}>🏁</Text>
+                <Text style={styles.divider}>|</Text>
+                <Text style={styles.amount}>$ {ocReward}</Text>
+              </View>
+            )}
+
+            {ocBonus !== null && (
+              <View style={styles.row}>
+                <Text style={styles.label}>OC Success Reward Bonus</Text>
+                <Text style={styles.divider}>|</Text>
+                <Text style={styles.points}>🏁</Text>
+                <Text style={styles.divider}>|</Text>
+                <Text style={styles.amount}>$ {ocBonus}</Text>
+              </View>
+            )}
 
             {/* <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
               <Text style={styles.closeText}>Close</Text>

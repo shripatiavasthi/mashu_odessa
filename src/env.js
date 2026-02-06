@@ -38,6 +38,8 @@ const ENDPOINTS = {
   userRewards: userId => `/api/v1/oc/app/rewards/${userId}`,
   userRewardsByTerm: (termCodeId, userId) =>
     `/api/v1/oc/app/rewards/term/${termCodeId}/user/${userId}`,
+  termGoalPoints: termCodeId =>
+    `/api/v1/oc/app/term-data/goal-points/list?termCodeId=${termCodeId}`,
 };
 
 const getConfig = () => CONFIG[ENVIRONMENT] || CONFIG.production;

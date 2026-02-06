@@ -18,7 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import CheckInModal from '../../components/CheckInModal'
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchTermCodes} from '../../store/slices/termSlice';
+import {fetchGoalPoints, fetchTermCodes} from '../../store/slices/termSlice';
 import {fetchEventsByTerm, fetchUpcomingEvents} from '../../store/slices/eventsSlice';
 import {selectAuth, selectEvents, selectTerms} from '../../store';
 
@@ -41,7 +41,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
     const dispatch = useDispatch();
     const {accessToken, user} = useSelector(selectAuth);
-    const {items: termItems, status: termStatus} = useSelector(selectTerms);
+    const {items: termItems, status: termStatus, goalPoints, ocSuccessRewards} = useSelector(selectTerms);
     const {items: eventItems, upcomingItems, totalPoints} = useSelector(selectEvents);
 
     const navigation = useNavigation();
@@ -50,7 +50,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
     const termOptions = useMemo(() => {
         if (!Array.isArray(termItems) || !termItems.length) {
-            return [{id: null, termCode: 'null'}];
+            return [];
         }
         return termItems
             .map(item => ({
@@ -106,6 +106,12 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                 accessToken,
                 userId: user.id,
                 termId: selectedTermId,
+            }),
+        );
+        dispatch(
+            fetchGoalPoints({
+                accessToken,
+                termCodeId: selectedTermId,
             }),
         );
     }, [accessToken, dispatch, isFocused, selectedTermId, user?.id]);
@@ -320,7 +326,9 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                                             pressed && styles.dropDownPressed,
                                         ]}
                                     >
-                                        <Text style={styles.filterTxt}>{selectedTerm}</Text>
+                                        <Text style={styles.filterTxt}>
+                                            {selectedTerm || termOptions[0]?.termCode || ''}
+                                        </Text>
                                         <Image source={require('../../assets/Image/drop_down.png')} />
                                     </Pressable>
 
@@ -482,6 +490,8 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                 <RewardPointsModal
                     visible={showModal}
                     onClose={() => setShowModal(false)}
+                    goalPointsData={goalPoints?.[0]}
+                    ocSuccessRewards={ocSuccessRewards}
                 />
 
             </AppGradient>

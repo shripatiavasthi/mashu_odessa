@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -14,46 +14,26 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
 import RewardPointsModal from '../../components/RewardPointsModal';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchFaqs} from '../../store/slices/faqSlice';
+import {selectAuth, selectFaq} from '../../store';
 
 
 const { height, width } = Dimensions.get('window');
 
 const FaqScreen = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const [showModal, setShowModal] = useState(false);
-  
-  const faqData = [
-    {
-      question: 'What is OC All In?',
-      answer:
-        'OC All In is an incentive program that rewards Odessa College Employees for engaging in college activities',
-    },
-    {
-      question: 'Who is eligible?',
-      answer:
-        'All eligible Odessa College employees may participate in the OC All In program.',
-    },
-    {
-      question: 'What are the rewards?',
-      answer:
-        'Participants can earn points and redeem them for rewards based on engagement.',
-    },
-    {
-      question: 'How do I Participate?',
-      answer:
-        'You can participate by attending events, activities, and completing challenges.',
-    },
-    {
-      question: 'What are the event types?',
-      answer:
-        'Events include academic, social, wellness, and professional development activities.',
-    },
-    {
-      question: 'How do I claim my rewards?',
-      answer:
-        'Rewards can be claimed once eligibility criteria and point thresholds are met.',
-    },
-  ];
+  const dispatch = useDispatch();
+  const {accessToken} = useSelector(selectAuth);
+  const {items: faqItems, status: faqStatus} = useSelector(selectFaq);
+
+  useEffect(() => {
+    if (!accessToken || faqStatus !== 'idle') {
+      return;
+    }
+    dispatch(fetchFaqs({accessToken}));
+  }, [accessToken, dispatch, faqStatus]);
 
   const toggleItem = index => {
     setActiveIndex(index === activeIndex ? -1 : index);
@@ -69,11 +49,11 @@ const FaqScreen = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {faqData.map((item, index) => {
+          {faqItems.map((item, index) => {
             const isOpen = index === activeIndex;
 
             return (
-              <View key={index} style={styles.card}>
+              <View key={item?.id || index} style={styles.card}>
                 <TouchableOpacity
                   style={styles.questionRow}
                   onPress={() => toggleItem(index)}

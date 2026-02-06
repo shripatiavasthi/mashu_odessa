@@ -62,7 +62,7 @@ const CheckInModal = ({
       dispatch(resetCheckIn());
       onSubmit?.(trimmedId, response);
       onClose?.();
-      navigation.navigate('CheckInSuccessScreen', {
+      navigation.navigate('EventSuccessScreens', {
         activityId: trimmedId,
         user: authUser,
         response,

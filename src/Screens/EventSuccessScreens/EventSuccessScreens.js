@@ -8,7 +8,7 @@ import {
   Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
 import { colors, typography } from '../../styles/globalStyles';
@@ -19,6 +19,17 @@ const { height, width } = Dimensions.get('window');
 
 const EventSuccessScreens = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const { response } = route.params || {};
+  const data = response?.data || {};
+  const eventName = data?.eventName || 'Event';
+  const eventLocation = data?.eventLocation || 'TBD';
+  const eventDate = [data?.date, data?.startTime].filter(Boolean).join(' | ') || 'TBD';
+  const termCode = data?.termCode || 'N/A';
+  const eventPoints = Number.isFinite(data?.eventPoints)
+    ? `${data.eventPoints} Points`
+    : '0 Points';
 
  
 
@@ -61,7 +72,7 @@ const EventSuccessScreens = () => {
           <View style={styles.textContainer}>
             <Text style={styles.successText}>
               You have successfully checked in to the{'\n'}
-              <Text style={styles.boldText}>“Convocation”</Text> event
+              <Text style={styles.boldText}>“{eventName}”</Text> event
             </Text>
           </View>
 
@@ -72,34 +83,32 @@ const EventSuccessScreens = () => {
           <View style={styles.detailsContainer}>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
-                Event Name: <Text style={styles.detailBold}>Convocation</Text>
+                Event Name: <Text style={styles.detailBold}>{eventName}</Text>
               </Text>
             </View>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Date:{' '}
-                <Text style={styles.detailBold}>
-                  2025 - 08 - 12 | 10:00 AM
-                </Text>
+                <Text style={styles.detailBold}>{eventDate}</Text>
               </Text>
             </View>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Location:{' '}
-                <Text style={styles.detailBold}>Sports Center</Text>
+                <Text style={styles.detailBold}>{eventLocation}</Text>
               </Text>
             </View>
 
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
-                Term : <Text style={styles.detailBold}>25S1</Text>
+                Term : <Text style={styles.detailBold}>{termCode}</Text>
               </Text>
             </View>
 
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Points :{' '}
-                <Text style={styles.detailBold}>500 Points</Text>
+                <Text style={styles.detailBold}>{eventPoints}</Text>
               </Text>
             </View>
           </View>

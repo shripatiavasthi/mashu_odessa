@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -14,39 +14,69 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppGradient from '../../components/AppGradient';
 import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchRewardTermDetails} from '../../store/slices/rewardsSlice';
+import {selectAuth, selectRewards} from '../../store';
 
     const { width, height } = Dimensions.get('window');
 
 const TermRewardDetailsScreen = () => {
 
     const navigation = useNavigation(); 
+    const route = useRoute();
+    const dispatch = useDispatch();
+
+    const {accessToken, user} = useSelector(selectAuth);
+    const {termDetails, termDetailsStatus} = useSelector(selectRewards);
+
+    const {termCodeId, termCode, displayName, rewardAmount} = route.params || {};
 
   const [showEventModal, setShowEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const events = [
-    {
-      title: 'Convocation',
-      date: '2025-09-15 | 1:00 PM',
-      points: '500 Pts',
-    },
-    {
-      title: 'Orientation',
-      date: '2025-09-01 | 2:00 PM',
-      points: '500 Pts',
-    },
-    {
-      title: 'Workshop',
-      date: '2025-09-05 | 11:00 AM',
-      points: '500 Pts',
-    },
-    {
-      title: 'Seminar',
-      date: '2025-09-10 | 9:00 AM',
-      points: '100 Pts',
-    },
-  ];
+  useEffect(() => {
+    if (!accessToken || !user?.id || !termCodeId) {
+      return;
+    }
+    dispatch(
+      fetchRewardTermDetails({
+        accessToken,
+        userId: user.id,
+        termCodeId,
+      }),
+    );
+  }, [accessToken, dispatch, termCodeId, user?.id]);
+
+  const events = useMemo(() => {
+    const list = termDetails?.events;
+    if (!Array.isArray(list)) {
+      return [];
+    }
+    return list.map(item => ({
+      id: item?.id || item?.eventId,
+      title: item?.name || item?.title || 'Event',
+      date: [item?.date, item?.startTime].filter(Boolean).join(' | ') || 'TBD',
+      points: Number.isFinite(item?.eventPoints)
+        ? `${item.eventPoints} Pts`
+        : item?.points || '0 Pts',
+      location: item?.location || 'TBD',
+      termCode: item?.termCode || termCode || '',
+      checkInDate:
+        item?.checkInDate ||
+        item?.checkInTime ||
+        item?.checkInAt ||
+        'TBD',
+    }));
+  }, [termDetails, termCode]);
+
+  const totalReward =
+    termDetails?.totalReward ??
+    termDetails?.rewardAmount ??
+    (typeof rewardAmount === 'string'
+      ? Number(rewardAmount.replace(/[^0-9.]/g, ''))
+      : rewardAmount) ??
+    0;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -72,7 +102,8 @@ const TermRewardDetailsScreen = () => {
         <View style={styles.ribbonContainer}>
           <ImageBackground source={require('../../assets/Image/RewardHead.png')} style={styles.ribbon}>
             <Text style={styles.ribbonText}>
-              Total reward by term 25F1 : $25
+              Total reward by term {termCode || displayName || ''} : $
+              {Number.isFinite(totalReward) ? totalReward : 0}
             </Text>
           </ImageBackground>
         </View>
@@ -81,7 +112,7 @@ const TermRewardDetailsScreen = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
           {events.map((item, index) => (
-            <View key={index} style={styles.cardSpace}>
+            <View key={item.id || index} style={styles.cardSpace}>
               <TouchableOpacity
                 style={styles.card}
                 onPress={() => {
@@ -119,11 +150,13 @@ const TermRewardDetailsScreen = () => {
               </View>
               <View style={styles.modalDivider} />
               <View style={styles.labelConatiner}>
-                <Text style={styles.label}>Term : <Text style={styles.value}>25F1</Text></Text>
+                <Text style={styles.label}>
+                  Term : <Text style={styles.value}>{selectedEvent?.termCode || termCode || ''}</Text>
+                </Text>
               </View>
               <View style={styles.midValConatiner}>
                 <Text style={styles.label}>
-                  Event Location: <Text style={styles.value}>Sports Center</Text>
+                  Event Location: <Text style={styles.value}>{selectedEvent?.location || 'TBD'}</Text>
                 </Text>
               </View>
 
@@ -132,13 +165,13 @@ const TermRewardDetailsScreen = () => {
                 <Text style={styles.label}>Event Date</Text>
               </View>
               <View style={styles.valueConatiner}>
-                <Text style={styles.value}>2025 - 08 - 12 | 10:00 AM</Text>
+                <Text style={styles.value}>{selectedEvent?.date || 'TBD'}</Text>
               </View>
               <View style={styles.labelConatiner}>
                 <Text style={styles.label}>Event Check-In Date</Text>
               </View>
               <View style={styles.valueConatiner}>
-                <Text style={styles.value}>2025 - 08 - 12 | 10:00 AM</Text>
+                <Text style={styles.value}>{selectedEvent?.checkInDate || 'TBD'}</Text>
               </View>
               <View style={styles.modalDivider} />
               <View style={styles.pointMdConatiner}>

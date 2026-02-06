@@ -36,6 +36,8 @@ const ENDPOINTS = {
   userUpcomingEvents: userId => `/api/v1/oc/app/events/user/${userId}/upcoming`,
   faqsList: '/api/v1/oc/app/faqs/list',
   userRewards: userId => `/api/v1/oc/app/rewards/${userId}`,
+  userRewardsByTerm: (termCodeId, userId) =>
+    `/api/v1/oc/app/rewards/term/${termCodeId}/user/${userId}`,
 };
 
 const getConfig = () => CONFIG[ENVIRONMENT] || CONFIG.production;

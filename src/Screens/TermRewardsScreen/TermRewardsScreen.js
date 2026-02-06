@@ -59,6 +59,7 @@ const RewardsScreen = ({ onMenuPress }) => {
       Array.isArray(rewardTerms)
         ? rewardTerms.map(term => ({
             key: term?.termCodeId || term?.termCode,
+            termCodeId: term?.termCodeId || null,
             title: term?.displayName || term?.termCode || 'Term',
             term: term?.termCode || '',
             points: Number.isFinite(term?.points) ? `${term.points}` : '0',
@@ -71,10 +72,17 @@ const RewardsScreen = ({ onMenuPress }) => {
     [rewardTerms],
   );
 
-  const TermCard = ({ title, term, points, reward, status }) => (
+  const TermCard = ({ title, term, points, reward, status, termCodeId }) => (
     <View style={styles.cardContainer}>
       <TouchableOpacity style={styles.card}
-        onPress={() => { navigation.navigate('TermRewardDetailsScreen') }}
+        onPress={() => {
+          navigation.navigate('TermRewardDetailsScreen', {
+            termCodeId,
+            termCode: term,
+            displayName: title,
+            rewardAmount: reward,
+          });
+        }}
       >
         <View style={styles.cardTopRow}>
           <View>
@@ -175,6 +183,7 @@ const RewardsScreen = ({ onMenuPress }) => {
                 points={term.points}
                 reward={term.reward}
                 status={term.status}
+                termCodeId={term.termCodeId}
               />
             ))}
           </View>

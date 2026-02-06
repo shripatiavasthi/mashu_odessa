@@ -21,17 +21,17 @@ const RewardPointsModal = ({
 }) => {
   const resolvedGoalPoints = goalPointsData || {};
   const goalPoints =
-    Number.isFinite(resolvedGoalPoints.goalPoints) ? resolvedGoalPoints.goalPoints : 1500;
+    Number.isFinite(resolvedGoalPoints.goalPoints) ? resolvedGoalPoints.goalPoints : 0;
   const goalRewards =
-    Number.isFinite(resolvedGoalPoints.goalRewards) ? resolvedGoalPoints.goalRewards : 25;
+    Number.isFinite(resolvedGoalPoints.goalRewards) ? resolvedGoalPoints.goalRewards : 0;
   const ddPoints =
-    Number.isFinite(resolvedGoalPoints.ddPoints) ? resolvedGoalPoints.ddPoints : 3000;
+    Number.isFinite(resolvedGoalPoints.ddPoints) ? resolvedGoalPoints.ddPoints : 0;
   const ddRewards =
-    Number.isFinite(resolvedGoalPoints.ddRewards) ? resolvedGoalPoints.ddRewards : 50;
+    Number.isFinite(resolvedGoalPoints.ddRewards) ? resolvedGoalPoints.ddRewards : 0;
   const csPoints =
-    Number.isFinite(resolvedGoalPoints.csPoints) ? resolvedGoalPoints.csPoints : 3200;
+    Number.isFinite(resolvedGoalPoints.csPoints) ? resolvedGoalPoints.csPoints : 0;
   const csRewards =
-    Number.isFinite(resolvedGoalPoints.csRewards) ? resolvedGoalPoints.csRewards : 100;
+    Number.isFinite(resolvedGoalPoints.csRewards) ? resolvedGoalPoints.csRewards : 0;
   const ocReward =
     Number.isFinite(ocSuccessRewards?.ocSuccessReward)
       ? ocSuccessRewards.ocSuccessReward
@@ -83,26 +83,6 @@ const RewardPointsModal = ({
               <Text style={styles.divider}>|</Text>
               <Text style={styles.amount}>$ {csRewards}</Text>
             </View>
-
-            {ocReward !== null && (
-              <View style={styles.row}>
-                <Text style={styles.label}>OC Success Reward</Text>
-                <Text style={styles.divider}>|</Text>
-                <Text style={styles.points}>🏁</Text>
-                <Text style={styles.divider}>|</Text>
-                <Text style={styles.amount}>$ {ocReward}</Text>
-              </View>
-            )}
-
-            {ocBonus !== null && (
-              <View style={styles.row}>
-                <Text style={styles.label}>OC Success Reward Bonus</Text>
-                <Text style={styles.divider}>|</Text>
-                <Text style={styles.points}>🏁</Text>
-                <Text style={styles.divider}>|</Text>
-                <Text style={styles.amount}>$ {ocBonus}</Text>
-              </View>
-            )}
 
             {/* <TouchableOpacity style={styles.closeBtn} onPress={onClose}>
               <Text style={styles.closeText}>Close</Text>

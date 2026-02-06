@@ -5,12 +5,14 @@ import authReducer from './slices/authSlice';
 import checkInReducer from './slices/checkInSlice';
 import termReducer from './slices/termSlice';
 import eventsReducer from './slices/eventsSlice';
+import faqReducer from './slices/faqSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   checkIn: checkInReducer,
   terms: termReducer,
   events: eventsReducer,
+  faq: faqReducer,
 });
 
 const persistConfig = {
@@ -35,3 +37,4 @@ export const selectAuth = state => state.auth;
 export const selectCheckIn = state => state.checkIn;
 export const selectTerms = state => state.terms;
 export const selectEvents = state => state.events;
+export const selectFaq = state => state.faq;

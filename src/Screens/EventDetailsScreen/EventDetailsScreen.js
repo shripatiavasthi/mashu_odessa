@@ -48,28 +48,6 @@ const EventDetailsScreen = () => {
   const Divider = () => <View style={styles.divider} />;
 
 
-
-// checkInTime
-// : 
-// "2026-02-04T07:31:19.225Z"
-// date
-// : 
-// "2026-02-03"
-// eventPoints
-// : 
-// 1500
-// id
-// : 
-// "9affc615-9cde-4e4e-b065-ec0583ed9e8d"
-// location
-// : 
-// "Sports Center"
-// name
-// : 
-// "Board Meeting 3"
-// startTime
-// : 
-// "11:00:00"
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>

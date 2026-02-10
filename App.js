@@ -26,30 +26,53 @@ const Stack = createStackNavigator();
 function DataBootstrapper() {
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(selectAuth);
-  const { items: termItems, status: termStatus, goalPointsStatus } = useSelector(selectTerms);
-  const { status: eventsStatus, upcomingStatus } = useSelector(selectEvents);
-  const { status: faqStatus } = useSelector(selectFaq);
-  const { status: rewardsStatus } = useSelector(selectRewards);
+  const {
+    items: termItems,
+    status: termStatus,
+    goalPoints,
+    goalPointsStatus,
+  } = useSelector(selectTerms);
+  const {
+    items: eventItems,
+    upcomingItems,
+    status: eventsStatus,
+    upcomingStatus,
+  } = useSelector(selectEvents);
+  const { items: faqItems, status: faqStatus } = useSelector(selectFaq);
+  const { terms: rewardsTerms, status: rewardsStatus } =
+    useSelector(selectRewards);
 
   useEffect(() => {
     if (!accessToken) return;
 
-    if (termStatus === 'idle') {
+    if (termStatus !== 'loading' && termItems.length === 0) {
       dispatch(fetchTermCodes({ accessToken }));
     }
 
-    if (faqStatus === 'idle') {
+    if (faqStatus !== 'loading' && faqItems.length === 0) {
       dispatch(fetchFaqs({ accessToken }));
     }
 
-    if (user?.id && upcomingStatus === 'idle') {
+    if (user?.id && upcomingStatus !== 'loading' && upcomingItems.length === 0) {
       dispatch(fetchUpcomingEvents({ accessToken, userId: user.id }));
     }
 
-    if (user?.id && rewardsStatus === 'idle') {
+    if (user?.id && rewardsStatus !== 'loading' && rewardsTerms.length === 0) {
       dispatch(fetchRewards({ accessToken, userId: user.id }));
     }
-  }, [accessToken, dispatch, faqStatus, rewardsStatus, termStatus, upcomingStatus, user?.id]);
+  }, [
+    accessToken,
+    dispatch,
+    faqItems.length,
+    faqStatus,
+    rewardsStatus,
+    rewardsTerms.length,
+    termItems.length,
+    termStatus,
+    upcomingItems.length,
+    upcomingStatus,
+    user?.id,
+  ]);
 
   useEffect(() => {
     if (!accessToken || !user?.id || !Array.isArray(termItems) || termItems.length === 0) {
@@ -59,14 +82,23 @@ function DataBootstrapper() {
     const preferred = termItems.find(term => term?.currentTerm) || termItems[0];
     if (!preferred?.id) return;
 
-    if (eventsStatus === 'idle') {
+    if (eventsStatus !== 'loading' && eventItems.length === 0) {
       dispatch(fetchEventsByTerm({ accessToken, userId: user.id, termId: preferred.id }));
     }
 
-    if (goalPointsStatus === 'idle') {
+    if (goalPointsStatus !== 'loading' && goalPoints.length === 0) {
       dispatch(fetchGoalPoints({ accessToken, termCodeId: preferred.id }));
     }
-  }, [accessToken, dispatch, eventsStatus, goalPointsStatus, termItems, user?.id]);
+  }, [
+    accessToken,
+    dispatch,
+    eventItems.length,
+    eventsStatus,
+    goalPoints.length,
+    goalPointsStatus,
+    termItems,
+    user?.id,
+  ]);
 
   return null;
 }

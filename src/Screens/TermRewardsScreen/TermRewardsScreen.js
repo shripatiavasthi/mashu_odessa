@@ -9,30 +9,59 @@ import {
   Platform,
   Image,
   ImageBackground,
-  Modal
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
 import RewardPointsModal from '../../components/RewardPointsModal';
 import { colors, typography } from '../../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchRewards} from '../../store/slices/rewardsSlice';
-import {selectAuth, selectRewards} from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchGoalPoints } from '../../store/slices/termSlice';
+import { selectAuth, selectTerms } from '../../store';
 
 import Icon from 'react-native-vector-icons/Entypo';
-
 
 const { height, width } = Dimensions.get('window');
 
 const RewardsScreen = ({ onMenuPress }) => {
-
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {accessToken, user} = useSelector(selectAuth);
-  const {terms: rewardTerms, ocSuccessReward, status: rewardsStatus} = useSelector(selectRewards);
+
+  const { accessToken } = useSelector(selectAuth);
+  const { items: termItems, goalPoints, ocSuccessRewards, status: termStatus } =
+    useSelector(selectTerms);
+
+  const [showModal, setShowModal] = useState(false);
+  const [showDecemberModal, setShowDecemberModal] = useState(false);
+  const [selectedTermId, setSelectedTermId] = useState(null);
+
+
+  useEffect(() => {
+    if (!termItems?.length || selectedTermId) return;
+
+    const currentTerm = termItems.find(t => t.currentTerm === true);
+    const fallbackTerm = termItems[0];
+
+    const targetTerm = currentTerm || fallbackTerm;
+
+    if (targetTerm?.id) {
+      setSelectedTermId(targetTerm.id);
+    }
+  }, [termItems, selectedTermId]);
+
+  
+  useEffect(() => {
+    if (!accessToken || !selectedTermId || termStatus === 'loading') return;
+
+    dispatch(
+      fetchGoalPoints({
+        accessToken,
+        termCodeId: selectedTermId,
+      })
+    );
+  }, [accessToken, selectedTermId, dispatch, termStatus]);
 
   const handleMenuPress = () => {
     if (onMenuPress) {
@@ -42,24 +71,12 @@ const RewardsScreen = ({ onMenuPress }) => {
     }
   };
 
-
-
-  const [showModal, setShowModal] = useState(false);
-  const [showDecemberModal, setShowDecemberModal] = useState(false);
-
-  useEffect(() => {
-    if (!accessToken || !user?.id || rewardsStatus !== 'idle') {
-      return;
-    }
-    dispatch(fetchRewards({accessToken, userId: user.id}));
-  }, [accessToken, dispatch, rewardsStatus, user?.id]);
-
   const termCards = useMemo(
     () =>
-      Array.isArray(rewardTerms)
-        ? rewardTerms.map(term => ({
-            key: term?.termCodeId || term?.termCode,
-            termCodeId: term?.termCodeId || null,
+      Array.isArray(termItems)
+        ? termItems.map(term => ({
+            key: term?.id || term?.termCode,
+            termCodeId: term?.id || null,
             title: term?.displayName || term?.termCode || 'Term',
             term: term?.termCode || '',
             points: Number.isFinite(term?.points) ? `${term.points}` : '0',
@@ -69,12 +86,13 @@ const RewardsScreen = ({ onMenuPress }) => {
               : '$ 0',
           }))
         : [],
-    [rewardTerms],
+    [termItems],
   );
 
   const TermCard = ({ title, term, points, reward, status, termCodeId }) => (
     <View style={styles.cardContainer}>
-      <TouchableOpacity style={styles.card}
+      <TouchableOpacity
+        style={styles.card}
         onPress={() => {
           navigation.navigate('TermRewardDetailsScreen', {
             termCodeId,
@@ -82,8 +100,7 @@ const RewardsScreen = ({ onMenuPress }) => {
             displayName: title,
             rewardAmount: reward,
           });
-        }}
-      >
+        }}>
         <View style={styles.cardTopRow}>
           <View>
             <View style={styles.titleRow}>
@@ -96,10 +113,10 @@ const RewardsScreen = ({ onMenuPress }) => {
                 )}
               </View>
               <View>
-                <ImageBackground source={require('../../assets/Image/RewardIcon.png')}
+                <ImageBackground
+                  source={require('../../assets/Image/RewardIcon.png')}
                   style={styles.rewardTag}
-                  resizeMode='contain'
-                >
+                  resizeMode="contain">
                   <Text style={styles.rewardText}>{reward}</Text>
                 </ImageBackground>
               </View>
@@ -109,18 +126,13 @@ const RewardsScreen = ({ onMenuPress }) => {
               <View style={styles.pointCon}>
                 <Text style={styles.pointsText}>
                   Points: {points}{' '}
-                  {status ? (
-                    <Text style={styles.pointsItalic}>({status})</Text>
-                  ) : null}
+                  {status ? <Text style={styles.pointsItalic}>({status})</Text> : null}
                 </Text>
-                
-                                                <Icon name="chevron-with-circle-right" size={18} color="#666666" />
-                
 
+                <Icon name="chevron-with-circle-right" size={18} color="#666666" />
               </View>
             )}
           </View>
-
         </View>
       </TouchableOpacity>
     </View>
@@ -129,18 +141,13 @@ const RewardsScreen = ({ onMenuPress }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
-        {/* <AppHeader /> */}
-
-        <LinearGradient
-          colors={['#2E6FB6', '#4DA3DA']}
-          style={styles.header}>
-          <TouchableOpacity
-            style={styles.menuContainer}
-            onPress={handleMenuPress}>
+        <LinearGradient colors={['#2E6FB6', '#4DA3DA']} style={styles.header}>
+          <TouchableOpacity style={styles.menuContainer} onPress={handleMenuPress}>
             <Image
               source={require('../../assets/Image/Menu.png')}
               resizeMode="contain"
-              style={styles.menuIcon} />
+              style={styles.menuIcon}
+            />
           </TouchableOpacity>
 
           <View style={styles.logoContainer}>
@@ -150,27 +157,24 @@ const RewardsScreen = ({ onMenuPress }) => {
               style={styles.logo}
             />
 
-
             <View style={styles.filterContainer}>
-              {/* <TouchableOpacity style={styles.filterCon}>
-                                            <Text style={styles.filterTxt}>1000 Pts</Text>
-                                        </TouchableOpacity> */}
-
               <TouchableOpacity style={styles.dropDownCon}>
-                <Text style={styles.filterTxt}>2025</Text>
-                <Image source={require('../../assets/Image/drop_down.png')} resizeMode='contain' style={styles.dropImgStyle} />
+                <Text style={styles.filterTxt}>
+                  {termItems.find(t => t.id === selectedTermId)?.termCode || 'Term'} 
+                  {/* 2026 */}
+                </Text>
+                <Image
+                  source={require('../../assets/Image/drop_down.png')}
+                  resizeMode="contain"
+                  style={styles.dropImgStyle}
+                />
               </TouchableOpacity>
             </View>
-
-
-
           </View>
         </LinearGradient>
 
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}>
-          {/* Term Rewards */}
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          
           <View style={styles.sectionContainer}>
             <View style={styles.headerContainer}>
               <Text style={styles.sectionTitle}>Term Rewards</Text>
@@ -188,11 +192,11 @@ const RewardsScreen = ({ onMenuPress }) => {
             ))}
           </View>
 
+          {/* December Bonus */}
           <View style={styles.sectionContainer}>
             <View style={styles.headerContainer}>
               <Text style={styles.sectionTitle}>December Bonus</Text>
             </View>
-            {/* <TermCard title="December Bonus" reward="$ 25" /> */}
 
             <View style={styles.decSpaceContainer}>
               <View style={styles.cardDecContainer}>
@@ -200,32 +204,31 @@ const RewardsScreen = ({ onMenuPress }) => {
                   <View style={styles.decCon}>
                     <Text style={styles.cardTitle}>December Bonus</Text>
                     <TouchableOpacity onPress={() => setShowDecemberModal(true)}>
-                      {/* <Text style={styles.termText}>mashu</Text> */}
-                      <Image source={require('../../assets/Image/Info.png')} style={styles.infoImgStyle} resizeMode='contain' />
+                      <Image
+                        source={require('../../assets/Image/Info.png')}
+                        style={styles.infoImgStyle}
+                        resizeMode="contain"
+                      />
                     </TouchableOpacity>
                   </View>
                   <View>
-                    <ImageBackground source={require('../../assets/Image/RewardIcon.png')}
+                    <ImageBackground
+                      source={require('../../assets/Image/RewardIcon.png')}
                       style={styles.rewardTag}
-                      resizeMode='contain'
-                    >
+                      resizeMode="contain">
                       <Text style={styles.rewardText}>$ 25</Text>
                     </ImageBackground>
                   </View>
                 </View>
               </View>
             </View>
-
           </View>
 
-
+          
           <View style={styles.sectionContainer}>
             <View style={styles.headerContainer}>
               <Text style={styles.sectionTitle}>OC Success Rewards</Text>
             </View>
-
-            {/* <TermCard title="OC Success Reward" reward="$ 25" />
-            <TermCard title="OC Success Reward Bonus" reward="$ 200" /> */}
 
             <View style={styles.decSpaceContainer}>
               <TouchableOpacity style={styles.cardDecContainer}>
@@ -234,12 +237,13 @@ const RewardsScreen = ({ onMenuPress }) => {
                     <Text style={styles.cardTitle}>OC Success Reward</Text>
                   </View>
                   <View>
-                    <ImageBackground source={require('../../assets/Image/RewardIcon.png')}
+                    <ImageBackground
+                      source={require('../../assets/Image/RewardIcon.png')}
                       style={styles.rewardTag}
-                      resizeMode='contain'>
+                      resizeMode="contain">
                       <Text style={styles.rewardText}>
-                        {Number.isFinite(ocSuccessReward?.ocSuccessReward)
-                          ? `$ ${ocSuccessReward.ocSuccessReward}`
+                        {Number.isFinite(ocSuccessRewards?.ocSuccessReward)
+                          ? `$ ${ocSuccessRewards.ocSuccessReward}`
                           : '$ 0'}
                       </Text>
                     </ImageBackground>
@@ -248,22 +252,22 @@ const RewardsScreen = ({ onMenuPress }) => {
               </TouchableOpacity>
             </View>
 
-
             <View style={styles.decSpaceContainer}>
-              <TouchableOpacity style={styles.cardDecContainer}
-                onPress={() => { navigation.navigate('SuccessRewardBonus') }}>
+              <TouchableOpacity
+                style={styles.cardDecContainer}
+                onPress={() => navigation.navigate('SuccessRewardBonus')}>
                 <View style={styles.decebmerinfoCon}>
                   <View style={styles.decCon}>
                     <Text style={styles.cardTitle}>OC Success Reward Bonus</Text>
                   </View>
                   <View>
-                    <ImageBackground source={require('../../assets/Image/RewardIcon.png')}
+                    <ImageBackground
+                      source={require('../../assets/Image/RewardIcon.png')}
                       style={styles.rewardTag}
-                      resizeMode='contain'
-                    >
+                      resizeMode="contain">
                       <Text style={styles.rewardText}>
-                        {Number.isFinite(ocSuccessReward?.ocSuccessRewardBonus)
-                          ? `$ ${ocSuccessReward.ocSuccessRewardBonus}`
+                        {Number.isFinite(ocSuccessRewards?.ocSuccessRewardBonus)
+                          ? `$ ${ocSuccessRewards.ocSuccessRewardBonus}`
                           : '$ 0'}
                       </Text>
                     </ImageBackground>
@@ -271,7 +275,6 @@ const RewardsScreen = ({ onMenuPress }) => {
                 </View>
               </TouchableOpacity>
             </View>
-
           </View>
         </ScrollView>
 
@@ -279,7 +282,6 @@ const RewardsScreen = ({ onMenuPress }) => {
           onPress={() => setShowModal(prev => !prev)}
           style={styles.fab}
           activeOpacity={0.8}>
-
           <Image
             source={
               showModal
@@ -288,26 +290,23 @@ const RewardsScreen = ({ onMenuPress }) => {
             }
           />
         </TouchableOpacity>
+
         <RewardPointsModal
           visible={showModal}
           onClose={() => setShowModal(false)}
+          goalPointsData={goalPoints?.[0] || {}}
+          ocSuccessRewards={ocSuccessRewards || {}}
         />
 
-
-        <Modal
-          visible={showDecemberModal}
-          transparent
-          animationType="fade"
-        >
+        {/* December Bonus Modal */}
+        <Modal visible={showDecemberModal} transparent animationType="fade">
           <View style={styles.modalOverlay}>
             <View style={styles.decModalContainer}>
-
               <View style={styles.decHeadContainer}>
                 <Text style={styles.decTitle}>December Bonus</Text>
               </View>
               <View style={styles.modalDivider} />
 
-              {/* Icon */}
               <View style={styles.iconContainer}>
                 <Image
                   source={require('../../assets/Image/Calendar.png')}
@@ -317,22 +316,19 @@ const RewardsScreen = ({ onMenuPress }) => {
               </View>
 
               <View style={styles.criteriaContainer}>
-                <Text style={styles.decHeading}>
-                  Employee Eligibility Criteria
-                </Text>
+                <Text style={styles.decHeading}>Employee Eligibility Criteria</Text>
               </View>
 
               <View style={styles.decContainer}>
                 <Text style={styles.decText}>
-                  To be eligible, you must be a full-time employee with continuous
-                  employment for the past year.
+                  To be eligible, you must be a full-time employee with continuous employment
+                  for the past year.
                 </Text>
               </View>
               <View style={styles.txtDecContainer}>
                 <Text style={styles.decText}>
-                  For December 2025, you must have been full-time from September
-                  2024 to December 2025 and earned at least 1,500 points in each
-                  term (F1, F2, S1, S2).
+                  For December 2025, you must have been full-time from September 2024 to
+                  December 2025 and earned at least 1,500 points in each term (F1, F2, S1, S2).
                 </Text>
               </View>
 
@@ -341,24 +337,19 @@ const RewardsScreen = ({ onMenuPress }) => {
               <View style={styles.btnSpaceCon}>
                 <TouchableOpacity
                   style={styles.closeBtn}
-                  onPress={() => setShowDecemberModal(false)}
-                >
+                  onPress={() => setShowDecemberModal(false)}>
                   <Text style={styles.closeText}>Close</Text>
                 </TouchableOpacity>
               </View>
-
             </View>
           </View>
         </Modal>
-
-
       </AppGradient>
     </SafeAreaView>
   );
 };
 
 export default RewardsScreen;
-
 
 const styles = StyleSheet.create({
   safeArea: {

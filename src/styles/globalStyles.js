@@ -20,7 +20,9 @@ export const colors = {
   border: '#006BB640',
   surface: '#F5F9FF',
   boderLight: '#99999980',
-  redColor: '#FF0000'
+  redColor: '#FF0000',
+  lightBlue: '#f0f9ff',
+  nameBack: '#f2f7fb'
 };
 
 export const typography = {

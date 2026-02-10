@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     width: 65,
     height: 65,
     borderRadius: 34,
-    backgroundColor: 'rgba(231, 207, 209)',
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: '#1f1f1f',
@@ -220,9 +220,9 @@ const styles = StyleSheet.create({
   },
 
   avatarText: {
-    fontSize: 25,
+    fontSize: 28,
     fontWeight: '700',
-    color: '#4f151d',
+    color: colors.primary,
   },
 
   nameCon: {

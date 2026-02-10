@@ -50,14 +50,14 @@ const CheckInSuccessScreen = ({ navigation }) => {
           <View style={styles.textContainer}>
             <Text style={styles.successText}>
               You have successfully checked in to the{'\n'}
-              <Text style={styles.boldText}>“Convocation”</Text> event
+              <Text style={styles.boldText}>"{data.eventName}"</Text> event
             </Text>
           </View>
 
-          {/* Divider */}
+          
           <View style={styles.divider} />
 
-          {/* Details */}
+          
           <View style={styles.detailsContainer}>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>

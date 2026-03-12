@@ -10,11 +10,24 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
-// import Icon from 'react-native-vector-icons/Ionicons';
+import { useRoute } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/Entypo';
 
 const { height, width } = Dimensions.get('window');
 
 const CheckInSuccessScreen = ({ navigation }) => {
+  const route = useRoute();
+  const data = route?.params?.response?.data
+
+  const handleVisitEvents = () => {
+    const parentNav = navigation.getParent?.();
+    if (parentNav) {
+      parentNav.navigate('Events', { initialTab: 'MY_EVENTS' });
+      return;
+    }
+    navigation.navigate('Events', { initialTab: 'MY_EVENTS' });
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
@@ -26,65 +39,64 @@ const CheckInSuccessScreen = ({ navigation }) => {
           <View style={styles.iconOuter}>
             {/* <View style={styles.iconCircle}> */}
             <Image
-              source={require('../../assets/Image/Calendar.png')}
+              source={require('../../assets/Image/Success.gif')}
               resizeMode="contain"
               style={styles.checkIcon}
             />
             {/* </View> */}
           </View>
 
-
           <View style={styles.textContainer}>
             <Text style={styles.successText}>
               You have successfully checked in to the{'\n'}
-              <Text style={styles.boldText}>“Convocation”</Text> event
+              <Text style={styles.boldText}>"{data.eventName}"</Text> event
             </Text>
           </View>
 
-          {/* Divider */}
           <View style={styles.divider} />
 
-          {/* Details */}
           <View style={styles.detailsContainer}>
+
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
-                Event Name: <Text style={styles.detailBold}>Convocation</Text>
+                Event Name: <Text style={styles.detailBold}>{data.eventName}</Text>
               </Text>
             </View>
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Date:{' '}
                 <Text style={styles.detailBold}>
-                  2025 - 08 - 12 | 10:00 AM
+                  {data.date} | {data.startTime}
                 </Text>
-              </Text>
-            </View>
-            <View style={styles.detailRowContainer}>
-              <Text style={styles.detailText}>
-                Event Location:{' '}
-                <Text style={styles.detailBold}>Sports Center</Text>
               </Text>
             </View>
 
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
-                Term : <Text style={styles.detailBold}>25S1</Text>
+                Event Location:{' '}
+                <Text style={styles.detailBold}>{data.eventLocation}</Text>
               </Text>
             </View>
-            
+
+            <View style={styles.detailRowContainer}>
+              <Text style={styles.detailText}>
+                Term : <Text style={styles.detailBold}>{data.termCode}</Text>
+              </Text>
+            </View>
+
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>
                 Event Points :{' '}
-                <Text style={styles.detailBold}>500 Points</Text>
+                <Text style={styles.detailBold}>{data.eventPoints}</Text>
               </Text>
             </View>
           </View>
 
-          {/* Button */}
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('EventsScreen')}
+              onPress={handleVisitEvents}
             >
               <Text style={styles.buttonText}>Visit Events</Text>
             </TouchableOpacity>
@@ -128,11 +140,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkIcon: {
-
+    height: 100,
+    width: 100
     // backgroundColor: 'cyan'
   },
 
-  /* Text */
+  
   textContainer: {
     height: height / 10,
     width: width / 1.2,
@@ -150,7 +163,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  /* Divider */
+  
   divider: {
     height: 1,
     width: width / 1.2,
@@ -159,7 +172,7 @@ const styles = StyleSheet.create({
 
   },
 
-  /* Details */
+
   detailsContainer: {
     height: height / 5,
     width: width / 1.2,
@@ -181,7 +194,7 @@ const styles = StyleSheet.create({
     color: '#414651',
   },
 
-  /* Button */
+
   buttonContainer: {
     height: height / 6,
     width: width / 1,
@@ -197,10 +210,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
 });
-

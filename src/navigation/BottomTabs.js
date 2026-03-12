@@ -6,13 +6,14 @@ import {
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack'; 
-import {colors, typography} from '../styles/globalStyles';
 
 import EventCheckInScreen from '../Screens/EventCheckInScreen/EventCheckInScreen';
 import EventsScreen from '../Screens/EventsScreen/EventsScreen';
 import TermRewardsScreen from '../Screens/TermRewardsScreen/TermRewardsScreen';
 import FaqScreen from '../Screens/FaqScreen/FaqScreen';
 import CheckInSuccessScreen from '../Screens/CheckInSuccessScreen/CheckInSuccessScreen';
+import SuccessRewardBonus from '../Screens/TermRewardsScreen/SuccessRewardBonus'
+import { colors, typography } from '../styles/globalStyles';
 
 const { height, width } = Dimensions.get('window');
 const Tab = createBottomTabNavigator();
@@ -29,10 +30,9 @@ function CheckInStack() {
         name="CheckInSuccessScreen"
         component={CheckInSuccessScreen}
       />
-       <Stack.Screen
-        name="EventsScreen"
-        component={EventsScreen}
-      />
+       <Stack.Screen 
+       name="SuccessRewardBonus" 
+       component={SuccessRewardBonus} />
     </Stack.Navigator>
   );
 }
@@ -44,12 +44,11 @@ const BottomTabs = () => {
         headerShown: false,
         tabBarShowLabel: true,
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarInactiveTintColor: colors.textDark,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.label,
         tabBarIcon: ({ focused }) => {
           let icon;
-
           if (route.name === 'CheckIn') {
             icon = focused
               ? require('../assets/Image/Icons/CheckInOn.png')
@@ -76,8 +75,7 @@ const BottomTabs = () => {
             />
           );
         },
-      })}
-    >
+      })}>
       
       <Tab.Screen
         name="CheckIn"
@@ -88,8 +86,12 @@ const BottomTabs = () => {
       <Tab.Screen
         name="Events"
         component={EventsScreen}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('Events', { initialTab: 'MY_EVENTS' });
+          },
+        })}
       />
-
       <Tab.Screen
         name="Rewards"
         component={TermRewardsScreen}
@@ -100,6 +102,7 @@ const BottomTabs = () => {
         component={FaqScreen}
         options={{ tabBarLabel: "FAQ's" }}
       />
+      
     </Tab.Navigator>
   );
 };
@@ -108,12 +111,10 @@ export default BottomTabs;
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: height / 11,
+    height: height / 10,
     paddingTop: height / 80,
     paddingBottom: height / 60,
-    // borderTopLeftRadius: width / 18,
-    // borderTopRightRadius: width / 18,
-    backgroundColor: colors.white,
+    backgroundColor: '#FFFFFF',
     position: 'absolute',
     elevation: 8,
     shadowColor: '#000',
@@ -122,14 +123,13 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
   },
   icon: {
-    height: 22,
-    width: 22,
+    height: 25,
+    width: 25,
     resizeMode: 'contain'
   },
   label: {
-    fontSize: width / 32,
+    fontSize: 16,
     fontWeight: '600',
-    marginTop: height / 200,
-    fontFamily: typography.regular,
+    fontFamily: typography.bold
   },
 });

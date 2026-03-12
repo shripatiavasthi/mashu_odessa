@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,48 +7,33 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  Pressable,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
+import RewardPointsModal from '../../components/RewardPointsModal';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchFaqs} from '../../store/slices/faqSlice';
+import {selectAuth, selectFaq} from '../../store';
+
 
 const { height, width } = Dimensions.get('window');
 
 const FaqScreen = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
+  const {accessToken} = useSelector(selectAuth);
+  const {items: faqItems, status: faqStatus} = useSelector(selectFaq);
 
-  const faqData = [
-    {
-      question: 'What is OC All In?',
-      answer:
-        'OC All In is an incentive program that rewards Odessa College Employees for engaging in college activities',
-    },
-    {
-      question: 'Who is eligible?',
-      answer:
-        'All eligible Odessa College employees may participate in the OC All In program.',
-    },
-    {
-      question: 'What are the rewards?',
-      answer:
-        'Participants can earn points and redeem them for rewards based on engagement.',
-    },
-    {
-      question: 'How do I Participate?',
-      answer:
-        'You can participate by attending events, activities, and completing challenges.',
-    },
-    {
-      question: 'What are the event types?',
-      answer:
-        'Events include academic, social, wellness, and professional development activities.',
-    },
-    {
-      question: 'How do I claim my rewards?',
-      answer:
-        'Rewards can be claimed once eligibility criteria and point thresholds are met.',
-    },
-  ];
+  useEffect(() => {
+    if (!accessToken || faqStatus !== 'idle') {
+      return;
+    }
+    dispatch(fetchFaqs({accessToken}));
+  }, [accessToken, dispatch, faqStatus]);
 
   const toggleItem = index => {
     setActiveIndex(index === activeIndex ? -1 : index);
@@ -56,6 +41,7 @@ const FaqScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+
       <AppGradient style={styles.gradient}>
         <AppHeader />
 
@@ -63,11 +49,11 @@ const FaqScreen = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {faqData.map((item, index) => {
+          {faqItems.map((item, index) => {
             const isOpen = index === activeIndex;
 
             return (
-              <View key={index} style={styles.card}>
+              <View key={item?.id || index} style={styles.card}>
                 <TouchableOpacity
                   style={styles.questionRow}
                   onPress={() => toggleItem(index)}
@@ -91,11 +77,8 @@ const FaqScreen = () => {
           })}
         </ScrollView>
 
-        {/* Floating Info Button */}
-        <TouchableOpacity style={styles.fab}>
-          <Text style={styles.fabText}>i</Text>
-        </TouchableOpacity>
       </AppGradient>
+
     </SafeAreaView>
   );
 };
@@ -116,72 +99,57 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  /* FAQ Card */
+
   card: {
+
     width: width / 1.1,
     backgroundColor: '#FFFFFF',
-    borderRadius: width / 25,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#B9DCF5',
+    borderColor: '#00A2E54D',
     paddingHorizontal: width / 24,
-    paddingVertical: height / 45,
-    marginBottom: height / 40,
+    paddingVertical: height / 55,
+    marginBottom: height / 60,
+
   },
 
   questionRow: {
+    // backgroundColor: 'cyan',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+
   },
 
   questionText: {
+    
     width: width / 1.5,
-    fontSize: width / 22,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#344054',
+    color: '#414651',
+    lineHeight: 20
+
   },
 
   icon: {
-    fontSize: width / 16,
+    fontSize: width / 17,
     fontWeight: '600',
-    color: '#1D4E89',
-    lineHeight: width / 16,
+    color: '#006BB6',
+    lineHeight: 20,
   },
 
   divider: {
     height: 1,
     width: '100%',
     backgroundColor: '#D0D5DD',
-    marginVertical: height / 40,
+    marginVertical: height / 70,
   },
 
   answerText: {
-    fontSize: width / 26,
-    color: '#475467',
-    lineHeight: height / 35,
-  },
-
-  /* Floating Button */
-  fab: {
-    position: 'absolute',
-    right: width / 18,
-    bottom: Platform.OS === 'ios' ? height / 16 : height / 22,
-    height: width / 6,
-    width: width / 6,
-    borderRadius: width / 12,
-    backgroundColor: '#2E6FB6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-  },
-
-  fabText: {
-    color: '#FFFFFF',
-    fontSize: width / 18,
-    fontWeight: '700',
+    fontSize: 12,
+    color: '#414651',
+    lineHeight: 20,
+    fontFamily: 'OpenSons-Regular',
+    fontWeight: '400'
   },
 });

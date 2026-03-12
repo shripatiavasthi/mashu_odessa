@@ -16,7 +16,7 @@ const Splash = ({ navigation }) => {
   return (
     <AppGradient style={styles.mainContainer}>
       <Image 
-        source={require('../assets/Image/Logo.png')} 
+        source={require('../assets/Image/NewLogo.png')} 
         resizeMode='contain' 
         style={styles.imgstyleSize}
       />

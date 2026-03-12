@@ -34,6 +34,7 @@ target 'odessa_mobile_app' do
   pod 'GoogleUtilities', :modular_headers => true
   pod 'GoogleDataTransport', :modular_headers => true
   pod 'nanopb', :modular_headers => true
+  pod 'Firebase/Crashlytics'
 
   post_install do |installer|
     react_native_post_install(

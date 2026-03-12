@@ -3,11 +3,13 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import BottomTabs from './BottomTabs';
 import AppDrawerContent from '../components/AppDrawerContent';
 import {colors} from '../styles/globalStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   return (
+    
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
@@ -22,6 +24,7 @@ const DrawerNavigator = () => {
     >
       <Drawer.Screen name="Home" component={BottomTabs} />
     </Drawer.Navigator>
+    
   );
 };
 

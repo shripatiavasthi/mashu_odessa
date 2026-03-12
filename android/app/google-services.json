@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "236917131842",
-    "project_id": "infojini-69e06",
-    "storage_bucket": "infojini-69e06.firebasestorage.app"
+    "project_number": "30316853689",
+    "project_id": "odessa-college",
+    "storage_bucket": "odessa-college.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:236917131842:android:21dba832242e4f9d4efbdb",
+        "mobilesdk_app_id": "1:30316853689:android:fc4769a51267d90b35de68",
         "android_client_info": {
-          "package_name": "com.odessa_mobile_app"
+          "package_name": "com.infojini.odessadev"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB0EJZg3ddHTEueL-_imIzaMlwncrz3vNQ"
+          "current_key": "AIzaSyC5K6vC-_cwnyCCClL9CQfheMxXv_vBsVU"
         }
       ],
       "services": {

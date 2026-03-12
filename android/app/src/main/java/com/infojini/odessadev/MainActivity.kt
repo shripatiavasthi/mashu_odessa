@@ -1,4 +1,4 @@
-package com.odessa_mobile_app
+package com.infojini.odessadev
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

@@ -1,4 +1,4 @@
-package com.odessa_mobile_app
+package com.infojini.odessadev
 
 import android.app.Application
 import com.facebook.react.PackageList

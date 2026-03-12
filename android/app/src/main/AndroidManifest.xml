@@ -4,6 +4,12 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" android:minSdkVersion="33" />
+
+
     <application
         android:name=".MainApplication"
         android:label="@string/app_name"
@@ -14,7 +20,7 @@
         android:usesCleartextTraffic="${usesCleartextTraffic}"
         android:supportsRtl="true">
 
-        <!-- Firebase Messaging Service -->
+        
         <service
             android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService"
             android:exported="false">
@@ -23,7 +29,6 @@
             </intent-filter>
         </service>
 
-        <!-- Optional icon (safe) -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
@@ -39,12 +44,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <!-- ============================================ -->
-            <!-- Azure AD / Microsoft Entra ID Authentication -->
-            <!-- ============================================ -->
             
-            <!-- For react-native-azure-auth -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -54,33 +54,6 @@
                     android:host="${applicationId}"
                     android:pathPrefix="/android/callback" />
             </intent-filter>
-
-            <!-- OR For react-native-app-auth (comment out above if using this) -->
-            <!-- <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="${appAuthRedirectScheme}"
-                    android:host="oauth" />
-            </intent-filter> -->
-
         </activity>
-
-        <!-- Browser activity for Azure AD auth flow -->
-        <!-- Only needed for react-native-app-auth -->
-        <!-- Uncomment if using react-native-app-auth -->
-        <!-- <activity
-            android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            android:exported="true"
-            tools:node="replace">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="${appAuthRedirectScheme}" />
-            </intent-filter>
-        </activity> -->
-
     </application>
 </manifest>

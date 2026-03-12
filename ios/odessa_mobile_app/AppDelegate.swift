@@ -36,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     return true
   }
 
-  // 🔑 REQUIRED for OAuth redirect (Microsoft Login)
   func application(
     _ application: UIApplication,
     open url: URL,

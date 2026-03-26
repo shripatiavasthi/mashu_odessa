@@ -1,4 +1,3 @@
-// src/services/authService.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { refresh } from 'react-native-app-auth';
 import { Platform } from 'react-native';
@@ -12,7 +11,7 @@ const STORAGE_KEYS = {
   USER_DATA: '@auth/user_data',
 };
 
-// Same MSAL config as EmployeeLoginScreen
+
 const msalConfig = {
   clientId: env.azure.clientId,
   redirectUrl:
@@ -27,7 +26,6 @@ const msalConfig = {
   },
 };
 
-// ─── SAVE ────────────────────────────────────────────────────────────────────
 
 export const saveAuthSession = async ({
   msAccessToken,
@@ -51,7 +49,6 @@ export const saveAuthSession = async ({
   }
 };
 
-// ─── LOAD ────────────────────────────────────────────────────────────────────
 
 export const loadAuthSession = async () => {
   try {
@@ -65,7 +62,6 @@ export const loadAuthSession = async () => {
     const userRaw = map[STORAGE_KEYS.USER_DATA];
     const user = userRaw ? JSON.parse(userRaw) : null;
 
-    // No saved session at all
     if (!msRefreshToken || !backendAccessToken || !user) {
       return null;
     }
@@ -83,8 +79,6 @@ export const loadAuthSession = async () => {
   }
 };
 
-// ─── CLEAR ───────────────────────────────────────────────────────────────────
-
 export const clearAuthSession = async () => {
   try {
     await AsyncStorage.multiRemove(Object.values(STORAGE_KEYS));
@@ -94,19 +88,13 @@ export const clearAuthSession = async () => {
   }
 };
 
-// ─── CHECK EXPIRY ────────────────────────────────────────────────────────────
-
-// Returns true if the MS access token is expired or about to expire (5 min buffer)
 export const isMsTokenExpired = (msTokenExpiry) => {
   if (!msTokenExpiry) return true;
   const expiryTime = new Date(msTokenExpiry).getTime();
-  const bufferMs = 5 * 60 * 1000; // 5 minute early-refresh buffer
+  const bufferMs = 5 * 60 * 1000; 
   return Date.now() >= expiryTime - bufferMs;
 };
 
-// ─── REFRESH MS TOKEN ────────────────────────────────────────────────────────
-
-// Uses react-native-app-auth `refresh` to silently get a new MS access token
 export const refreshMsToken = async (msRefreshToken) => {
   try {
     const refreshResult = await refresh(msalConfig, {

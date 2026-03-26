@@ -7,9 +7,14 @@ import {
     TouchableOpacity,
     Dimensions,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
 import { colors, typography } from '../styles/globalStyles';
 import Icon from 'react-native-vector-icons/Entypo';
+
+import OcAllInIcon from '../assets/Image/svg/OcAllIn.svg';
+import Plc from '../assets/Image/svg/Plc.svg';
+import Thirty from '../assets/Image/svg/Thirty.svg';
+
 
 const { height, width } = Dimensions.get('screen')
 
@@ -18,6 +23,7 @@ const EmployeeLoginModal = ({
     onClose,
     onAllIn,
     onPLC,
+    onThirty
 }) => {
     return (
         <Modal
@@ -34,7 +40,7 @@ const EmployeeLoginModal = ({
 
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>Employee Login</Text>
+                        <Text style={styles.title}>Select a feature to proceed</Text>
                     </View>
 
                     <View style={styles.cardSpace}>
@@ -43,11 +49,8 @@ const EmployeeLoginModal = ({
                             onPress={onAllIn}>
                             <View style={styles.row}>
                                 <View style={styles.iconContainer}>
-                                    <Ionicons
-                                        name="person-outline"
-                                        size={35}
-                                        color="#006BB6"
-                                    />
+                                    <OcAllInIcon width={40} height={40} color={colors.primaryDark} />
+
                                 </View>
 
                                 <View style={styles.textBox}>
@@ -73,11 +76,7 @@ const EmployeeLoginModal = ({
                             onPress={onPLC}>
                             <View style={styles.row}>
                                 <View style={styles.iconContainer}>
-                                    <Ionicons
-                                        name="school-outline"
-                                        size={35}
-                                        color="#006BB6"
-                                    />
+                                    <Plc width={40} height={40} color={colors.primaryDark} />
                                 </View>
 
                                 <View style={styles.textBox}>
@@ -87,6 +86,32 @@ const EmployeeLoginModal = ({
                                     <View style={styles.cardDescBox}>
                                         <Text style={styles.subText}>
                                             Please log in to access the PLC credits
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.cardSpace}>
+                        <TouchableOpacity
+                            style={styles.card}
+                            onPress={onThirty}>
+                            <View style={styles.row}>
+                                <View style={styles.iconContainer}>
+                                    <Thirty width={40} height={40} color={colors.primaryDark} />
+                                </View>
+
+                                <View style={styles.textBox}>
+                                    <View style={styles.iOSBoxCon}>
+                                        <Text style={styles.cardTitle}>30 For 30 Fitness Challenge</Text>
+                                    </View>
+                                    <View style={styles.cardDescBox}>
+                                        <Text style={styles.subText}>
+                                            Please log in to access the fitness challenge
                                         </Text>
                                     </View>
                                 </View>

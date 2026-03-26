@@ -11,7 +11,7 @@ import {
   ImageBackground,
   Modal,
   Pressable,
-  RefreshControl,         
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppGradient from '../../components/AppGradient';
@@ -38,20 +38,17 @@ const RewardsScreen = ({ onMenuPress }) => {
   const { items: termItems, goalPoints, status: termStatus } = useSelector(selectTerms);
   const { terms, ocSuccessReward } = useSelector(selectRewards);
 
-  
+
   const [refreshing, setRefreshing] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [showDecemberModal, setShowDecemberModal] = useState(false);
   const [selectedTermId, setSelectedTermId] = useState(null);
 
-  
+
   const handleRefresh = useCallback(() => {
     if (!accessToken || !user?.id) return;
-
     setRefreshing(true);
-
-    
     dispatch(fetchRewards({ accessToken, userId: user.id }));
 
     if (selectedTermId) {
@@ -69,6 +66,7 @@ const RewardsScreen = ({ onMenuPress }) => {
   }, [dispatch, accessToken, user?.id, selectedTermId]);
 
   useEffect(() => {
+    if (!accessToken || !user?.id) return;
     dispatch(fetchRewards({ accessToken, userId: user.id }));
   }, [dispatch, accessToken, user?.id]);
 
@@ -189,26 +187,28 @@ const RewardsScreen = ({ onMenuPress }) => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={handleRefresh}
-              colors={['#006BB6']} 
-              tintColor="#006BB6" 
+              colors={['#006BB6']}
+              tintColor="#006BB6"
             />
           }>
-          <View style={styles.sectionContainer}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.sectionTitle}>Term Rewards</Text>
+          {terms && terms.length > 0 && (
+            <View style={styles.sectionContainer}>
+              <View style={styles.headerContainer}>
+                <Text style={styles.sectionTitle}>Term Rewards</Text>
+              </View>
+              {terms.map(term => (
+                <TermCard
+                  key={term.termCodeId}
+                  title={term.displayName}
+                  term={term.termCode}
+                  points={Number.isFinite(term?.points) ? `${term.points}` : '0'}
+                  reward={Number.isFinite(term?.rewardAmount) ? `$ ${term.rewardAmount}` : '$ 0'}
+                  status={term.status}
+                  termCodeId={term.termCodeId}
+                />
+              ))}
             </View>
-            {terms.map(term => (
-              <TermCard
-                key={term.termCodeId}
-                title={term.displayName}
-                term={term.termCode}
-                points={Number.isFinite(term?.points) ? `${term.points}` : '0'}
-                reward={Number.isFinite(term?.rewardAmount) ? `$ ${term.rewardAmount}` : '$ 0'}
-                status={term.status}
-                termCodeId={term.termCodeId}
-              />
-            ))}
-          </View>
+          )}
 
           <View style={styles.sectionContainer}>
             <View style={styles.headerContainer}>

@@ -73,34 +73,40 @@ inputContainer: {
   borderRadius: 8,
   backgroundColor: colors.white,
 },
-input: {
-  height: height / 20,  
+
+inputContainer: {
+  height: height / 18,               
   width: width / 1.2,
-  paddingHorizontal: 12,
-  fontSize: 14,  
-  fontFamily: typography.regular,
-  color: colors.textDark,
-  fontWeight: '600',
+  justifyContent: 'center',
   borderColor: colors.border,
   borderWidth: 1,
   borderRadius: 8,
-  
+  backgroundColor: colors.white,
+},
+input: {
+  height: height / 18,
+  width: width / 1.2,
+  paddingHorizontal: 12,
+  fontSize: 14,
+  fontFamily: typography.regular,
+  color: colors.textDark,
+  fontWeight: '600',
+                                    
 },
 
-  btnContainer: {
-    height: height / 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  button: {
-    height: height / 22,
-    width: width / 1.2,
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+ button: {
+  height: height / 20,             
+  width: width / 1.2,
+  backgroundColor: colors.primary,
+  borderRadius: 8,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+btnContainer: {
+  paddingVertical: height * 0.02,   
+  alignItems: 'center',
+  justifyContent: 'center',
+},
   disabledButton: {
     backgroundColor: '#A0A0A0',
   },

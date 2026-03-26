@@ -7,9 +7,12 @@ import termReducer from './slices/termSlice';
 import eventsReducer from './slices/eventsSlice';
 import faqReducer from './slices/faqSlice';
 import rewardsReducer from './slices/rewardsSlice';
+import appReducer from './slices/appSlice';
+
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  app: appReducer, 
   checkIn: checkInReducer,
   terms: termReducer,
   events: eventsReducer,

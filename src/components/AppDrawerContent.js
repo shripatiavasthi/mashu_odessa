@@ -10,18 +10,21 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { setActiveMenu } from '../store/slices/appSlice';
 
 import { colors, typography } from '../styles/globalStyles';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAuth } from '../store';
 import { logoutWithAccessToken, clearAuth } from '../store/slices/authSlice';
 import { clearAuthSession } from '../services/authService';
+// import { useNavigation } from '@react-navigation/native';
+import EmployeeLoginModal from '../components/EmployeeLoginModal';
 
 import LogoutModal from './LogoutModal';
 
 const { height, width } = Dimensions.get('window');
 
-const drawerItems = [
+const ocDrawerItems = [
   {
     label: 'Check-In',
     icon: require('../assets/Image/Icons/CheckInOn.png'),
@@ -51,11 +54,50 @@ const drawerItems = [
   },
 ];
 
-const AppDrawerContent = ({ navigation }) => {
+const plcDrawerItems = [
+  {
+    label: 'Check-In',
+    icon: require('../assets/Image/Icons/CheckInOn.png'),
+    tab: 'CheckIn',
+  },
+  {
+    label: 'My Events',
+    icon: require('../assets/Image/Icons/EventOn.png'),
+    tab: 'Events',
+    initialTab: 'MY_EVENTS',
+  },
+  {
+    label: 'Upcoming Events',
+    icon: require('../assets/Image/Icons/EventOn.png'),
+    tab: 'Events',
+    initialTab: 'UPCOMING_EVENTS',
+  },
+  {
+    label: 'Progress',
+    icon: require('../assets/Image/Icons/EventOn.png'),
+    tab: 'Progress',
+  },
+  {
+    label: 'Team',
+    icon: require('../assets/Image/Icons/EventOn.png'),
+    tab: 'Team',
+  },
+  {
+    label: 'Policy',
+    icon: require('../assets/Image/Icons/EventOn.png'),
+    tab: 'Policy',
+  },
+];
 
+const AppDrawerContent = ({ navigation }) => {
   const [showLogout, setShowLogout] = useState(false);
 
+
+
+
   const dispatch = useDispatch();
+  const activeMenu = useSelector(state => state.app.activeMenu);
+
   const { user, accessToken } = useSelector(selectAuth);
 
   const fullName =
@@ -89,7 +131,38 @@ const AppDrawerContent = ({ navigation }) => {
     );
   };
 
+  // const handleNavigate = (tab, initialTab) => {
+  //   const resolvedInitialTab =
+  //     tab === 'Events' && !initialTab ? 'MY_EVENTS' : initialTab;
+
+  //   navigation.navigate('Home', {
+  //     screen: tab,
+  //     params: { initialTab: resolvedInitialTab },
+  //   });
+  // };
+
   const handleNavigate = (tab, initialTab) => {
+    navigation.closeDrawer();
+
+    if (tab === 'Policy') {
+      navigation.navigate('PolicyScreen');
+      return;
+    }
+
+    if (tab === 'Progress') {
+      navigation.navigate('Home', {
+        screen: 'Progress',
+      });
+      return;
+    }
+
+    if (tab === 'Team') {
+      navigation.navigate('Home', {
+        screen: 'Team',
+      });
+      return;
+    }
+
     const resolvedInitialTab =
       tab === 'Events' && !initialTab ? 'MY_EVENTS' : initialTab;
 
@@ -99,6 +172,7 @@ const AppDrawerContent = ({ navigation }) => {
     });
   };
 
+
   const handleLogout = () => {
     setShowLogout(true);
   };
@@ -106,12 +180,10 @@ const AppDrawerContent = ({ navigation }) => {
   const handleConfirmLogout = async () => {
     setShowLogout(false);
     try {
-      
       if (accessToken) {
         await dispatch(logoutWithAccessToken({ accessToken })).unwrap();
       }
     } catch (error) {
-      
       console.warn('[Logout] Backend logout failed:', error?.message);
     } finally {
       await clearAuthSession();
@@ -120,11 +192,39 @@ const AppDrawerContent = ({ navigation }) => {
     }
   };
 
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+
+  const currentDrawerItems = activeMenu === 'OC' ? ocDrawerItems : plcDrawerItems;
+  const currentMenuTitle = activeMenu === 'OC' ? 'OC All-In' : 'Professional Learning Center';
+
   return (
     <LinearGradient
       colors={[colors.primary, colors.primaryLight]}
       style={styles.fill}
     >
+      <EmployeeLoginModal
+        visible={showEmployeeModal}
+        onClose={() => setShowEmployeeModal(false)}
+        onAllIn={() => {
+          setShowEmployeeModal(false);
+          // setActiveMenu('OC');
+          dispatch(setActiveMenu('OC'));
+          navigation.closeDrawer();
+        }}
+        onPLC={() => {
+          setShowEmployeeModal(false);
+          // setActiveMenu('PLC');
+          dispatch(setActiveMenu('PLC'));
+          navigation.closeDrawer();
+        }}
+        onThirty={() => {
+          setShowEmployeeModal(false);
+          // navigation.navigate('ContactUsScreen')
+          navigation.closeDrawer();
+          Alert.alert('WorkInProgess!', 'Working now on #o for 30 login flow, check back soon!')
+        }}
+      />
+
       <SafeAreaView style={styles.safeArea}>
 
         <View style={styles.profileSection}>
@@ -139,8 +239,29 @@ const AppDrawerContent = ({ navigation }) => {
           </View>
         </View>
 
+
+        <View style={styles.switchHeaderContainer}>
+          <View style={styles.switchHeaderLeft}>
+            <Text style={styles.switchHeaderText} numberOfLines={1}>
+              {currentMenuTitle}
+            </Text>
+          </View>
+          <TouchableOpacity
+            // onPress={() => setActiveMenu(activeMenu === 'OC' ? 'PLC' : 'OC')}
+            onPress={() => setShowEmployeeModal(true)}
+            style={styles.switchIconContainer}>
+
+            <Image
+              source={require('../assets/Image/Switch.png')}
+              style={styles.switchIcon}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.divider} />
+
         <View style={styles.menuSection}>
-          {drawerItems.map(item => (
+          {currentDrawerItems.map(item => (
             <TouchableOpacity
               key={item.label}
               style={styles.menuItem}
@@ -169,7 +290,7 @@ const AppDrawerContent = ({ navigation }) => {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.versionText}>Version 1.0.0</Text>
+          <Text style={styles.versionText}>Version - 1.0.0</Text>
         </View>
 
         <LogoutModal
@@ -185,27 +306,25 @@ const AppDrawerContent = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   fill: {
-    height: height / 1,
+    flex: 1,
     justifyContent: 'flex-start',
-    alignItems: 'center',
   },
   safeArea: {
-    height: height / 1,
-    width: width / 1.5,
+    flex: 1,
+    width: '100%',
   },
   profileSection: {
-    height: height / 6,
-    justifyContent: 'flex-end',
+    paddingTop: height * 0.04,
+    paddingBottom: height * 0.015,
+    justifyContent: 'flex-start',
+    width: width / 1.5,
+    alignSelf: 'center',
   },
-
-  // Outer wrapper (keeps position consistent whether photo or initials)
   avatarContainer: {
     width: 65,
     height: 65,
     borderRadius: 35,
   },
-
-  // Initials fallback circle
   avatarInitials: {
     width: 65,
     height: 65,
@@ -216,20 +335,16 @@ const styles = StyleSheet.create({
     borderColor: '#1f1f1f',
     borderWidth: 1,
   },
-
-  // Photo
   avatar: {
     width: 65,
     height: 65,
     borderRadius: 35,
   },
-
   avatarText: {
     fontSize: 28,
     fontWeight: '700',
     color: colors.primary,
   },
-
   nameCon: {
     height: height / 28,
     justifyContent: 'flex-end',
@@ -240,15 +355,59 @@ const styles = StyleSheet.create({
     fontFamily: typography.regular,
     fontWeight: '700',
   },
-  emailCon: {},
+  emailCon: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
   emailText: {
     fontSize: typography.size.sm,
     color: colors.white,
     opacity: 0.9,
     fontFamily: typography.regular,
   },
+
+
+  switchHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: width / 1.5,
+    alignSelf: 'center',
+    paddingVertical: 10,
+    // marginTop: 10,
+  },
+  switchHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  switchHeaderText: {
+    fontSize: typography.size.sm,
+    color: colors.white,
+    fontFamily: typography.regular,
+    fontWeight: '700',
+    paddingRight: 10,
+  },
+  switchIconContainer: {
+    // padding: 5,
+  },
+  switchIcon: {
+    width: 25,
+    height: 25,
+    tintColor: colors.white,
+  },
+  divider: {
+    width: width / 1.5,
+    alignSelf: 'center',
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    marginBottom: 10,
+  },
+  // -------------------------------
+
   menuSection: {
     marginTop: height * 0.01,
+    width: '100%',
   },
   menuItem: {
     flexDirection: 'row',
@@ -256,6 +415,8 @@ const styles = StyleSheet.create({
     paddingVertical: height * 0.018,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.2)',
+    width: width / 1.5,
+    alignSelf: 'center',
   },
   menuIcon: {
     width: 21,
@@ -272,6 +433,8 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 'auto',
     paddingBottom: height * 0.04,
+    width: width / 1.5,
+    alignSelf: 'center',
   },
   versionText: {
     color: colors.white,
@@ -282,3 +445,4 @@ const styles = StyleSheet.create({
 });
 
 export default AppDrawerContent;
+

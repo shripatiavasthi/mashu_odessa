@@ -107,12 +107,12 @@ export default RewardPointsModal;
 
 const styles = StyleSheet.create({
   overlay: {
-    height: height / 1,
+    height: height / 1.3,
     width: width / 1,
     // backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingBottom: height / 4.9
+    // paddingBottom: height / 4.9
   },
   container: {
     height: height / 5,

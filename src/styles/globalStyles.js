@@ -22,7 +22,9 @@ export const colors = {
   boderLight: '#99999980',
   redColor: '#FF0000',
   lightBlue: '#f0f9ff',
-  nameBack: '#f2f7fb'
+  nameBack: '#f2f7fb',
+  black: '#0d0606',
+  
 };
 
 export const typography = {

@@ -11,6 +11,7 @@ import {
   Platform,
   Modal,
   ActivityIndicator,
+  RefreshControl
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppGradient from '../../components/AppGradient';
@@ -36,10 +37,13 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   const [isTermOpen, setIsTermOpen] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [selectedTermId, setSelectedTermId] = useState(null);
-  const [hasSetInitialTerm, setHasSetInitialTerm] = useState(false); 
+  const [hasSetInitialTerm, setHasSetInitialTerm] = useState(false);
 
   const [showCheckInModal, setShowCheckInModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
 
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(selectAuth);
@@ -50,13 +54,13 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   const route = useRoute();
   const isFocused = useIsFocused();
 
-  
+
   const currentGoalData = goalPoints?.[0] || {};
 
   const csPoints = Number.isFinite(currentGoalData.csPoints) ? currentGoalData.csPoints : 0;
   const ddPoints = Number.isFinite(currentGoalData.ddPoints) ? currentGoalData.ddPoints : 0;
 
-  
+
   let pointsLabel = '0 Pts';
   if (Number.isFinite(totalPoints)) {
     if (totalPoints >= csPoints) {
@@ -74,16 +78,16 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
       .map(item => ({
         id: item?.id || null,
         termCode: item?.termCode || null,
-        currentTerm: !!item?.currentTerm, 
+        currentTerm: !!item?.currentTerm,
       }))
       .filter(item => item.termCode);
   }, [termItems]);
 
-  
+
   React.useEffect(() => {
     if (!termOptions.length || hasSetInitialTerm) return;
 
-  
+
     const preferredTerm = termOptions.find(t => t.currentTerm === true);
     const targetTerm = preferredTerm || termOptions[0];
 
@@ -94,7 +98,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     }
   }, [termOptions, hasSetInitialTerm]);
 
-  
+
   React.useEffect(() => {
     if (!isFocused) return;
     const initialTab = route?.params?.initialTab;
@@ -104,7 +108,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     }
   }, [isFocused, route?.params?.initialTab, navigation]);
 
-  
+
   React.useEffect(() => {
     if (!isFocused || !accessToken) return;
     if (termStatus === 'idle') {
@@ -112,7 +116,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     }
   }, [accessToken, dispatch, isFocused, termStatus]);
 
-  
+
   React.useEffect(() => {
     if (!isFocused || !accessToken || !user?.id || !selectedTermId) return;
 
@@ -132,7 +136,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     );
   }, [accessToken, dispatch, isFocused, selectedTermId, user?.id]);
 
-  
+
   React.useEffect(() => {
     if (!isFocused || !accessToken || !user?.id) return;
     dispatch(
@@ -151,13 +155,31 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     }
   };
 
- const goToEventDetails = event => {
-  navigation.navigate('EventDetailsScreen', {
-    data: event,
-    terms: selectedTerm,
-    fromTab: activeTab  
-  });
-};
+  const goToEventDetails = event => {
+    navigation.navigate('EventDetailsScreen', {
+      data: event,
+      terms: selectedTerm,
+      fromTab: activeTab
+    });
+  };
+
+  // Add after handleMenuPress function
+  const handleRefresh = async () => {
+    if (activeTab !== 'UPCOMING_EVENTS') return;
+    setIsRefreshing(true);
+    try {
+      await dispatch(
+        fetchUpcomingEvents({
+          accessToken,
+          userId: user.id,
+        }),
+      ).unwrap();
+    } catch (error) {
+      console.warn('[Refresh] Failed to refresh upcoming events:', error?.message);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const MyEventCard = ({ event, title, location, points, eventDate, checkInDate }) => (
     <View style={styles.spaceConatiner}>
@@ -434,8 +456,19 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             </Text>
           </Pressable>
         </View>
-
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              colors={[colors.primary]}
+              tintColor={colors.primary}
+            />
+          }
+        >
           {renderContent()}
         </ScrollView>
 

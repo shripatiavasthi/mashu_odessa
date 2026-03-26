@@ -28,7 +28,6 @@ const AppHeader = ({ showMenu = true, onMenuPress }) => {
       colors={[colors.primary, colors.primaryLight]}
       style={styles.header}
     >
-      {/* Menu Icon */}
       {showMenu ? (
         <TouchableOpacity
           style={styles.menuContainer}

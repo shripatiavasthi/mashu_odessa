@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
-
+import AppGradient from '../../components/AppGradient';
 const { width, height } = Dimensions.get('window');
 
 const EventDetailsScreen = () => {
@@ -43,7 +43,9 @@ const EventDetailsScreen = () => {
     : [checkInFull, 'N/A'];
 
   return (
+      
     <SafeAreaView style={styles.safeArea}>
+      <AppGradient style={styles.linearStyle}>
       <LinearGradient
         colors={['#006BB6', '#00A2E5']}
         start={{ x: 0, y: 0 }}
@@ -134,6 +136,7 @@ const EventDetailsScreen = () => {
           </View>
         </View>
       </ScrollView>
+      </AppGradient>
     </SafeAreaView>
   );
 };
@@ -143,11 +146,15 @@ export default EventDetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6FBFF',
+    // backgroundColor: '#F6FBFF',
 
   },
 
-  /* Header */
+  linearStyle:{
+    height: height/1.05,
+    width: width/1
+  },
+
   header: {
     height: height / 14,
     width: width / 1,
@@ -212,7 +219,7 @@ const styles = StyleSheet.create({
     fontSize: typography.size.sm,
     color: colors.grayDark,
     fontFamily: typography.regular,
-    fontWeight: '600'
+    fontWeight: '400'
   },
   value: {
     fontSize: typography.size.md,

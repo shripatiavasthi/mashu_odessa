@@ -12,9 +12,9 @@ import {
 import { colors, typography } from '../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
 import InvalidActivityModal from './InvalidActivityModal';
-import {useAppDispatch, useAppSelector} from '../store/hooks';
-import {submitEventCheckIn, resetCheckIn} from '../store/slices/checkInSlice';
-import {selectAuth, selectCheckIn} from '../store';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { submitEventCheckIn, resetCheckIn } from '../store/slices/checkInSlice';
+import { selectAuth, selectCheckIn } from '../store';
 
 const { height, width } = Dimensions.get('window')
 
@@ -30,8 +30,8 @@ const CheckInModal = ({
 
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const {status} = useAppSelector(selectCheckIn);
-  const {accessToken, user: authUser} = useAppSelector(selectAuth);
+  const { status } = useAppSelector(selectCheckIn);
+  const { accessToken, user: authUser } = useAppSelector(selectAuth);
 
   useEffect(() => {
     if (!visible) {
@@ -120,32 +120,33 @@ const CheckInModal = ({
 
           {step === 2 && (
             <>
-            <View style={styles.checkInCon}>
-              <Text style={styles.heading}>Event Check-In</Text>
-            </View>
+              <View style={styles.checkInCon}>
+                <Text style={styles.heading}>Event Check-In</Text>
+              </View>
               <Text style={styles.description}>
                 To proceed with the check-in, enter the Activity ID you received
                 from the event organizer.{'\n\n'}
                 Once submitted, we will verify the ID and complete your check-in.
               </Text>
               <View style={styles.labelCon}>
-              <Text style={styles.label}>Activity ID</Text>
+                <Text style={styles.label}>Activity ID</Text>
               </View>
               <View style={styles.txtinpCon}>
                 <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Enter activity ID"
-                value={activityId}
-                placeholderTextColor="#999"
-                onChangeText={text =>
-                  setActivityId(text.replace(/[^0-9]/g, ''))
-                }
-                style={styles.input}
-                keyboardType="number-pad"
-                maxLength={6}
-                
-              />
-              </View>
+                  <TextInput
+                  numberOfLines={1}
+                    placeholder="Enter activity ID"
+                    value={activityId}
+                    placeholderTextColor="#999"
+                    onChangeText={text =>
+                      setActivityId(text.replace(/[^0-9]/g, ''))
+                    }
+                    style={styles.input}
+                    keyboardType="number-pad"
+                    maxLength={6}
+
+                  />
+                </View>
               </View>
 
               <View style={styles.cardDivider} />
@@ -201,10 +202,11 @@ const styles = StyleSheet.create({
   },
 
   container: {
+    // height: height / 1.9,
     width: width / 1.1,
     backgroundColor: colors.white,
     borderRadius: 16,
-    // paddingBottom: 16,
+    // paddingBottom: 10,
   },
 
 
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     color: colors.textDark,
-    
+
     lineHeight: 20,
   },
 
@@ -261,8 +263,8 @@ const styles = StyleSheet.create({
 
   },
 
-  checkInCon:{
-     height: height / 15,
+  checkInCon: {
+    height: height / 15,
     width: width / 1.2,
     // backgroundColor: "blue",
     alignSelf: 'center',
@@ -278,7 +280,7 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    width: width/1.3,
+    width: width / 1.3,
     fontSize: 14,
     color: colors.textDark,
     textAlign: 'center',
@@ -288,9 +290,9 @@ const styles = StyleSheet.create({
     fontFamily: typography.semiBold,
     alignSelf: 'center'
   },
-  labelCon:{
-    height: height/30,
-    width: width/1.2,
+  labelCon: {
+    height: height / 30,
+    width: width / 1.2,
     alignSelf: 'center',
     // backgroundColor: 'cyan',
     justifyContent: 'center',
@@ -303,31 +305,33 @@ const styles = StyleSheet.create({
     color: '#374151',
   },
 
-  txtinpCon:{
-      height: height/15,
-    width: width/1.1,
-    // backgroundColor: 'cyan'
+  txtinpCon: {
+    height: height / 12,
+    width: width / 1.1,
+    // backgroundColor: 'cyan',
+    // justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 2,
   },
 
-  inputContainer:{
-    height: height/21,
-    width: width/1.2,
-    alignSelf: 'center',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  input: {
-    width: width/1.2,
-    
-    paddingHorizontal: 10,
-    fontSize: 14,
-    color: '#111827',
-    textAlign: 'left',
-    fontFamily: typography.regular
-    
-  },
+  inputContainer: {
+  height: height / 17,  
+  
+  width: width / 1.2,
+  justifyContent: 'center',
+  borderColor: colors.boderLight,
+  borderWidth: 1,
+  borderRadius: 8,
+  backgroundColor: colors.white,
+  paddingHorizontal: 12,     // moved padding here
+},
+input: {
+  flex: 1,                   // fills inputContainer cleanly
+  fontSize: 14,
+  fontFamily: typography.regular,
+  color: colors.textDark,
+  
+},
 
   /* Footer */
   footer: {

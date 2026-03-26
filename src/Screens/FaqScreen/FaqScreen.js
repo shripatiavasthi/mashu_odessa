@@ -6,9 +6,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  Platform,
-  Pressable,
-  Image
+  RefreshControl, 
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
@@ -27,6 +25,8 @@ const FaqScreen = () => {
   const dispatch = useDispatch();
   const {accessToken} = useSelector(selectAuth);
   const {items: faqItems, status: faqStatus} = useSelector(selectFaq);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
 
   useEffect(() => {
     if (!accessToken || faqStatus !== 'idle') {
@@ -39,6 +39,17 @@ const FaqScreen = () => {
     setActiveIndex(index === activeIndex ? -1 : index);
   };
 
+  const handleRefresh = async () => {
+  setIsRefreshing(true);
+  try {
+    await dispatch(fetchFaqs({ accessToken })).unwrap();
+  } catch (error) {
+    console.error('Failed to refresh FAQs:', error);
+  } finally {
+    setIsRefreshing(false);
+  }
+};
+
   return (
     <SafeAreaView style={styles.safeArea}>
 
@@ -46,9 +57,17 @@ const FaqScreen = () => {
         <AppHeader />
 
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+  contentContainerStyle={styles.scrollContent}
+  showsVerticalScrollIndicator={false}
+  refreshControl={
+    <RefreshControl
+      refreshing={isRefreshing}
+      onRefresh={handleRefresh}
+      colors={['#006BB6']}    
+      tintColor={'#006BB6'}      // iOS
+    />
+  }
+>
           {faqItems.map((item, index) => {
             const isOpen = index === activeIndex;
 

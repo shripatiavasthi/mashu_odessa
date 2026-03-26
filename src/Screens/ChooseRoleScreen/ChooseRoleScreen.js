@@ -34,8 +34,13 @@ const ChooseRoleScreen = ({ navigation }) => {
         }}
         onPLC={() => {
           setShowEmployeeModal(false);
-          // navigation.navigate('EmployeeLoginScreen')
-          Alert.alert('High Alert!', 'need approval!')
+          navigation.navigate('ContactUsScreen')
+          // Alert.alert('WorkInProgess!', 'Working now on PLC login flow, check back soon!')
+        }}
+        onThirty={() => {
+          setShowEmployeeModal(false);
+          // navigation.navigate('ContactUsScreen')
+          Alert.alert('WorkInProgess!', 'Working now on #o for 30 login flow, check back soon!')
         }}
       />
 

@@ -1,4 +1,3 @@
-// App.js
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,6 +13,14 @@ import EventSuccessScreens from './src/Screens/EventSuccessScreens/EventSuccessS
 import SuccessRewardBonus from './src/Screens/TermRewardsScreen/SuccessRewardBonus';
 import TermRewardDetailsScreen from './src/Screens/TermRewardDetailsScreen/TermRewardDetailsScreen';
 import DrawerNavigator from './src/navigation/DrawerNavigator';
+import PlcDetailScreen from './src/Screens/PlcScreens/ProgressScreen/PlcDetailScreen'
+import TeamDetailScreen from './src/Screens/PlcScreens/ProgressTeamScreen/TeamDetailScreen'
+import ChangeTeamScreen from './src/Screens/PlcScreens/ChangeTeamScreen/ChangeTeamScreen'
+import TeamChangeSuccessScreen from './src/Screens/PlcScreens/TeamChangeSuccessScreen/TeamChangeSuccessScreen'
+import TeamLoginSignScreen from './src/Screens/PlcScreens/TeamLoginSignScreen/TeamLoginSignScreen'
+import PolicyScreen from './src/Screens/PlcScreens/PolicyScreen/PolicyScreen'
+import TeamSignup from './src/Screens/PlcScreens/TeamSignup/TeamSignup'
+import TeamNewScreen from './src/Screens/PlcScreens/TeamNewScreen/TeamNewScreen'
 
 import { persistor, store } from './src/store';
 import { fetchGoalPoints, fetchTermCodes } from './src/store/slices/termSlice';
@@ -28,6 +35,8 @@ import {
   saveAuthSession,
 } from './src/services/authService';
 import { loginWithIdToken } from './src/store/slices/authSlice';
+
+
 
 const Stack = createStackNavigator();
 
@@ -61,12 +70,10 @@ function Root() {
             }),
           );
         } else {
-          // ── Token expired → try silent refresh ────────────────────────
+          
           console.log('[App] MS token expired, attempting silent refresh...');
           try {
             const refreshed = await refreshMsToken(msRefreshToken);
-
-            // Re-authenticate with your backend using the new MS ID token
             const loginResponse = await dispatch(
               loginWithIdToken({ idToken: refreshed.idToken }),
             ).unwrap();
@@ -77,7 +84,6 @@ function Root() {
               photoUrl: savedUser?.photoUrl || null,
             };
 
-            // Update Redux
             dispatch(
               setAuthData({
                 accessToken: userData.accessToken,
@@ -99,11 +105,10 @@ function Root() {
 
             console.log('[App] Silent refresh succeeded');
           } catch (refreshError) {
-            // ── Refresh failed → clear everything → force re-login ──────
             console.warn('[App] Silent refresh failed, forcing re-login:', refreshError);
             await clearAuthSession();
             dispatch(clearAuth());
-            // Navigation will naturally land on Splash/Login since accessToken is null
+            
           }
         }
       } catch (e) {
@@ -118,7 +123,7 @@ function Root() {
     restoreSession();
   }, [dispatch]);
 
-  // ── Fetch terms once authenticated ────────────────────────────────────
+  
   useEffect(() => {
     if (accessToken && termStatus === 'idle') {
       dispatch(fetchTermCodes({ accessToken }));
@@ -144,15 +149,11 @@ function Root() {
     }
   }, [termItems, accessToken, user?.id, dispatch]);
 
-  // ── Wait until auth check is done before rendering navigation ─────────
-  // This prevents a flash of the login screen on users who are already logged in
   if (!authChecked) return null;
 
   return (
     <NavigationContainer>
       <Stack.Navigator
-        // If we have a valid token after restore → go straight to MainTabs
-        // Otherwise → Splash (which leads to login)
         initialRouteName={accessToken && user ? 'MainTabs' : 'Splash'}
         screenOptions={{ headerShown: false }}>
 
@@ -161,11 +162,19 @@ function Root() {
         <Stack.Screen name="EmployeeLoginScreen" component={EmployeeLoginScreen} />
         <Stack.Screen name="MainTabs" component={DrawerNavigator} />
         <Stack.Screen name="EventDetailsScreen" component={EventDetailsScreen} />
+        <Stack.Screen name="PlcDetailScreen" component={PlcDetailScreen} />
         <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
         <Stack.Screen name="EventSuccessScreens" component={EventSuccessScreens} />
         <Stack.Screen name="SuccessRewardBonus" component={SuccessRewardBonus} />
         <Stack.Screen name="TermRewardDetailsScreen" component={TermRewardDetailsScreen} />
-
+        <Stack.Screen name="TeamDetailScreen" component={TeamDetailScreen} />
+        <Stack.Screen name="ChangeTeamScreen" component={ChangeTeamScreen} />
+        <Stack.Screen name="TeamChangeSuccessScreen" component={TeamChangeSuccessScreen} />
+        <Stack.Screen name="TeamLoginSignScreen" component={TeamLoginSignScreen} />
+        <Stack.Screen name="PolicyScreen" component={PolicyScreen} />
+        <Stack.Screen name="TeamSignup" component={TeamSignup} />
+        <Stack.Screen name="TeamNewScreen" component={TeamNewScreen} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

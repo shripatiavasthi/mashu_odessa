@@ -44,6 +44,8 @@ const resolveActiveMenu = activeMenu =>
     ? activeMenu.trim().toLowerCase()
     : 'oc';
 
+const isPlcMenu = activeMenu => resolveActiveMenu(activeMenu) === 'plc';
+
 const ENDPOINTS = {
   activityCheckIn: '/activities/check-in',
   eventCheckIn: activeMenu => `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/check-in`,
@@ -51,8 +53,13 @@ const ENDPOINTS = {
   authLogout: '/api/v1/app/authentication/logout',
   termCodesList: activeMenu => `/api/v1/app/${resolveActiveMenu(activeMenu)}/term-data/term-codes/list`,
   userEventsByTerm: (userId, termId , activeMenu) =>
-    `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/user/${userId}/term/${termId}`,
-  userUpcomingEvents: ( userId, activeMenu) => `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/user/${userId}/upcoming`,
+    isPlcMenu(activeMenu)
+      ? `/api/v1/app/plc/events/users/${userId}`
+      : `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/user/${userId}/term/${termId}`,
+  userUpcomingEvents: ( userId, activeMenu) =>
+    isPlcMenu(activeMenu)
+      ? `/api/v1/app/plc/events/users/${userId}/upcoming`
+      : `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/user/${userId}/upcoming`,
   faqsList: activeMenu => `/api/v1/app/${resolveActiveMenu(activeMenu)}/faqs/list`,
   userRewards:( userId, activeMenu) => `/api/v1/app/${resolveActiveMenu(activeMenu)}/rewards/${userId}`,
   userRewardsByTerm: (termCodeId, userId , activeMenu) =>

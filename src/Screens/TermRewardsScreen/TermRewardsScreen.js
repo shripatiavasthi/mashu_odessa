@@ -36,6 +36,7 @@ const RewardsScreen = ({ onMenuPress }) => {
 
   const { accessToken, user } = useSelector(selectAuth);
   const activeMenu = useSelector(state => state.app.activeMenu);
+  const isPlcMenu = activeMenu === 'plc';
   const {
     items: termItems,
     goalPoints,
@@ -57,7 +58,7 @@ const RewardsScreen = ({ onMenuPress }) => {
 
 
   const handleRefresh = useCallback(() => {
-    if (!accessToken || !user?.id) return;
+    if (isPlcMenu || !accessToken || !user?.id) return;
     setRefreshing(true);
     dispatch(fetchRewards({ accessToken, userId: user.id, activeMenu }));
 
@@ -74,21 +75,22 @@ const RewardsScreen = ({ onMenuPress }) => {
     setTimeout(() => {
       setRefreshing(false);
     }, 1200);
-  }, [dispatch, accessToken, activeMenu, user?.id, selectedTermId]);
+  }, [dispatch, accessToken, activeMenu, isPlcMenu, user?.id, selectedTermId]);
 
   useEffect(() => {
-    if (!accessToken || !user?.id) return;
+    if (isPlcMenu || !accessToken || !user?.id) return;
     dispatch(fetchRewards({ accessToken, userId: user.id, activeMenu }));
-  }, [dispatch, accessToken, activeMenu, user?.id]);
+  }, [dispatch, accessToken, activeMenu, isPlcMenu, user?.id]);
 
   useEffect(() => {
-    if (!accessToken) return;
+    if (isPlcMenu || !accessToken) return;
     if (termStatus === 'idle' || lastFetchedMenu !== activeMenu) {
       dispatch(fetchTermCodes({ accessToken, activeMenu }));
     }
-  }, [accessToken, activeMenu, dispatch, lastFetchedMenu, termStatus]);
+  }, [accessToken, activeMenu, dispatch, isPlcMenu, lastFetchedMenu, termStatus]);
 
   useEffect(() => {
+    if (isPlcMenu) return;
     if (!termItems?.length || selectedTermId) return;
 
     const currentTerm = termItems.find(t => t.currentTerm === true);
@@ -98,10 +100,10 @@ const RewardsScreen = ({ onMenuPress }) => {
     if (targetTerm?.id) {
       setSelectedTermId(targetTerm.id);
     }
-  }, [termItems, selectedTermId]);
+  }, [isPlcMenu, termItems, selectedTermId]);
 
   useEffect(() => {
-    if (!accessToken || !selectedTermId || termStatus === 'loading') return;
+    if (isPlcMenu || !accessToken || !selectedTermId || termStatus === 'loading') return;
 
     dispatch(
       fetchGoalPoints({
@@ -110,7 +112,7 @@ const RewardsScreen = ({ onMenuPress }) => {
         activeMenu,
       })
     );
-  }, [accessToken, activeMenu, selectedTermId, dispatch, termStatus]);
+  }, [accessToken, activeMenu, dispatch, isPlcMenu, selectedTermId, termStatus]);
 
 
   const TermCard = ({ title, term, points, reward, status, termCodeId }) => (

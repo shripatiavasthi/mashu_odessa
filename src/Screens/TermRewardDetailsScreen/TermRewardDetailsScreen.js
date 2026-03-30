@@ -39,7 +39,7 @@ const TermRewardDetailsScreen = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    if (!accessToken || !user?.id || !termCodeId) {
+    if (activeMenu === 'plc' || !accessToken || !user?.id || !termCodeId) {
       return;
     }
     dispatch(

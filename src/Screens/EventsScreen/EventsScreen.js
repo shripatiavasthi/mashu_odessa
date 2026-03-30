@@ -48,6 +48,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(selectAuth);
   const activeMenu = useSelector(state => state.app.activeMenu);
+  const isPlcMenu = activeMenu === 'plc';
   const {
     items: termItems,
     status: termStatus,
@@ -80,6 +81,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   }
 
   const termOptions = useMemo(() => {
+    if (isPlcMenu) return [];
     if (!Array.isArray(termItems) || !termItems.length) return [];
     return termItems
       .map(item => ({
@@ -88,7 +90,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         currentTerm: !!item?.currentTerm,
       }))
       .filter(item => item.termCode);
-  }, [termItems]);
+  }, [isPlcMenu, termItems]);
 
   React.useEffect(() => {
     setSelectedTerm(null);
@@ -98,6 +100,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
 
   React.useEffect(() => {
+    if (isPlcMenu) return;
     if (!termOptions.length || hasSetInitialTerm) return;
 
 
@@ -109,7 +112,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
       setSelectedTermId(targetTerm.id);
       setHasSetInitialTerm(true);
     }
-  }, [termOptions, hasSetInitialTerm]);
+  }, [hasSetInitialTerm, isPlcMenu, termOptions]);
 
 
   React.useEffect(() => {
@@ -123,15 +126,28 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
 
   React.useEffect(() => {
-    if (!isFocused || !accessToken) return;
+    if (isPlcMenu || !isFocused || !accessToken) return;
     if (termStatus === 'idle' || lastFetchedMenu !== activeMenu) {
       dispatch(fetchTermCodes({ accessToken, activeMenu }));
     }
-  }, [accessToken, activeMenu, dispatch, isFocused, lastFetchedMenu, termStatus]);
+  }, [accessToken, activeMenu, dispatch, isFocused, isPlcMenu, lastFetchedMenu, termStatus]);
 
 
   React.useEffect(() => {
-    if (!isFocused || !accessToken || !user?.id || !selectedTermId) return;
+    if (!isPlcMenu || !isFocused || !accessToken || !user?.id) return;
+
+    dispatch(
+      fetchEventsByTerm({
+        accessToken,
+        userId: user.id,
+        activeMenu,
+      }),
+    );
+  }, [accessToken, activeMenu, dispatch, isFocused, isPlcMenu, user?.id]);
+
+
+  React.useEffect(() => {
+    if (isPlcMenu || !isFocused || !accessToken || !user?.id || !selectedTermId) return;
 
     dispatch(
       fetchEventsByTerm({
@@ -149,7 +165,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         activeMenu,
       }),
     );
-  }, [accessToken, activeMenu, dispatch, isFocused, selectedTermId, user?.id]);
+  }, [accessToken, activeMenu, dispatch, isFocused, isPlcMenu, selectedTermId, user?.id]);
 
 
   React.useEffect(() => {
@@ -255,10 +271,12 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             <Text style={styles.pointsText}>{points}</Text>
           </View>
         </View>
-        <View style={styles.termContainer}>
-          <Text style={styles.termText}>Event Term : {term}</Text>
-          <Icon name="chevron-with-circle-right" size={18} color="#666666" />
-        </View>
+        {!isPlcMenu && (
+          <View style={styles.termContainer}>
+            <Text style={styles.termText}>Event Term : {term}</Text>
+            <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+          </View>
+        )}
         <View style={styles.cardDivider} />
         <View style={styles.dateRow}>
           <View style={styles.dateBlock}>
@@ -290,7 +308,8 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   );
 
   const renderContent = () => {
-    const isLoading = termStatus === 'loading' || eventsStatus === 'loading';
+    const isLoading =
+      eventsStatus === 'loading' || (!isPlcMenu && termStatus === 'loading');
     const hasNoEvents = activeTab === 'MY_EVENTS' ? !eventItems?.length : !upcomingItems?.length;
 
     if (isLoading) {
@@ -308,8 +327,12 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           <Text style={styles.loadingText}>No events found</Text>
           <Text style={styles.loadingText}>
             {activeTab === 'MY_EVENTS'
-              ? 'No events completed in this term yet'
-              : 'No upcoming events in this term'}
+              ? isPlcMenu
+                ? 'No completed events yet'
+                : 'No events completed in this term yet'
+              : isPlcMenu
+                ? 'No upcoming events'
+                : 'No upcoming events in this term'}
           </Text>
         </View>
       );
@@ -319,11 +342,14 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
       <>
         {activeTab === 'MY_EVENTS' ? (
           eventItems.map((event, index) => {
-            const title = event?.name || `Event ${index + 1}`;
-            const location = event?.location || 'TBD';
-            const points = `${event?.eventPoints || 0} Pts`;
-            const eventDate = `${event?.date} | ${event?.startTime || 'TBD'}`.trim();
-            const checkInDate = event?.checkInTime || 'TBD';
+            const title = event?.name || event?.eventName || `Event ${index + 1}`;
+            const location = event?.location || event?.eventLocation || 'TBD';
+            const numericPoints = isPlcMenu ? event?.eventPlcCredits : event?.eventPoints;
+            const points = Number.isFinite(numericPoints) ? `${numericPoints} Pts` : '0 Pts';
+            const eventDate = isPlcMenu
+              ? event?.eventStartDateTime || 'TBD'
+              : `${event?.date} | ${event?.startTime || 'TBD'}`.trim();
+            const checkInDate = event?.checkInTime || event?.eventCheckInTime || 'TBD';
 
             return (
               <MyEventCard
@@ -340,13 +366,16 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         ) : (
           upcomingItems.map((event, index) => {
             const earlyCheckinAllowed = !!event.earlyCheckinAllowed;
-            const title = event?.name || `Event ${index + 1}`;
-            const location = event?.location || 'TBD';
+            const title = event?.name || event?.eventName || `Event ${index + 1}`;
+            const location = event?.location || event?.eventLocation || 'TBD';
             const term = event?.termCode || selectedTerm || 'N/A';
-            const points = Number.isFinite(event?.eventPoints)
-              ? `${event.eventPoints} Pts`
+            const numericPoints = isPlcMenu ? event?.eventPlcCredits : event?.eventPoints;
+            const points = Number.isFinite(numericPoints)
+              ? `${numericPoints} Pts`
               : '0 Pts';
-            const eventDate = [event?.date, event?.startTime].filter(Boolean).join(' | ') || 'TBD';
+            const eventDate = isPlcMenu
+              ? event?.eventStartDateTime || 'TBD'
+              : [event?.date, event?.startTime].filter(Boolean).join(' | ') || 'TBD';
 
             return (
               <UpcomingEventCard
@@ -358,7 +387,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
                 term={term}
                 points={points}
                 eventDate={eventDate}
-                showCheckInButton={!!event?.showCheckInButton}
+                showCheckInButton={isPlcMenu ? true : !!event?.showCheckInButton}
               />
             );
           })
@@ -405,7 +434,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
               style={styles.logo}
             />
 
-            {activeTab === 'MY_EVENTS' && (
+            {activeTab === 'MY_EVENTS' && !isPlcMenu && (
               <View style={styles.filterContainer}>
                 <View style={styles.filterCon}>
                   <Text style={styles.filterTxt} numberOfLines={1}>{pointsLabel}</Text>

@@ -75,7 +75,7 @@ const eventsSlice = createSlice({
         const data = payload.data || {};
 
         state.status = 'succeeded';
-        state.items = Array.isArray(data.events) ? data.events : [];
+        state.items = Array.isArray(data) ? data : Array.isArray(data.events) ? data.events : [];
         state.totalPoints = Number.isFinite(data.totalPoints)
           ? data.totalPoints
           : 0;
@@ -93,7 +93,7 @@ const eventsSlice = createSlice({
         const data = payload.data || {};
 
         state.upcomingStatus = 'succeeded';
-        state.upcomingItems = Array.isArray(data.events) ? data.events : [];
+        state.upcomingItems = Array.isArray(data) ? data : Array.isArray(data.events) ? data.events : [];
       })
       .addCase(fetchUpcomingEvents.rejected, (state, action) => {
         state.upcomingStatus = 'failed';

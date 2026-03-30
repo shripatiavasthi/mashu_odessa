@@ -206,7 +206,58 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     }
   };
 
-  const MyEventCard = ({ event, title, location, points, eventDate, checkInDate }) => (
+  const getEventMetric = event => {
+    if (isPlcMenu) {
+      if (event?.eventMode === 'team' && Number.isFinite(event?.eventPoints)) {
+        return `${event.eventPoints} Points`;
+      }
+
+      if (Number.isFinite(event?.eventPlcCredits)) {
+        return `${event.eventPlcCredits} PLC Credit${event.eventPlcCredits === 1 ? '' : 's'}`;
+      }
+
+      return '0 PLC Credit';
+    }
+
+    return `${event?.eventPoints || 0} Pts`;
+  };
+
+  const getEventTitle = (event, index) =>
+    event?.name || event?.eventName || `Event ${index + 1}`;
+
+  const getEventLocation = event =>
+    event?.location || event?.eventLocation || 'TBD';
+
+  const getEventMetaLine = event => {
+    if (!isPlcMenu) {
+      return null;
+    }
+
+    const typeLabel = Array.isArray(event?.eventType)
+      ? event.eventType.filter(Boolean).join(', ')
+      : event?.eventType || 'N/A';
+    const categoryLabel = event?.eventCategory || 'N/A';
+
+    return `${typeLabel} | ${categoryLabel}`;
+  };
+
+  const getEventStartDisplay = event =>
+    isPlcMenu
+      ? event?.eventStartDateTime || 'TBD'
+      : `${event?.date} | ${event?.startTime || 'TBD'}`.trim();
+
+  const getEventCheckInDisplay = event =>
+    event?.checkInTime || event?.eventCheckInTime || 'TBD';
+
+  const MyEventCard = ({
+    event,
+    title,
+    detailsLine,
+    location,
+    points,
+    eventDate,
+    checkInDate,
+  }) => (
     <View style={styles.spaceConatiner}>
       <TouchableOpacity onPress={() => goToEventDetails(event)} style={styles.card}>
         <View style={styles.cardHeader}>
@@ -216,6 +267,11 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             <Text style={styles.pointsText}>{points}</Text>
           </View>
         </View>
+        {!!detailsLine && (
+          <View style={styles.termContainer}>
+            <Text style={styles.termText}>{detailsLine}</Text>
+          </View>
+        )}
         <View style={styles.locationCon}>
           <Text style={styles.locationText}>Location: {location}</Text>
           <Icon name="chevron-with-circle-right" size={18} color="#666666" />
@@ -248,6 +304,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     event,
     earlyCheckinAllowed,
     title,
+    detailsLine,
     location,
     term,
     points,
@@ -271,10 +328,11 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             <Text style={styles.pointsText}>{points}</Text>
           </View>
         </View>
-        {!isPlcMenu && (
+        {!!detailsLine && (
           <View style={styles.termContainer}>
-            <Text style={styles.termText}>Event Term : {term}</Text>
-            <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+            <Text style={styles.termText}>
+              {isPlcMenu ? detailsLine : `Event Term : ${term}`}
+            </Text>
           </View>
         )}
         <View style={styles.cardDivider} />
@@ -342,20 +400,19 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
       <>
         {activeTab === 'MY_EVENTS' ? (
           eventItems.map((event, index) => {
-            const title = event?.name || event?.eventName || `Event ${index + 1}`;
-            const location = event?.location || event?.eventLocation || 'TBD';
-            const numericPoints = isPlcMenu ? event?.eventPlcCredits : event?.eventPoints;
-            const points = Number.isFinite(numericPoints) ? `${numericPoints} Pts` : '0 Pts';
-            const eventDate = isPlcMenu
-              ? event?.eventStartDateTime || 'TBD'
-              : `${event?.date} | ${event?.startTime || 'TBD'}`.trim();
-            const checkInDate = event?.checkInTime || event?.eventCheckInTime || 'TBD';
+            const title = getEventTitle(event, index);
+            const location = getEventLocation(event);
+            const detailsLine = getEventMetaLine(event);
+            const points = getEventMetric(event);
+            const eventDate = getEventStartDisplay(event);
+            const checkInDate = getEventCheckInDisplay(event);
 
             return (
               <MyEventCard
-                key={event?.id || index}
+                key={event?.id || event?.eventId || index}
                 event={event}
                 title={title}
+                detailsLine={detailsLine}
                 location={location}
                 points={points}
                 eventDate={eventDate}
@@ -366,23 +423,22 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         ) : (
           upcomingItems.map((event, index) => {
             const earlyCheckinAllowed = !!event.earlyCheckinAllowed;
-            const title = event?.name || event?.eventName || `Event ${index + 1}`;
-            const location = event?.location || event?.eventLocation || 'TBD';
+            const title = getEventTitle(event, index);
+            const detailsLine = getEventMetaLine(event);
+            const location = getEventLocation(event);
             const term = event?.termCode || selectedTerm || 'N/A';
-            const numericPoints = isPlcMenu ? event?.eventPlcCredits : event?.eventPoints;
-            const points = Number.isFinite(numericPoints)
-              ? `${numericPoints} Pts`
-              : '0 Pts';
+            const points = getEventMetric(event);
             const eventDate = isPlcMenu
               ? event?.eventStartDateTime || 'TBD'
               : [event?.date, event?.startTime].filter(Boolean).join(' | ') || 'TBD';
 
             return (
               <UpcomingEventCard
-                key={event?.id || index}
+                key={event?.id || event?.eventId || index}
                 event={event}
                 earlyCheckinAllowed={earlyCheckinAllowed}
                 title={title}
+                detailsLine={detailsLine}
                 location={location}
                 term={term}
                 points={points}

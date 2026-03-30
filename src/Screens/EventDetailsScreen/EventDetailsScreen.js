@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
 import AppGradient from '../../components/AppGradient';
@@ -18,6 +19,7 @@ const { width, height } = Dimensions.get('window');
 const EventDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const activeMenu = useSelector(state => state.app.activeMenu);
 
 
 
@@ -35,12 +37,42 @@ const EventDetailsScreen = () => {
   }
 
   const isMyEvent = fromTab === 'MY_EVENTS';
+  const isPlcEvent =
+    activeMenu === 'plc' ||
+    Array.isArray(event?.eventType) ||
+    event?.eventPlcCredits !== undefined;
 
-  const checkInFull = event.checkInTime || 'Not checked in yet';
+  const splitDateTime = value => {
+    if (typeof value !== 'string' || !value.trim()) {
+      return ['N/A', 'N/A'];
+    }
 
-  const [checkInDatePart, checkInTimePart] = checkInFull.includes(' ')
-    ? checkInFull.split(' ')
-    : [checkInFull, 'N/A'];
+    const normalized = value.trim();
+    return [normalized.slice(0, 10) || 'N/A', normalized.slice(11) || 'N/A'];
+  };
+
+  const eventName = event?.name || event?.title || event?.eventName || 'N/A';
+  const eventLocation = event?.location || event?.eventLocation || 'N/A';
+  const eventTerm = event?.termCode || terms || 'N/A';
+  const eventType = Array.isArray(event?.eventType)
+    ? event.eventType.filter(Boolean).join(', ')
+    : event?.eventType || 'N/A';
+  const eventCategory = event?.eventCategory || 'N/A';
+  const eventMetric = isPlcEvent
+    ? Number.isFinite(event?.eventPlcCredits)
+      ? `${event.eventPlcCredits} PLC Credit${event.eventPlcCredits === 1 ? '' : 's'}`
+      : Number.isFinite(event?.eventPoints)
+        ? `${event.eventPoints} Points`
+        : '0 PLC Credit'
+    : `${event?.eventPoints || event?.points || '0'} Pts`;
+
+  const [eventDatePart, eventTimePart] = isPlcEvent
+    ? splitDateTime(event?.eventStartDateTime)
+    : [event?.date || 'N/A', event?.startTime || 'N/A'];
+
+  const [checkInDatePart, checkInTimePart] = splitDateTime(
+    isPlcEvent ? event?.eventCheckInTime : event?.checkInTime,
+  );
 
   return (
       
@@ -73,24 +105,39 @@ const EventDetailsScreen = () => {
             <Text style={styles.label}>Event Name</Text>
           </View>
           <View style={styles.valueCon}>
-            <Text style={styles.value}>{event.name || event.title || 'N/A'}</Text>
+            <Text style={styles.value}>{eventName}</Text>
           </View>
         </View>
         <View style={styles.divider} />
 
-        <View style={styles.section}>
-          <View style={styles.eventnameCon}>
-            <Text style={styles.label}>
-              Term : <Text style={styles.value}>{terms || 'N/A'}</Text>
-            </Text>
+        {isPlcEvent ? (
+          <View style={styles.section}>
+            <View style={styles.eventnameCon}>
+              <Text style={styles.label}>
+                Event Type : <Text style={styles.value}>{eventType}</Text>
+              </Text>
+            </View>
+            <View style={styles.eventnameCon}>
+              <Text style={styles.label}>
+                Event Category : <Text style={styles.value}>{eventCategory}</Text>
+              </Text>
+            </View>
           </View>
-        </View>
+        ) : (
+          <View style={styles.section}>
+            <View style={styles.eventnameCon}>
+              <Text style={styles.label}>
+                Term : <Text style={styles.value}>{eventTerm}</Text>
+              </Text>
+            </View>
+          </View>
+        )}
 
 
         <View style={styles.section}>
           <View style={styles.labelContainer}>
             <Text style={styles.label}>
-              Event Location: <Text style={styles.value}>{event.location || 'N/A'}</Text>
+              Event Location: <Text style={styles.value}>{eventLocation}</Text>
             </Text>
           </View>
         </View>
@@ -104,7 +151,7 @@ const EventDetailsScreen = () => {
           </View>
           <View style={styles.valueCon}>
             <Text style={styles.value}>
-              {event.date} | {event.startTime || 'N/A'}
+              {eventDatePart} | {eventTimePart}
             </Text>
           </View>
         </View>
@@ -131,7 +178,7 @@ const EventDetailsScreen = () => {
           <View style={styles.eventnameCon}>
             <Text style={styles.label}>
               Event Points :{' '}
-              <Text style={styles.value}>{event.eventPoints || event.points || '0'} Pts</Text>
+              <Text style={styles.value}>{eventMetric}</Text>
             </Text>
           </View>
         </View>

@@ -5,34 +5,54 @@ const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     scrollView: {
-        flex: 1,
+         height: height / 1,
+        width: width / 1,
     },
     container: {
-        paddingHorizontal: width / 20,
-        paddingTop: height / 40,
-        paddingBottom: height / 30,
+        height: height / 1.2,
+        width: width / 1.1,
+        alignSelf: 'center',
+        // paddingVertical: height / 40,
     },
+        
+    headContainer:{
+            height: height / 16,
+            width: width / 1.1,
+            justifyContent: 'center',
+            // alignItems: 'center',
+            // backgroundColor: 'cyan'
+            // paddingBottom: height / 40,
+    },
+    
 
-    // Important Information Title
+
     infoTitle: {
-        fontSize: typography.size.lg,
+        fontSize: typography.size.sm,
         fontFamily: typography.bold,
         fontWeight: '700',
         color: colors.primary,
-        marginBottom: height / 35,
+        // marginBottom: height / 35,
     },
 
     // Bullet List
     bulletList: {
-        marginBottom: height / 45,
+        // marginBottom: height / 45,
+    },
+    bulletItemCon:{
+        // height: height / 12,
+        paddingBottom: height / 40,
+        width: width / 1.1,
+        // backgroundColor: 'cyan',
+        justifyContent: 'center',
     },
     bulletItem: {
-        fontSize: typography.size.md,
+        fontSize: typography.size.sm,
         fontFamily: typography.regular,
         color: colors.textDark,
         lineHeight: 24,
-        marginBottom: height / 55,
-        paddingLeft: width / 40,
+        fontWeight: '400',
+        // marginBottom: height / 55,
+        // paddingLeft: width / 40,
     },
 
     // Labels (Team Name & Team Password)

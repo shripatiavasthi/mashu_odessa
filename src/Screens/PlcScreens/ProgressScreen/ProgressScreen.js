@@ -69,7 +69,6 @@ export default function ProgressScreen({ navigation }) {
 
     const renderTable = () => (
         <View style={tableStyles.wrapper}>
-
             <View style={tableStyles.row}>
                 <View style={[tableStyles.cell, tableStyles.categoryCell, tableStyles.headerCell]}>
                     <Text style={tableStyles.headerText}>Category</Text>
@@ -163,7 +162,7 @@ export default function ProgressScreen({ navigation }) {
                                 <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('PlcDetailScreen')}>
 
                                     <View style={styles.titleCon}>
-                                        <Text style={styles.cardTitle}>{item.title}</Text>
+                                        <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
                                         <View style={styles.creditBadge}>
                                             <View style={styles.dot} />
                                             <Text style={styles.creditText}>{item.credit}</Text>

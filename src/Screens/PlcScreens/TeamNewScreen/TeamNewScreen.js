@@ -37,28 +37,38 @@ const TeamNewScreen =({ navigation }) => {
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.container}>
-
-                        {/* Important Information */}
+                        <View style={styles.headContainer}>
                         <Text style={styles.infoTitle}>
                             Important Information about Teams and Team Names
                         </Text>
+                        </View>
 
                         <View style={styles.bulletList}>
+                            <View style={styles.bulletItemCon}> 
                             <Text style={styles.bulletItem}>
                                 • Do not use any special characters when creating your team name (only letters and numbers please).
                             </Text>
+                            </View>
+                            <View style={styles.bulletItemCon}>
                             <Text style={styles.bulletItem}>
                                 • Duplicate team names will not be allowed. If you try to create a team name that someone else has already created, you will be asked to create a different name.
                             </Text>
+                            </View>
+                            <View style={styles.bulletItemCon}>
                             <Text style={styles.bulletItem}>
                                 • Do not use crude, vulgar, or suggestive words in your team name. Any team name deemed to be containing this kind of language will be removed.
                             </Text>
+                            </View>
+                            <View style={styles.bulletItemCon}>
                             <Text style={styles.bulletItem}>
                                 • Teams must contain a minimum of 2 members and a maximum of 5 members. Any teams created that do not have at least 2 members will be removed.
                             </Text>
+                            </View>
+                            <View style={styles.bulletItemCon}>
                             <Text style={styles.bulletItem}>
                                 • Creating a Team Name will automatically add you as a member of that team. If you decide later on that you want to change teams, you can use the Change Team function on the main page to switch your team association.
                             </Text>
+                            </View>
                         </View>
 
                         {/* Team Name Input */}

@@ -89,6 +89,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         alignSelf: 'center',
+        // backgroundColor: 'cyan'
     },
     cardTitle: {
         fontSize: typography.size.md,
@@ -102,6 +103,10 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: width / 60,
+        backgroundColor: colors.lightBlue,
+        borderRadius: 35,
+        paddingHorizontal: 7,
+        // height: height / 35,
     },
     dot: {
         width: width / 40,

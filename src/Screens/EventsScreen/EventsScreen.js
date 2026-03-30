@@ -147,13 +147,6 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     );
   }, [accessToken, dispatch, isFocused, user?.id]);
 
-  const handleMenuPress = () => {
-    if (onMenuPress) {
-      onMenuPress();
-    } else {
-      navigation.openDrawer?.() || navigation.getParent?.()?.openDrawer?.();
-    }
-  };
 
   const goToEventDetails = event => {
     navigation.navigate('EventDetailsScreen', {
@@ -163,7 +156,6 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     });
   };
 
-  // Add after handleMenuPress function
   const handleRefresh = async () => {
     if (activeTab !== 'UPCOMING_EVENTS') return;
     setIsRefreshing(true);
@@ -358,25 +350,32 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     );
   };
 
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <CheckInModal
-        visible={showCheckInModal}
-        eventName={selectedEvent?.name}
-        onClose={() => setShowCheckInModal(false)}
-        onSubmit={activityId => {
-          console.log('Check-in submitted:', {
-            eventId: selectedEvent?.id,
-            activityId,
-          });
-        }}
-      />
+  const handleHomePress = () => {
+    navigation.navigate('ChooseRoleScreen')
+    // setShowEmployeeModal(true);
 
-      <AppGradient style={styles.gradient}>
+  };
+
+  return (
+    <AppGradient style={styles.gradient}>
+      <SafeAreaView style={styles.safeArea}>
+        <CheckInModal
+          visible={showCheckInModal}
+          eventName={selectedEvent?.name}
+          onClose={() => setShowCheckInModal(false)}
+          onSubmit={activityId => {
+            console.log('Check-in submitted:', {
+              eventId: selectedEvent?.id,
+              activityId,
+            });
+          }}
+        />
+
+
         <LinearGradient colors={['#2E6FB6', '#4DA3DA']} style={styles.header}>
-          <TouchableOpacity style={styles.menuContainer} onPress={handleMenuPress}>
+          <TouchableOpacity style={styles.menuContainer} onPress={handleHomePress}>
             <Image
-              source={require('../../assets/Image/Menu.png')}
+              source={require('../../assets/Image/Icons/Home.png')}
               resizeMode="contain"
               style={styles.menuIcon}
             />
@@ -384,7 +383,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
           <View style={styles.logoContainer}>
             <Image
-              source={require('../../assets/Image/Menulogo.png')}
+              source={require('../../assets/Image/NewLogo.png')}
               resizeMode="contain"
               style={styles.logo}
             />
@@ -456,7 +455,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
             </Text>
           </Pressable>
         </View>
-        
+
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
@@ -475,7 +474,8 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         <TouchableOpacity
           onPress={() => setShowModal(prev => !prev)}
           style={styles.fab}
-          activeOpacity={0.8}>
+          activeOpacity={0.8}
+        >
           <Image
             source={showModal ? require('../../assets/Image/close.png') : require('../../assets/Image/Info.png')}
           />
@@ -486,9 +486,10 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           onClose={() => setShowModal(false)}
           goalPointsData={goalPoints?.[0]}
           ocSuccessRewards={ocSuccessRewards}
+
         />
-      </AppGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </AppGradient>
   );
 };
 

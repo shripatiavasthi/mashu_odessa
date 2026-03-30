@@ -50,10 +50,10 @@ const RewardPointsModal = ({
       transparent
       animationType="fade"
       statusBarTranslucent
+      style= {styles.modalCon}
     >
       
       <Pressable style={styles.overlay} onPress={onClose}>
-        <Pressable onPress={() => { }}>
           <LinearGradient
             colors={['#0B6FB6', '#0FA3E0']}
             start={{ x: 0, y: 0 }}
@@ -96,7 +96,7 @@ const RewardPointsModal = ({
             </TouchableOpacity> */}
 
           </LinearGradient>
-        </Pressable>
+        
       </Pressable>
     </Modal>
   );
@@ -106,20 +106,23 @@ export default RewardPointsModal;
 
 
 const styles = StyleSheet.create({
+  modalCon:{
+     flex: 1
+  },
   overlay: {
-    height: height / 1.3,
+    height: height / 1.05,
     width: width / 1,
     // backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    // paddingBottom: height / 4.9
+    paddingBottom: height / 4.9
   },
   container: {
     height: height / 5,
     width: width * 0.85,
     borderRadius: 10,
     // padding: 22,
-    backgroundColor: 'cyan'
+    // backgroundColor: 'cyan'
   },
   titleContainer:{
     height: height / 20,

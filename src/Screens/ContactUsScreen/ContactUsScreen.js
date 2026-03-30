@@ -146,16 +146,16 @@ const TestingScreen = () => {
             </View>
             <View style={styles.accCreateContainer}>
               <Text style={styles.infoText}>
-                Don’t have an account? 
+                Don’t have an account?
               </Text>
               <TouchableOpacity>
-              <Text
-                style={[
-                  styles.activeTabText
-                ]}
-              > Create Account
+                <Text
+                  style={[
+                    styles.activeTabText
+                  ]}
+                > Create Account
                 </Text>
-                </TouchableOpacity>
+              </TouchableOpacity>
             </View>
 
           </View>
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     letterSpacing: 1
   },
-accCreateContainer: {
+  accCreateContainer: {
     height: height / 16,
     width: width / 1.18,
     // backgroundColor: 'pink',

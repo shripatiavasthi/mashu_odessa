@@ -45,9 +45,10 @@ export const BackHeader = ({ title, onBack }) => {
 };
 
 const headerStyles = StyleSheet.create({
-  headeSection:{
-    // flex: 1
-  },
+  // fullSize:{
+  //   height: height/1,
+
+  // },
   header: {
     height: height / 14,
     width: width/1,

@@ -93,13 +93,6 @@ const RewardsScreen = ({ onMenuPress }) => {
     );
   }, [accessToken, selectedTermId, dispatch, termStatus]);
 
-  const handleMenuPress = () => {
-    if (onMenuPress) {
-      onMenuPress();
-    } else {
-      navigation.openDrawer?.() || navigation.getParent?.()?.openDrawer?.();
-    }
-  };
 
   const TermCard = ({ title, term, points, reward, status, termCodeId }) => (
     <View style={styles.cardContainer}>
@@ -149,13 +142,20 @@ const RewardsScreen = ({ onMenuPress }) => {
     </View>
   );
 
+   const handleHomePress = () => {
+    navigation.navigate('ChooseRoleScreen')
+    // setShowEmployeeModal(true);
+
+  };
+
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
         <LinearGradient colors={['#2E6FB6', '#4DA3DA']} style={styles.header}>
-          <TouchableOpacity style={styles.menuContainer} onPress={handleMenuPress}>
+          <TouchableOpacity style={styles.menuContainer} onPress={handleHomePress}>
             <Image
-              source={require('../../assets/Image/Menu.png')}
+              source={require('../../assets/Image/Icons/Home.png')}
               resizeMode="contain"
               style={styles.menuIcon}
             />
@@ -163,12 +163,12 @@ const RewardsScreen = ({ onMenuPress }) => {
 
           <View style={styles.logoContainer}>
             <Image
-              source={require('../../assets/Image/Menulogo.png')}
+              source={require('../../assets/Image/NewLogo.png')}
               resizeMode="contain"
               style={styles.logo}
             />
 
-            <View style={styles.filterContainer}>
+            {/* <View style={styles.filterContainer}>
               <Pressable style={styles.dropDownCon}>
                 <Text style={styles.filterTxt}>2026</Text>
                 <Image
@@ -177,7 +177,7 @@ const RewardsScreen = ({ onMenuPress }) => {
                   style={styles.dropImgStyle}
                 />
               </Pressable>
-            </View>
+            </View> */}
           </View>
         </LinearGradient>
         <ScrollView

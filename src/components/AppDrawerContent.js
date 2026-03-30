@@ -11,7 +11,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { setActiveMenu } from '../store/slices/appSlice';
-
+import Plc from '../assets/Image/svg/Plc.svg'
 import { colors, typography } from '../styles/globalStyles';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAuth } from '../store';
@@ -74,26 +74,23 @@ const plcDrawerItems = [
   },
   {
     label: 'Progress',
-    icon: require('../assets/Image/Icons/EventOn.png'),
+    icon: require('../assets/Image/Icons/ProgressBlack.png'),
     tab: 'Progress',
   },
   {
     label: 'Team',
-    icon: require('../assets/Image/Icons/EventOn.png'),
+    icon: require('../assets/Image/Icons/TeamBlack.png'),
     tab: 'Team',
   },
   {
     label: 'Policy',
-    icon: require('../assets/Image/Icons/EventOn.png'),
+    icon: require('../assets/Image/Icons/Policy.png'),
     tab: 'Policy',
   },
 ];
 
 const AppDrawerContent = ({ navigation }) => {
   const [showLogout, setShowLogout] = useState(false);
-
-
-
 
   const dispatch = useDispatch();
   const activeMenu = useSelector(state => state.app.activeMenu);
@@ -131,15 +128,7 @@ const AppDrawerContent = ({ navigation }) => {
     );
   };
 
-  // const handleNavigate = (tab, initialTab) => {
-  //   const resolvedInitialTab =
-  //     tab === 'Events' && !initialTab ? 'MY_EVENTS' : initialTab;
 
-  //   navigation.navigate('Home', {
-  //     screen: tab,
-  //     params: { initialTab: resolvedInitialTab },
-  //   });
-  // };
 
   const handleNavigate = (tab, initialTab) => {
     navigation.closeDrawer();
@@ -188,7 +177,11 @@ const AppDrawerContent = ({ navigation }) => {
     } finally {
       await clearAuthSession();
       dispatch(clearAuth());
-      navigation.getParent?.()?.navigate('ChooseRoleScreen');
+      // navigation.getParent?.()?.navigate('LoginScreen');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'LoginScreen' }],
+      });
     }
   };
 
@@ -213,7 +206,6 @@ const AppDrawerContent = ({ navigation }) => {
         }}
         onPLC={() => {
           setShowEmployeeModal(false);
-          // setActiveMenu('PLC');
           dispatch(setActiveMenu('PLC'));
           navigation.closeDrawer();
         }}
@@ -241,12 +233,20 @@ const AppDrawerContent = ({ navigation }) => {
 
 
         <View style={styles.switchHeaderContainer}>
+          <View style={styles.switchIconContainer}>
+          {/* <Plc height= '30' width= '30'  /> */}
+            <Image
+              source={require('../assets/Image/Icons/PlcIcon.png')}
+              style={styles.switchIcon}
+              resizeMode="contain"
+            />
+          </View>
           <View style={styles.switchHeaderLeft}>
             <Text style={styles.switchHeaderText} numberOfLines={1}>
               {currentMenuTitle}
             </Text>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             // onPress={() => setActiveMenu(activeMenu === 'OC' ? 'PLC' : 'OC')}
             onPress={() => setShowEmployeeModal(true)}
             style={styles.switchIconContainer}>
@@ -256,7 +256,7 @@ const AppDrawerContent = ({ navigation }) => {
               style={styles.switchIcon}
               resizeMode="contain"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.divider} />
 
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
   },
   profileSection: {
     paddingTop: height * 0.04,
-    paddingBottom: height * 0.015,
+    paddingBottom: height * 0.03,
     justifyContent: 'flex-start',
     width: width / 1.5,
     alignSelf: 'center',
@@ -368,33 +368,43 @@ const styles = StyleSheet.create({
 
 
   switchHeaderContainer: {
-    flexDirection: 'row',
+    // width: width/4,
+    height: height / 18,
+    // backgroundColor: 'pink',
+    // justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    width: width / 1.5,
-    alignSelf: 'center',
-    paddingVertical: 10,
-    // marginTop: 10,
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // borderBottomWidth: 0.5,
+    // borderColor: colors.lightBlue
   },
   switchHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
+    justifyContent: 'center',
+    // alignItems: 'center',
+    width: width / 1.9,
+    height: height / 18,
+    // backgroundColor: 'cyan'
   },
   switchHeaderText: {
     fontSize: typography.size.sm,
     color: colors.white,
     fontFamily: typography.regular,
     fontWeight: '700',
-    paddingRight: 10,
+
+    lineHeight: 16
   },
   switchIconContainer: {
-    // padding: 5,
+     width: width/7,
+    height: height / 18,
+    // backgroundColor: 'yellow',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   switchIcon: {
-    width: 25,
-    height: 25,
+    width: 30,
+    height: 30,
     tintColor: colors.white,
+    
   },
   divider: {
     width: width / 1.5,
@@ -403,7 +413,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.4)',
     marginBottom: 10,
   },
-  // -------------------------------
+
 
   menuSection: {
     marginTop: height * 0.01,

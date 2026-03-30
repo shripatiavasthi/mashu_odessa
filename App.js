@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import Splash from './src/Screens/Splash';
 import ChooseRoleScreen from './src/Screens/ChooseRoleScreen/ChooseRoleScreen';
-import EmployeeLoginScreen from './src/Screens/EmployeeLoginScreen/EmployeeLoginScreen';
+import LoginScreen from './src/Screens/EmployeeLoginScreen/LoginScreen';
 import ContactUsScreen from './src/Screens/ContactUsScreen/ContactUsScreen';
 import EventDetailsScreen from './src/Screens/EventDetailsScreen/EventDetailsScreen';
 import EventSuccessScreens from './src/Screens/EventSuccessScreens/EventSuccessScreens';
@@ -94,7 +94,6 @@ function Root() {
               }),
             );
 
-            // Persist updated tokens
             await saveAuthSession({
               msAccessToken: refreshed.msAccessToken,
               msRefreshToken: refreshed.msRefreshToken,
@@ -159,7 +158,7 @@ function Root() {
 
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="ChooseRoleScreen" component={ChooseRoleScreen} />
-        <Stack.Screen name="EmployeeLoginScreen" component={EmployeeLoginScreen} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="MainTabs" component={DrawerNavigator} />
         <Stack.Screen name="EventDetailsScreen" component={EventDetailsScreen} />
         <Stack.Screen name="PlcDetailScreen" component={PlcDetailScreen} />

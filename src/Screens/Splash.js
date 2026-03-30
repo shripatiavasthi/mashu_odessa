@@ -7,7 +7,7 @@ const {height, width} = Dimensions.get('screen');
 const Splash = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('ChooseRoleScreen');
+      navigation.navigate('LoginScreen');
     }, 3000);
 
     return () => clearTimeout(timer);

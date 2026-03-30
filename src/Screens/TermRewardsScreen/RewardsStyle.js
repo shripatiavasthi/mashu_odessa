@@ -39,6 +39,7 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 60,
     resizeMode: 'contain',
+    tintColor: colors.white
   },
   filterContainer: {
     height: height / 20,
@@ -335,7 +336,7 @@ export const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     right: width / 18,
-    bottom: Platform.OS === 'ios' ? height / 11 : height / 10,
+    bottom: Platform.OS === 'ios' ? height / 11 : height / 18,
     height: width / 7,
     width: width / 7,
     borderRadius: width / 12,

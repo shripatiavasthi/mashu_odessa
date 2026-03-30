@@ -35,6 +35,7 @@ const RewardsScreen = ({ onMenuPress }) => {
   const dispatch = useDispatch();
 
   const { accessToken, user } = useSelector(selectAuth);
+  const activeMenu = useSelector(state => state.app.activeMenu);
   const { items: termItems, goalPoints, status: termStatus } = useSelector(selectTerms);
   const { terms, ocSuccessReward } = useSelector(selectRewards);
 
@@ -49,13 +50,14 @@ const RewardsScreen = ({ onMenuPress }) => {
   const handleRefresh = useCallback(() => {
     if (!accessToken || !user?.id) return;
     setRefreshing(true);
-    dispatch(fetchRewards({ accessToken, userId: user.id }));
+    dispatch(fetchRewards({ accessToken, userId: user.id, activeMenu }));
 
     if (selectedTermId) {
       dispatch(
         fetchGoalPoints({
           accessToken,
           termCodeId: selectedTermId,
+          activeMenu,
         })
       );
     }
@@ -63,12 +65,12 @@ const RewardsScreen = ({ onMenuPress }) => {
     setTimeout(() => {
       setRefreshing(false);
     }, 1200);
-  }, [dispatch, accessToken, user?.id, selectedTermId]);
+  }, [dispatch, accessToken, activeMenu, user?.id, selectedTermId]);
 
   useEffect(() => {
     if (!accessToken || !user?.id) return;
-    dispatch(fetchRewards({ accessToken, userId: user.id }));
-  }, [dispatch, accessToken, user?.id]);
+    dispatch(fetchRewards({ accessToken, userId: user.id, activeMenu }));
+  }, [dispatch, accessToken, activeMenu, user?.id]);
 
   useEffect(() => {
     if (!termItems?.length || selectedTermId) return;
@@ -89,9 +91,10 @@ const RewardsScreen = ({ onMenuPress }) => {
       fetchGoalPoints({
         accessToken,
         termCodeId: selectedTermId,
+        activeMenu,
       })
     );
-  }, [accessToken, selectedTermId, dispatch, termStatus]);
+  }, [accessToken, activeMenu, selectedTermId, dispatch, termStatus]);
 
 
   const TermCard = ({ title, term, points, reward, status, termCodeId }) => (

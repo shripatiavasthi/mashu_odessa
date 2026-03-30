@@ -4,10 +4,10 @@ import {env, endpoints} from '../../env';
 
 export const fetchRewards = createAsyncThunk(
   'rewards/fetchRewards',
-  async ({accessToken, userId}, {rejectWithValue}) => {
+  async ({accessToken, userId, activeMenu}, {rejectWithValue}) => {
     try {
       const response = await apiClient.get(
-        `${env.apiBaseUrl}${endpoints.userRewards(userId)}`,
+        `${env.apiBaseUrl}${endpoints.userRewards(userId, activeMenu)}`,
         {token: accessToken},
       );
       return response;

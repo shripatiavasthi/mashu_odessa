@@ -48,7 +48,7 @@ const ENDPOINTS = {
   userEventsByTerm: (userId, termId , activeMenu) =>
     `/api/v1/app/${activeMenu}/events/user/${userId}/term/${termId}`,
   userUpcomingEvents: ( userId, activeMenu) => `/api/v1/app/${activeMenu}/events/user/${userId}/upcoming`,
-  faqsList: '/api/v1/app/oc/faqs/list',
+  faqsList: activeMenu => `/api/v1/app/${activeMenu}/faqs/list`,
   userRewards:( userId, activeMenu) => `/api/v1/app/${activeMenu}/rewards/${userId}`,
   userRewardsByTerm: (termCodeId, userId , activeMenu) =>
     `/api/v1/app/${activeMenu}/rewards/term/${termCodeId}/user/${userId}`,
@@ -74,4 +74,3 @@ console.log(
 );
 
 export const endpoints = ENDPOINTS;
-

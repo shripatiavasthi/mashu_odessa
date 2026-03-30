@@ -30,6 +30,7 @@ const TermRewardDetailsScreen = () => {
   const dispatch = useDispatch();
 
   const { accessToken, user } = useSelector(selectAuth);
+  const activeMenu = useSelector(state => state.app.activeMenu);
   const { termDetails, termDetailsStatus } = useSelector(selectRewards);
 
   const { termCodeId, termCode, displayName, rewardAmount } = route.params || {};
@@ -46,9 +47,10 @@ const TermRewardDetailsScreen = () => {
         accessToken,
         userId: user.id,
         termCodeId,
+        activeMenu,
       }),
     );
-  }, [accessToken, dispatch, termCodeId, user?.id]);
+  }, [accessToken, activeMenu, dispatch, termCodeId, user?.id]);
 
   const events = useMemo(() => {
     const list = termDetails?.events;

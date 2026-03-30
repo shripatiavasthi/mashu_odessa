@@ -29,6 +29,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
   const dispatch = useAppDispatch();
   const { status } = useAppSelector(selectCheckIn);
   const { accessToken, user: authUser } = useAppSelector(selectAuth);
+  const activeMenu = useAppSelector(state => state.app.activeMenu);
   const { user, accessToken: navToken } = route.params || {};
   const [showModal, setShowModal] = useState(false);
 
@@ -51,6 +52,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
           eventCode: trimmedId,
           userId: resolvedUserId,
           token,
+          activeMenu,
         }),
       ).unwrap();
 
@@ -153,4 +155,3 @@ const EventCheckInScreen = ({ navigation, route }) => {
 };
 
 export default EventCheckInScreen;
-

@@ -32,6 +32,7 @@ const CheckInModal = ({
   const dispatch = useAppDispatch();
   const { status } = useAppSelector(selectCheckIn);
   const { accessToken, user: authUser } = useAppSelector(selectAuth);
+  const activeMenu = useAppSelector(state => state.app.activeMenu);
 
   useEffect(() => {
     if (!visible) {
@@ -55,6 +56,7 @@ const CheckInModal = ({
           eventCode: trimmedId,
           userId: authUser?.id,
           token: accessToken,
+          activeMenu,
         }),
       ).unwrap();
 

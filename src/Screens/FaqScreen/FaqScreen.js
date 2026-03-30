@@ -24,6 +24,7 @@ const FaqScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const {accessToken} = useSelector(selectAuth);
+  const activeMenu = useSelector(state => state.app.activeMenu);
   const {items: faqItems, status: faqStatus} = useSelector(selectFaq);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -32,8 +33,8 @@ const FaqScreen = () => {
     if (!accessToken || faqStatus !== 'idle') {
       return;
     }
-    dispatch(fetchFaqs({accessToken}));
-  }, [accessToken, dispatch, faqStatus]);
+    dispatch(fetchFaqs({accessToken, activeMenu}));
+  }, [accessToken, activeMenu, dispatch, faqStatus]);
 
   const toggleItem = index => {
     setActiveIndex(index === activeIndex ? -1 : index);
@@ -42,7 +43,7 @@ const FaqScreen = () => {
   const handleRefresh = async () => {
   setIsRefreshing(true);
   try {
-    await dispatch(fetchFaqs({ accessToken })).unwrap();
+    await dispatch(fetchFaqs({accessToken, activeMenu})).unwrap();
   } catch (error) {
     console.error('Failed to refresh FAQs:', error);
   } finally {

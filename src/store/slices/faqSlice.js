@@ -4,10 +4,10 @@ import {env, endpoints} from '../../env';
 
 export const fetchFaqs = createAsyncThunk(
   'faq/fetchFaqs',
-  async ({accessToken}, {rejectWithValue}) => {
+  async ({accessToken, activeMenu}, {rejectWithValue}) => {
     try {
       const response = await apiClient.get(
-        `${env.apiBaseUrl}${endpoints.faqsList}`,
+        `${env.apiBaseUrl}${endpoints.faqsList(activeMenu)}`,
         {token: accessToken},
       );
       return response;

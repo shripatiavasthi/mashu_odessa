@@ -47,6 +47,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(selectAuth);
+  const activeMenu = useSelector(state => state.app.activeMenu);
   const { items: termItems, status: termStatus, goalPoints, ocSuccessRewards } = useSelector(selectTerms);
   const { items: eventItems, upcomingItems, totalPoints, status: eventsStatus } = useSelector(selectEvents);
 
@@ -112,9 +113,9 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   React.useEffect(() => {
     if (!isFocused || !accessToken) return;
     if (termStatus === 'idle') {
-      dispatch(fetchTermCodes({ accessToken }));
+      dispatch(fetchTermCodes({ accessToken, activeMenu }));
     }
-  }, [accessToken, dispatch, isFocused, termStatus]);
+  }, [accessToken, activeMenu, dispatch, isFocused, termStatus]);
 
 
   React.useEffect(() => {
@@ -125,6 +126,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         accessToken,
         userId: user.id,
         termId: selectedTermId,
+        activeMenu,
       }),
     );
 
@@ -132,9 +134,10 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
       fetchGoalPoints({
         accessToken,
         termCodeId: selectedTermId,
+        activeMenu,
       }),
     );
-  }, [accessToken, dispatch, isFocused, selectedTermId, user?.id]);
+  }, [accessToken, activeMenu, dispatch, isFocused, selectedTermId, user?.id]);
 
 
   React.useEffect(() => {
@@ -143,9 +146,10 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
       fetchUpcomingEvents({
         accessToken,
         userId: user.id,
+        activeMenu,
       }),
     );
-  }, [accessToken, dispatch, isFocused, user?.id]);
+  }, [accessToken, activeMenu, dispatch, isFocused, user?.id]);
 
 
   const goToEventDetails = event => {
@@ -164,6 +168,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
         fetchUpcomingEvents({
           accessToken,
           userId: user.id,
+          activeMenu,
         }),
       ).unwrap();
     } catch (error) {
@@ -494,4 +499,3 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 };
 
 export default EventsScreen;
-

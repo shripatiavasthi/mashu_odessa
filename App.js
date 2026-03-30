@@ -4,23 +4,23 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import Splash from './src/Screens/Splash';
-import ChooseRoleScreen from './src/Screens/ChooseRoleScreen/ChooseRoleScreen';
-import EmployeeLoginScreen from './src/Screens/EmployeeLoginScreen/EmployeeLoginScreen';
-import ContactUsScreen from './src/Screens/ContactUsScreen/ContactUsScreen';
+import SplashScreen from './src/common/screens/auth/SplashScreen';
+import ChooseRoleScreen from './src/common/screens/auth/ChooseRoleScreen';
+import EmployeeLoginScreen from './src/employee/screens/auth/EmployeeLoginScreen';
+import ContactUsScreen from './src/common/screens/shared/ContactUsScreen';
 import EventDetailsScreen from './src/Screens/EventDetailsScreen/EventDetailsScreen';
 import EventSuccessScreens from './src/Screens/EventSuccessScreens/EventSuccessScreens';
 import SuccessRewardBonus from './src/Screens/TermRewardsScreen/SuccessRewardBonus';
 import TermRewardDetailsScreen from './src/Screens/TermRewardDetailsScreen/TermRewardDetailsScreen';
-import DrawerNavigator from './src/navigation/DrawerNavigator';
-import PlcDetailScreen from './src/Screens/PlcScreens/ProgressScreen/PlcDetailScreen'
-import TeamDetailScreen from './src/Screens/PlcScreens/ProgressTeamScreen/TeamDetailScreen'
-import ChangeTeamScreen from './src/Screens/PlcScreens/ChangeTeamScreen/ChangeTeamScreen'
-import TeamChangeSuccessScreen from './src/Screens/PlcScreens/TeamChangeSuccessScreen/TeamChangeSuccessScreen'
-import TeamLoginSignScreen from './src/Screens/PlcScreens/TeamLoginSignScreen/TeamLoginSignScreen'
-import PolicyScreen from './src/Screens/PlcScreens/PolicyScreen/PolicyScreen'
-import TeamSignup from './src/Screens/PlcScreens/TeamSignup/TeamSignup'
-import TeamNewScreen from './src/Screens/PlcScreens/TeamNewScreen/TeamNewScreen'
+import DrawerNavigator from './src/common/navigation/DrawerNavigator';
+import PlcDetailScreen from './src/employee/programs/professionalLearningCenter/screens/ProgressScreen/PlcDetailScreen';
+import TeamDetailScreen from './src/employee/programs/professionalLearningCenter/screens/ProgressTeamScreen/TeamDetailScreen';
+import ChangeTeamScreen from './src/employee/programs/professionalLearningCenter/screens/ChangeTeamScreen/ChangeTeamScreen';
+import TeamChangeSuccessScreen from './src/employee/programs/professionalLearningCenter/screens/TeamChangeSuccessScreen/TeamChangeSuccessScreen';
+import TeamLoginSignScreen from './src/employee/programs/professionalLearningCenter/screens/TeamLoginSignScreen/TeamLoginSignScreen';
+import PolicyScreen from './src/employee/programs/professionalLearningCenter/screens/PolicyScreen/PolicyScreen';
+import TeamSignup from './src/employee/programs/professionalLearningCenter/screens/TeamSignup/TeamSignup';
+import TeamNewScreen from './src/employee/programs/professionalLearningCenter/screens/TeamNewScreen/TeamNewScreen';
 
 import { persistor, store } from './src/store';
 import { fetchGoalPoints, fetchTermCodes } from './src/store/slices/termSlice';
@@ -157,7 +157,7 @@ function Root() {
         initialRouteName={accessToken && user ? 'MainTabs' : 'Splash'}
         screenOptions={{ headerShown: false }}>
 
-        <Stack.Screen name="Splash" component={Splash} />
+        <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="ChooseRoleScreen" component={ChooseRoleScreen} />
         <Stack.Screen name="EmployeeLoginScreen" component={EmployeeLoginScreen} />
         <Stack.Screen name="MainTabs" component={DrawerNavigator} />

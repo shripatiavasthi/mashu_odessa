@@ -17,8 +17,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectAuth } from '../store';
 import { logoutWithAccessToken, clearAuth } from '../store/slices/authSlice';
 import { clearAuthSession } from '../services/authService';
-// import { useNavigation } from '@react-navigation/native';
-import EmployeeLoginModal from '../components/EmployeeLoginModal';
+import ProgramSelectionModal from '../common/components/ProgramSelectionModal';
+import {
+  EMPLOYEE_PROGRAMS,
+  PROGRAM_KEYS,
+} from '../common/constants/programs';
 
 import LogoutModal from './LogoutModal';
 
@@ -202,26 +205,29 @@ const AppDrawerContent = ({ navigation }) => {
       colors={[colors.primary, colors.primaryLight]}
       style={styles.fill}
     >
-      <EmployeeLoginModal
+      <ProgramSelectionModal
         visible={showEmployeeModal}
+        programs={EMPLOYEE_PROGRAMS}
         onClose={() => setShowEmployeeModal(false)}
-        onAllIn={() => {
+        onSelect={programKey => {
           setShowEmployeeModal(false);
-          // setActiveMenu('OC');
-          dispatch(setActiveMenu('OC'));
+          if (programKey === PROGRAM_KEYS.OC_ALL_IN) {
+            dispatch(setActiveMenu('OC'));
+            navigation.closeDrawer();
+            return;
+          }
+
+          if (programKey === PROGRAM_KEYS.PROFESSIONAL_LEARNING_CENTER) {
+            dispatch(setActiveMenu('PLC'));
+            navigation.closeDrawer();
+            return;
+          }
+
           navigation.closeDrawer();
-        }}
-        onPLC={() => {
-          setShowEmployeeModal(false);
-          // setActiveMenu('PLC');
-          dispatch(setActiveMenu('PLC'));
-          navigation.closeDrawer();
-        }}
-        onThirty={() => {
-          setShowEmployeeModal(false);
-          // navigation.navigate('ContactUsScreen')
-          navigation.closeDrawer();
-          Alert.alert('WorkInProgess!', 'Working now on #o for 30 login flow, check back soon!')
+          Alert.alert(
+            'WorkInProgess!',
+            'Working now on fitness challenge login flow, check back soon!',
+          );
         }}
       />
 
@@ -445,4 +451,3 @@ const styles = StyleSheet.create({
 });
 
 export default AppDrawerContent;
-

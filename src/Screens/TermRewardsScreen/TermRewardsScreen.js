@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchRewards } from '../../store/slices/rewardsSlice';
-import { fetchGoalPoints } from '../../store/slices/termSlice';
+import { fetchGoalPoints, fetchTermCodes } from '../../store/slices/termSlice';
 import { selectAuth, selectTerms, selectRewards } from '../../store';
 
 import Icon from 'react-native-vector-icons/Entypo';
@@ -36,7 +36,12 @@ const RewardsScreen = ({ onMenuPress }) => {
 
   const { accessToken, user } = useSelector(selectAuth);
   const activeMenu = useSelector(state => state.app.activeMenu);
-  const { items: termItems, goalPoints, status: termStatus } = useSelector(selectTerms);
+  const {
+    items: termItems,
+    goalPoints,
+    status: termStatus,
+    lastFetchedMenu,
+  } = useSelector(selectTerms);
   const { terms, ocSuccessReward } = useSelector(selectRewards);
 
 
@@ -45,6 +50,10 @@ const RewardsScreen = ({ onMenuPress }) => {
   const [showModal, setShowModal] = useState(false);
   const [showDecemberModal, setShowDecemberModal] = useState(false);
   const [selectedTermId, setSelectedTermId] = useState(null);
+
+  useEffect(() => {
+    setSelectedTermId(null);
+  }, [activeMenu]);
 
 
   const handleRefresh = useCallback(() => {
@@ -71,6 +80,13 @@ const RewardsScreen = ({ onMenuPress }) => {
     if (!accessToken || !user?.id) return;
     dispatch(fetchRewards({ accessToken, userId: user.id, activeMenu }));
   }, [dispatch, accessToken, activeMenu, user?.id]);
+
+  useEffect(() => {
+    if (!accessToken) return;
+    if (termStatus === 'idle' || lastFetchedMenu !== activeMenu) {
+      dispatch(fetchTermCodes({ accessToken, activeMenu }));
+    }
+  }, [accessToken, activeMenu, dispatch, lastFetchedMenu, termStatus]);
 
   useEffect(() => {
     if (!termItems?.length || selectedTermId) return;

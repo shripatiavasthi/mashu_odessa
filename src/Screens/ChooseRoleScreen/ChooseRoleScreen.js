@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     borderColor: colors.boderLight,
     borderRadius: 12,
     paddingVertical: 20,
-    paddingHorizontal: 18,
+    paddingHorizontal: 10,
     marginBottom: 18,
   },
   row: {

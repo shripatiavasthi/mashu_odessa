@@ -241,6 +241,20 @@ export const styles = StyleSheet.create({
         fontFamily: typography.regular,
         color: colors.textMuted,
     },
+    stateContainer: {
+        minHeight: height / 4,
+        width: width / 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: width / 10,
+    },
+    stateText: {
+        marginTop: height / 60,
+        fontSize: typography.size.sm,
+        fontFamily: typography.regular,
+        color: colors.textMuted,
+        textAlign: 'center',
+    },
 
 
     //TeamPageStyling

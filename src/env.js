@@ -66,6 +66,8 @@ const ENDPOINTS = {
     `/api/v1/app/${resolveActiveMenu(activeMenu)}/rewards/term/${termCodeId}/user/${userId}`,
   termGoalPoints:  ( termCodeId, activeMenu) =>
     `/api/v1/app/${resolveActiveMenu(activeMenu)}/term-data/goal-points/list?termCodeId=${termCodeId}`,
+  plcTeamProgress: '/api/v1/app/plc/progress/teams',
+  plcTeamProgressDetails: teamId => `/api/v1/app/plc/progress/teams/${teamId}`,
 };
 
 

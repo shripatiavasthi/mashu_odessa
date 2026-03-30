@@ -249,6 +249,19 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    teamStateContainer: {
+        minHeight: height / 4,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: width / 12,
+    },
+    teamStateText: {
+        marginTop: height / 60,
+        fontSize: typography.size.sm,
+        color: colors.textMuted,
+        fontFamily: typography.regular,
+        textAlign: 'center',
+    },
 });
 
 export const tableStyles = StyleSheet.create({

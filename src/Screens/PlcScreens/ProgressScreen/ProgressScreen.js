@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
     ScrollView,
     TouchableOpacity,
-    
+    ActivityIndicator,
     Dimensions,
-    StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Entypo';
+import { useSelector } from 'react-redux';
 import AppHeader from '../../../components/AppHeader';
 import AppGradient from '../../../components/AppGradient';
+import { apiClient } from '../../../api/client';
+import { env, endpoints } from '../../../env';
+import { selectAuth } from '../../../store';
 import { colors, typography } from '../../../styles/globalStyles';
 import { styles, tableStyles } from './ProgressStyles';
 
@@ -56,16 +59,39 @@ const creditDetails = [
     },
 ];
 
-const teamData = [
-    { id: 1, name: 'Crimson Hawks', members: 5, points: 250 },
-    { id: 2, name: 'Silver Serpents', members: 5, points: 10011 },
-    { id: 3, name: 'Blue Barracudas', members: 5, points: 175 },
-    { id: 4, name: 'Golden Griffins', members: 5, points: 150 },
-    { id: 5, name: 'Emerald Enchanters', members: 5, points: 70000 },
-];
-
 export default function ProgressScreen({ navigation }) {
     const [activeTab, setActiveTab] = useState('individual');
+    const [teamProgress, setTeamProgress] = useState([]);
+    const [teamStatus, setTeamStatus] = useState('idle');
+    const [teamError, setTeamError] = useState(null);
+    const { accessToken } = useSelector(selectAuth);
+
+    useEffect(() => {
+        if (activeTab !== 'team' || !accessToken) {
+            return;
+        }
+
+        const loadTeamProgress = async () => {
+            try {
+                setTeamStatus('loading');
+                setTeamError(null);
+
+                const response = await apiClient.get(
+                    `${env.apiBaseUrl}${endpoints.plcTeamProgress}`,
+                    { token: accessToken },
+                );
+
+                const data = response?.data;
+                setTeamProgress(Array.isArray(data) ? data : []);
+                setTeamStatus('succeeded');
+            } catch (error) {
+                setTeamStatus('failed');
+                setTeamError(error?.message || 'Failed to load team progress');
+            }
+        };
+
+        loadTeamProgress();
+    }, [accessToken, activeTab]);
 
     const renderTable = () => (
         <View style={tableStyles.wrapper}>
@@ -194,31 +220,56 @@ export default function ProgressScreen({ navigation }) {
                     </ScrollView>
                 ) : (
                     <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-                        {teamData.map(team => (
-                            <View key={team.id} style={styles.spaceBox}>
-                                <TouchableOpacity
-                                    style={styles.teamCard}
-                                    onPress={() => navigation.navigate('TeamDetailScreen', { name: team.name })}>
-                                    <View style={styles.teamCardLeft}>
-                                        <View style={styles.nameCon}>
-                                            <Text style={styles.teamName}>{team.name}</Text>
-                                        </View>
-                                        <View style={styles.teamCon}>
-                                            <Text style={styles.teamMembers}>{team.members} Team members</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.teamCardRight}>
-                                        <View style={styles.pointsBadge}>
-                                            <View style={styles.dot} />
-                                            <Text style={styles.pointsText}>{team.points} Points</Text>
-                                        </View>
-                                        <View style={styles.arrowCon}>
-                                            <Icon name="chevron-with-circle-right" size={18} color={colors.textDark} />
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
+                        {teamStatus === 'loading' ? (
+                            <View style={styles.teamStateContainer}>
+                                <ActivityIndicator size="large" color={colors.primary} />
+                                <Text style={styles.teamStateText}>Loading team progress...</Text>
                             </View>
-                        ))}
+                        ) : teamError ? (
+                            <View style={styles.teamStateContainer}>
+                                <Text style={styles.teamStateText}>{teamError}</Text>
+                            </View>
+                        ) : teamProgress.length === 0 ? (
+                            <View style={styles.teamStateContainer}>
+                                <Text style={styles.teamStateText}>No team progress found</Text>
+                            </View>
+                        ) : (
+                            teamProgress.map(team => {
+                                const teamMembers = Number(team?.teamMembersCount) || 0;
+                                const totalPoints = Number(team?.totalPoints) || 0;
+
+                                return (
+                                    <View key={team?.teamId || team?.teamName} style={styles.spaceBox}>
+                                        <TouchableOpacity
+                                            style={styles.teamCard}
+                                            onPress={() => navigation.navigate('TeamDetailScreen', {
+                                                id: team?.teamId,
+                                                name: team?.teamName,
+                                            })}>
+                                            <View style={styles.teamCardLeft}>
+                                                <View style={styles.nameCon}>
+                                                    <Text style={styles.teamName}>{team?.teamName || 'Team'}</Text>
+                                                </View>
+                                                <View style={styles.teamCon}>
+                                                    <Text style={styles.teamMembers}>
+                                                        {teamMembers} Team member{teamMembers === 1 ? '' : 's'}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={styles.teamCardRight}>
+                                                <View style={styles.pointsBadge}>
+                                                    <View style={styles.dot} />
+                                                    <Text style={styles.pointsText}>{totalPoints} Points</Text>
+                                                </View>
+                                                <View style={styles.arrowCon}>
+                                                    <Icon name="chevron-with-circle-right" size={18} color={colors.textDark} />
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                );
+                            })
+                        )}
                         <View style={{ height: height / 10 }} />
                     </ScrollView>
                 )}

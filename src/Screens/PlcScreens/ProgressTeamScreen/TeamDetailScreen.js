@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     View,
     Text,
@@ -6,77 +6,18 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
+    ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import AppGradient, { BackHeader } from '../../../components/AppGradient';
-// import { styles, tableStyles } from '../ProgressScreen/ProgressStyles';
+import { apiClient } from '../../../api/client';
+import { env, endpoints } from '../../../env';
+import { selectAuth } from '../../../store';
+import { colors } from '../../../styles/globalStyles';
 import { styles } from './TeamDetailStyles';
 
 const { height } = Dimensions.get('window');
-
-const eventsData = [
-    {
-        id: 1,
-        title: 'Graduation Ceremony',
-        points: 100,
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Exhibition Hall',
-        checkIn: '2024-11-15 | 02:30 PM',
-    },
-    {
-        id: 2,
-        title: 'Annual Awards Gala',
-        points: 100,
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Virtual Meeting',
-        checkIn: '2024-12-01 | 09:00 AM',
-    },
-    {
-        id: 3,
-        title: 'Innovation Summit',
-        points: 50,
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Conference Room A',
-        checkIn: '2024-12-15 | 04:00 PM',
-    },
-   
-];
-
-const membersData = [
-    {
-        id: 1,
-        name: 'You',
-        email: 'michaela@odessa.edu',
-        avatar: null,
-    },
-    {
-        id: 2,
-        name: 'Ethan Carter',
-        email: 'ethan.carter@sunset.edu',
-        avatar: null,
-    },
-    {
-        id: 3,
-        name: 'Oliver James',
-        email: 'oliver.james@sunset.edu',
-        avatar: null,
-    },
-    {
-        id: 4,
-        name: 'Noah Smith',
-        email: 'noah.smith@sunset.edu',
-        avatar: null,
-    },
-    {
-        id: 5,
-        name: 'Lucas Bennett',
-        email: 'lucas.bennett@sunset.edu',
-        avatar: null,
-    },
-];
 
 const getInitials = name => {
     const parts = name.trim().split(' ');
@@ -86,7 +27,82 @@ const getInitials = name => {
 
 export default function TeamDetailScreen({ navigation, route }) {
     const [activeTab, setActiveTab] = useState('events');
+    const [teamDetails, setTeamDetails] = useState(null);
+    const [status, setStatus] = useState('idle');
+    const [error, setError] = useState(null);
+    const { accessToken } = useSelector(selectAuth);
+    const teamId = route?.params?.id || '';
     const teamName = route?.params?.name || 'Crimson Hawks';
+
+    useEffect(() => {
+        if (!accessToken || !teamId) {
+            return;
+        }
+
+        const loadTeamDetails = async () => {
+            try {
+                setStatus('loading');
+                setError(null);
+
+                const response = await apiClient.get(
+                    `${env.apiBaseUrl}${endpoints.plcTeamProgressDetails(teamId)}`,
+                    { token: accessToken },
+                );
+
+                setTeamDetails(response?.data || {});
+                setStatus('succeeded');
+            } catch (requestError) {
+                setStatus('failed');
+                setError(requestError?.message || 'Failed to load team details');
+            }
+        };
+
+        loadTeamDetails();
+    }, [accessToken, teamId]);
+
+    const eventsData = useMemo(() => {
+        const list = teamDetails?.eventResponse;
+        if (!Array.isArray(list)) {
+            return [];
+        }
+
+        return list.map(item => ({
+            id: item?.eventId,
+            title: item?.eventName || 'Event',
+            points: Number.isFinite(item?.eventPoints) ? item.eventPoints : 0,
+            category: Array.isArray(item?.eventType)
+                ? item.eventType.filter(Boolean).join(', ')
+                : item?.eventType || 'N/A',
+            term: item?.eventCategory || 'N/A',
+            location: item?.eventLocation || 'TBD',
+            checkIn: item?.eventCheckInTime || 'TBD',
+            raw: item,
+        }));
+    }, [teamDetails]);
+
+    const membersData = useMemo(() => {
+        const list = teamDetails?.teamMembersResponse;
+        if (!Array.isArray(list)) {
+            return [];
+        }
+
+        return list.map(item => {
+            const fullName = [item?.firstName, item?.lastName].filter(Boolean).join(' ').trim() || 'Member';
+            return {
+                id: item?.userId,
+                name: item?.isCurrentUser ? 'You' : fullName,
+                email: item?.email || '',
+                avatar: null,
+            };
+        });
+    }, [teamDetails]);
+
+    const renderState = message => (
+        <View style={styles.stateContainer}>
+            {status === 'loading' && <ActivityIndicator size="large" color={colors.primary} />}
+            <Text style={styles.stateText}>{message}</Text>
+        </View>
+    );
 
     return (
         <SafeAreaView style={styles.safe} >
@@ -115,7 +131,7 @@ export default function TeamDetailScreen({ navigation, route }) {
                 {activeTab === 'events' ? (
                     <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
                         <View style={styles.listCon}>
-                            {eventsData.map(item => (
+                            {status === 'loading' ? renderState('Loading team events...') : error ? renderState(error) : eventsData.length === 0 ? renderState('No team events found') : eventsData.map(item => (
                                 <View style={styles.eventSpace} key={item.id}>
                                 <TouchableOpacity onPress={() => navigation.navigate('PlcDetailScreen')} key={item.id} style={styles.eventCard}>
                                     <View style={styles.eventCardTop}>
@@ -145,7 +161,7 @@ export default function TeamDetailScreen({ navigation, route }) {
                 ) : (
                     <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
                         <View style={styles.listCon}>
-                            {membersData.map(item => (
+                            {status === 'loading' ? renderState('Loading team members...') : error ? renderState(error) : membersData.length === 0 ? renderState('No team members found') : membersData.map(item => (
                                 <View key={item.id} style={styles.spaceContainer}>
                                 <TouchableOpacity key={item.id} style={styles.memberCard}>
                                     <View style={styles.avatarSpace}>

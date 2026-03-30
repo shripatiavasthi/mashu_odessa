@@ -28,11 +28,13 @@ const ChooseRoleScreen = () => {
   const dispatch = useDispatch();
 
   const handleAllIn = () => {
+    console.log('OC All-In selected');
     dispatch(setActiveMenu('oc'));
     navigation.navigate('MainTabs')
   };
 
   const handlePLC = () => {
+     console.log('PLC selected');
     dispatch(setActiveMenu('plc'));
     navigation.navigate('MainTabs')
   };
@@ -57,7 +59,7 @@ const ChooseRoleScreen = () => {
               resizeMode="contain"
             />
             
-            {/* <Text style={styles.collegeTitle}>ODESSA COLLEGE</Text> */}
+            
           </View>
 
 
@@ -77,7 +79,7 @@ const ChooseRoleScreen = () => {
                 </Text>
               </View>
 
-              <Icon name="chevron-with-circle-right" size={24} color="#666666" />
+              <Icon name="chevron-with-circle-right" size={24} color="#0e0707" />
             </View>
           </TouchableOpacity>
 

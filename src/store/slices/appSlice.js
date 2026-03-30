@@ -11,7 +11,7 @@ const normalizeActiveMenu = value => {
 const appSlice = createSlice({
   name: 'app',
   initialState: {
-    activeMenu: 'oc', // 'OC' or 'PLC', 
+    activeMenu: 'oc', 
   },
   reducers: {
     setActiveMenu: (state, action) => {

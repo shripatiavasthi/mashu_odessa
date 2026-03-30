@@ -136,7 +136,7 @@ const BottomTabs = () => {
         />
 
         {/* Conditional Tabs based on activeMenu (PLC or OC) */}
-        {activeMenu === 'OC' ? (
+        {activeMenu === 'oc' ? (
           <>
             <Tab.Screen
               name="Rewards"
@@ -445,4 +445,3 @@ const styles = StyleSheet.create({
 //     shadowRadius: 3,
 //   },
 // });
-

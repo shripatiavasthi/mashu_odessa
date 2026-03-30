@@ -4,11 +4,11 @@ import {env, endpoints} from '../../env';
 
 export const submitEventCheckIn = createAsyncThunk(
   'checkIn/submitEventCheckIn',
-  async ({eventCode, userId, token}, {rejectWithValue}) => {
+  async ({eventCode, userId, token , activeMenu}, {rejectWithValue}) => {
     try {
       const payload = {eventCode, userId};
       const response = await apiClient.post(
-        `${env.apiBaseUrl}${endpoints.eventCheckIn}`,
+        `${env.apiBaseUrl}${endpoints.eventCheckIn(activeMenu)}`,
         payload,
         {token},
       );

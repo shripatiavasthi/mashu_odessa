@@ -23,10 +23,10 @@ export const fetchRewards = createAsyncThunk(
 
 export const fetchRewardTermDetails = createAsyncThunk(
   'rewards/fetchRewardTermDetails',
-  async ({accessToken, userId, termCodeId}, {rejectWithValue}) => {
+  async ({accessToken, userId, termCodeId, activeMenu}, {rejectWithValue}) => {
     try {
       const response = await apiClient.get(
-        `${env.apiBaseUrl}${endpoints.userRewardsByTerm(termCodeId, userId)}`,
+        `${env.apiBaseUrl}${endpoints.userRewardsByTerm(termCodeId, userId, activeMenu)}`,
         {token: accessToken},
       );
       return response;

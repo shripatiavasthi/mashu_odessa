@@ -38,22 +38,22 @@ const CONFIG = {
     },
   },
 };
-
+// '/api/v1/app/oc/events/check-in'
 const ENDPOINTS = {
   activityCheckIn: '/activities/check-in',
-  eventCheckIn: '/api/v1/app/oc/events/check-in',
+  eventCheckIn: (activeMenu) => `/api/v1/app/${activeMenu}/events/check-in`,
   authLogin: '/api/v1/app/authentication/login',
   authLogout: '/api/v1/app/authentication/logout',
-  termCodesList: '/api/v1/app/oc/term-data/term-codes/list',
-  userEventsByTerm: (userId, termId) =>
-    `/api/v1/app/oc/events/user/${userId}/term/${termId}`,
-  userUpcomingEvents: userId => `/api/v1/app/oc/events/user/${userId}/upcoming`,
+  termCodesList: (activeMenu) => `/api/v1/app/${activeMenu}/term-data/term-codes/list`,
+  userEventsByTerm: (userId, termId , activeMenu) =>
+    `/api/v1/app/${activeMenu}/events/user/${userId}/term/${termId}`,
+  userUpcomingEvents: ( userId, activeMenu) => `/api/v1/app/${activeMenu}/events/user/${userId}/upcoming`,
   faqsList: '/api/v1/app/oc/faqs/list',
-  userRewards: userId => `/api/v1/app/oc/rewards/${userId}`,
-  userRewardsByTerm: (termCodeId, userId) =>
-    `/api/v1/app/oc/rewards/term/${termCodeId}/user/${userId}`,
-  termGoalPoints: termCodeId =>
-    `/api/v1/app/oc/term-data/goal-points/list?termCodeId=${termCodeId}`,
+  userRewards:( userId, activeMenu) => `/api/v1/app/${activeMenu}/rewards/${userId}`,
+  userRewardsByTerm: (termCodeId, userId , activeMenu) =>
+    `/api/v1/app/${activeMenu}/rewards/term/${termCodeId}/user/${userId}`,
+  termGoalPoints:  ( termCodeId, activeMenu) =>
+    `/api/v1/app/${activeMenu}/term-data/goal-points/list?termCodeId=${termCodeId}`,
 };
 
 

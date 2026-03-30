@@ -4,10 +4,10 @@ import {env, endpoints} from '../../env';
 
 export const fetchEventsByTerm = createAsyncThunk(
   'events/fetchEventsByTerm',
-  async ({accessToken, userId, termId}, {rejectWithValue}) => {
+  async ({accessToken, userId, termId , activeMenu}, {rejectWithValue}) => {
     try {
       const response = await apiClient.get(
-        `${env.apiBaseUrl}${endpoints.userEventsByTerm(userId, termId)}`,
+        `${env.apiBaseUrl}${endpoints.userEventsByTerm(userId, termId, activeMenu)}`,
         {token: accessToken},
       );
       return response;
@@ -23,10 +23,10 @@ export const fetchEventsByTerm = createAsyncThunk(
 
 export const fetchUpcomingEvents = createAsyncThunk(
   'events/fetchUpcomingEvents',
-  async ({accessToken, userId}, {rejectWithValue}) => {
+  async ({accessToken, userId, activeMenu}, {rejectWithValue}) => {
     try {
       const response = await apiClient.get(
-        `${env.apiBaseUrl}${endpoints.userUpcomingEvents(userId)}`,
+        `${env.apiBaseUrl}${endpoints.userUpcomingEvents(userId, activeMenu)}`,
         {token: accessToken},
       );
       return response;

@@ -28,12 +28,12 @@ const ChooseRoleScreen = () => {
   const dispatch = useDispatch();
 
   const handleAllIn = () => {
-    dispatch(setActiveMenu('OC'));
+    dispatch(setActiveMenu('oc'));
     navigation.navigate('MainTabs')
   };
 
   const handlePLC = () => {
-    dispatch(setActiveMenu('PLC'));
+    dispatch(setActiveMenu('plc'));
     navigation.navigate('MainTabs')
   };
 

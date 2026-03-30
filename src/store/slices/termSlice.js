@@ -4,10 +4,10 @@ import {env, endpoints} from '../../env';
 
 export const fetchTermCodes = createAsyncThunk(
   'terms/fetchTermCodes',
-  async ({accessToken}, {rejectWithValue}) => {
+  async ({accessToken, activeMenu}, {rejectWithValue}) => {
     try {
       const response = await apiClient.get(
-        `${env.apiBaseUrl}${endpoints.termCodesList}`,
+        `${env.apiBaseUrl}${endpoints.termCodesList(activeMenu)}`,
         {token: accessToken},
       );
       return response;
@@ -23,10 +23,10 @@ export const fetchTermCodes = createAsyncThunk(
 
 export const fetchGoalPoints = createAsyncThunk(
   'terms/fetchGoalPoints',
-  async ({accessToken, termCodeId}, {rejectWithValue}) => {
+  async ({accessToken, termCodeId , activeMenu}, {rejectWithValue}) => {
     try {
       const response = await apiClient.get(
-        `${env.apiBaseUrl}${endpoints.termGoalPoints(termCodeId)}`,
+        `${env.apiBaseUrl}${endpoints.termGoalPoints(termCodeId, activeMenu)}`,
         {token: accessToken},
       );
       return response;

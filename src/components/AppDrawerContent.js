@@ -201,12 +201,12 @@ const AppDrawerContent = ({ navigation }) => {
         onAllIn={() => {
           setShowEmployeeModal(false);
           // setActiveMenu('OC');
-          dispatch(setActiveMenu('OC'));
+          dispatch(setActiveMenu('oc'));
           navigation.closeDrawer();
         }}
         onPLC={() => {
           setShowEmployeeModal(false);
-          dispatch(setActiveMenu('PLC'));
+          dispatch(setActiveMenu('plc'));
           navigation.closeDrawer();
         }}
         onThirty={() => {

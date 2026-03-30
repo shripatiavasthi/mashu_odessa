@@ -186,11 +186,11 @@ const BottomTabs = () => {
         onClose={() => setShowEmployeeModal(false)}
         onAllIn={() => {
           setShowEmployeeModal(false);
-          dispatch(setActiveMenu('OC'));
+          dispatch(setActiveMenu('oc'));
         }}
         onPLC={() => {
           setShowEmployeeModal(false);
-          dispatch(setActiveMenu('PLC'));
+          dispatch(setActiveMenu('plc'));
         }}
         onThirty={() => {
           setShowEmployeeModal(false);

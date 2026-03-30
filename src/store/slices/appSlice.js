@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const appSlice = createSlice({
   name: 'app',
   initialState: {
-    activeMenu: 'OC', 
+    activeMenu: 'oc', // 'OC' or 'PLC', 
   },
   reducers: {
     setActiveMenu: (state, action) => {

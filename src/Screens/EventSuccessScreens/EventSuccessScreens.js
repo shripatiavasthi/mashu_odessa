@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import AppHeader from '../../components/AppHeader';
+import { useSelector } from 'react-redux';
 import AppGradient from '../../components/AppGradient';
 import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,25 +20,55 @@ const { height, width } = Dimensions.get('window');
 const EventSuccessScreens = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const activeMenu = useSelector(state => state.app.activeMenu);
 
   const { response } = route.params || {};
   const data = response?.data || {};
+  const isPlcResponse =
+    activeMenu === 'plc' ||
+    Array.isArray(data?.eventType) ||
+    data?.eventPlcCredits !== undefined;
+
+  const splitDateTime = value => {
+    if (typeof value !== 'string' || !value.trim()) {
+      return ['N/A', 'N/A'];
+    }
+
+    const normalized = value.trim();
+    const datePart = normalized.slice(0, 10) || 'N/A';
+    const timePart = normalized.slice(11) || 'N/A';
+
+    return [datePart, timePart];
+  };
+
   const eventName = data?.eventName || 'Event';
   const eventLocation = data?.eventLocation || 'TBD';
-  const eventDate = [data?.date, data?.startTime].filter(Boolean).join(' | ') || 'TBD';
-  // const checkInTime = data?.checkInTime || {};
   const termCode = data?.termCode || 'N/A';
-  const eventPoints = Number.isFinite(data?.eventPoints)
-    ? `${data.eventPoints} Points`
-    : '0 Points';
+  const eventCategory = data?.eventCategory || 'N/A';
+  const eventType = Array.isArray(data?.eventType)
+    ? data.eventType.filter(Boolean).join(', ')
+    : data?.eventType || 'N/A';
 
-  const checkInFull = data.checkInTime || 'Not checked in yet';
+  const [eventStartDatePart, eventStartTimePart] = isPlcResponse
+    ? splitDateTime(data?.eventStartDateTime)
+    : [data?.date || 'N/A', data?.startTime || 'N/A'];
 
-  const [checkInDatePart, checkInTimePart] = checkInFull.includes(' ')
-    ? checkInFull.split(' ')
-    : [checkInFull, 'N/A'];
+  const [eventEndDatePart, eventEndTimePart] = isPlcResponse
+    ? splitDateTime(data?.eventEndDateTime)
+    : [data?.endDate || data?.date || 'N/A', data?.endTime || 'N/A'];
 
-  console.log("detail login response :", data)
+  const [checkInDatePart, checkInTimePart] = splitDateTime(
+    isPlcResponse ? data?.eventCheckInTime : data?.checkInTime,
+  );
+
+  const metricLabel = isPlcResponse ? 'PLC Credit' : 'Event Points';
+  const metricValue = isPlcResponse
+    ? Number.isFinite(data?.eventPlcCredits)
+      ? `${data.eventPlcCredits}`
+      : '0'
+    : Number.isFinite(data?.eventPoints)
+      ? `${data.eventPoints} Points`
+      : '0 Points';
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -94,6 +124,22 @@ const EventSuccessScreens = () => {
           </View>
 
           <View style={styles.detailsContainer}>
+            {isPlcResponse && (
+              <>
+                <View style={styles.locContainer}>
+                  <Text style={styles.detailText}>
+                    Event Type : <Text style={styles.detailBold}>{eventType}</Text>
+                  </Text>
+                </View>
+
+                <View style={styles.termContainer}>
+                  <Text style={styles.detailText}>
+                    Event Category: <Text style={styles.detailBold}>{eventCategory}</Text>
+                  </Text>
+                </View>
+              </>
+            )}
+
             <View style={styles.locContainer}>
               <Text style={styles.detailText}>
                 Event Location:{' '}
@@ -101,11 +147,13 @@ const EventSuccessScreens = () => {
               </Text>
             </View>
 
-            <View style={styles.termContainer}>
-              <Text style={styles.detailText}>
-                Term : <Text style={styles.detailBold}>{termCode}</Text>
-              </Text>
-            </View>
+            {!isPlcResponse && (
+              <View style={styles.termContainer}>
+                <Text style={styles.detailText}>
+                  Term : <Text style={styles.detailBold}>{termCode}</Text>
+                </Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.eventstartCon}>
@@ -115,9 +163,27 @@ const EventSuccessScreens = () => {
               </Text>
             </View>
             <View style={styles.boldContainer}>
-              <Text style={styles.detailBold}>{eventDate}</Text>
+              <Text style={styles.detailBold}>
+                {eventStartDatePart} | {eventStartTimePart}
+              </Text>
             </View>
           </View>
+
+          {isPlcResponse && (
+            <View style={styles.eventContainer}>
+              <View>
+                <Text style={styles.detailText}>
+                  Event End Date
+                </Text>
+              </View>
+
+              <View style={styles.boldContainer}>
+                <Text style={styles.detailBold}>
+                  {eventEndDatePart} | {eventEndTimePart}
+                </Text>
+              </View>
+            </View>
+          )}
 
           <View style={styles.eventContainer}>
             <View>
@@ -135,8 +201,8 @@ const EventSuccessScreens = () => {
 
           <View style={styles.detailRowContainer}>
             <Text style={styles.detailText}>
-              Event Points :{' '}
-              <Text style={styles.detailBold}>{eventPoints}</Text>
+              {metricLabel} :{' '}
+              <Text style={styles.detailBold}>{metricValue}</Text>
             </Text>
           </View>
 

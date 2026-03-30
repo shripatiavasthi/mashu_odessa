@@ -39,21 +39,26 @@ const CONFIG = {
   },
 };
 // '/api/v1/app/oc/events/check-in'
+const resolveActiveMenu = activeMenu =>
+  typeof activeMenu === 'string' && activeMenu.trim()
+    ? activeMenu.trim().toLowerCase()
+    : 'oc';
+
 const ENDPOINTS = {
   activityCheckIn: '/activities/check-in',
-  eventCheckIn: (activeMenu) => `/api/v1/app/${activeMenu}/events/check-in`,
+  eventCheckIn: activeMenu => `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/check-in`,
   authLogin: '/api/v1/app/authentication/login',
   authLogout: '/api/v1/app/authentication/logout',
-  termCodesList: (activeMenu) => `/api/v1/app/${activeMenu}/term-data/term-codes/list`,
+  termCodesList: activeMenu => `/api/v1/app/${resolveActiveMenu(activeMenu)}/term-data/term-codes/list`,
   userEventsByTerm: (userId, termId , activeMenu) =>
-    `/api/v1/app/${activeMenu}/events/user/${userId}/term/${termId}`,
-  userUpcomingEvents: ( userId, activeMenu) => `/api/v1/app/${activeMenu}/events/user/${userId}/upcoming`,
-  faqsList: activeMenu => `/api/v1/app/${activeMenu}/faqs/list`,
-  userRewards:( userId, activeMenu) => `/api/v1/app/${activeMenu}/rewards/${userId}`,
+    `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/user/${userId}/term/${termId}`,
+  userUpcomingEvents: ( userId, activeMenu) => `/api/v1/app/${resolveActiveMenu(activeMenu)}/events/user/${userId}/upcoming`,
+  faqsList: activeMenu => `/api/v1/app/${resolveActiveMenu(activeMenu)}/faqs/list`,
+  userRewards:( userId, activeMenu) => `/api/v1/app/${resolveActiveMenu(activeMenu)}/rewards/${userId}`,
   userRewardsByTerm: (termCodeId, userId , activeMenu) =>
-    `/api/v1/app/${activeMenu}/rewards/term/${termCodeId}/user/${userId}`,
+    `/api/v1/app/${resolveActiveMenu(activeMenu)}/rewards/term/${termCodeId}/user/${userId}`,
   termGoalPoints:  ( termCodeId, activeMenu) =>
-    `/api/v1/app/${activeMenu}/term-data/goal-points/list?termCodeId=${termCodeId}`,
+    `/api/v1/app/${resolveActiveMenu(activeMenu)}/term-data/goal-points/list?termCodeId=${termCodeId}`,
 };
 
 

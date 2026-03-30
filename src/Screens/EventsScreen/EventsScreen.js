@@ -48,7 +48,13 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(selectAuth);
   const activeMenu = useSelector(state => state.app.activeMenu);
-  const { items: termItems, status: termStatus, goalPoints, ocSuccessRewards } = useSelector(selectTerms);
+  const {
+    items: termItems,
+    status: termStatus,
+    lastFetchedMenu,
+    goalPoints,
+    ocSuccessRewards,
+  } = useSelector(selectTerms);
   const { items: eventItems, upcomingItems, totalPoints, status: eventsStatus } = useSelector(selectEvents);
 
   const navigation = useNavigation();
@@ -84,6 +90,12 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
       .filter(item => item.termCode);
   }, [termItems]);
 
+  React.useEffect(() => {
+    setSelectedTerm(null);
+    setSelectedTermId(null);
+    setHasSetInitialTerm(false);
+  }, [activeMenu]);
+
 
   React.useEffect(() => {
     if (!termOptions.length || hasSetInitialTerm) return;
@@ -112,10 +124,10 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
   React.useEffect(() => {
     if (!isFocused || !accessToken) return;
-    if (termStatus === 'idle') {
+    if (termStatus === 'idle' || lastFetchedMenu !== activeMenu) {
       dispatch(fetchTermCodes({ accessToken, activeMenu }));
     }
-  }, [accessToken, activeMenu, dispatch, isFocused, termStatus]);
+  }, [accessToken, activeMenu, dispatch, isFocused, lastFetchedMenu, termStatus]);
 
 
   React.useEffect(() => {

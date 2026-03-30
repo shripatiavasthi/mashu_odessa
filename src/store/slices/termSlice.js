@@ -2,6 +2,14 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {apiClient} from '../../api/client';
 import {env, endpoints} from '../../env';
 
+const normalizeActiveMenu = value => {
+  if (typeof value !== 'string' || !value.trim()) {
+    return 'oc';
+  }
+
+  return value.trim().toLowerCase();
+};
+
 export const fetchTermCodes = createAsyncThunk(
   'terms/fetchTermCodes',
   async ({accessToken, activeMenu}, {rejectWithValue}) => {
@@ -44,6 +52,7 @@ const initialState = {
   items: [],
   status: 'idle',
   error: null,
+  lastFetchedMenu: null,
   goalPoints: [],
   ocSuccessRewards: null,
   goalPointsStatus: 'idle',
@@ -58,6 +67,7 @@ const termSlice = createSlice({
       state.items = [];
       state.status = 'idle';
       state.error = null;
+      state.lastFetchedMenu = null;
       state.goalPoints = [];
       state.ocSuccessRewards = null;
       state.goalPointsStatus = 'idle';
@@ -73,9 +83,11 @@ const termSlice = createSlice({
       .addCase(fetchTermCodes.fulfilled, (state, action) => {
         const payload = action.payload || {};
         const data = payload.data || [];
+        const {activeMenu} = action.meta.arg || {};
 
         state.status = 'succeeded';
         state.items = Array.isArray(data) ? data : [];
+        state.lastFetchedMenu = normalizeActiveMenu(activeMenu);
       })
       .addCase(fetchTermCodes.rejected, (state, action) => {
         state.status = 'failed';

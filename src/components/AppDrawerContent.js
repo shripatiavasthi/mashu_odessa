@@ -187,8 +187,8 @@ const AppDrawerContent = ({ navigation }) => {
 
   const [showEmployeeModal, setShowEmployeeModal] = useState(false);
 
-  const currentDrawerItems = activeMenu === 'OC' ? ocDrawerItems : plcDrawerItems;
-  const currentMenuTitle = activeMenu === 'OC' ? 'OC All-In' : 'Professional Learning Center';
+  const currentDrawerItems = activeMenu === 'oc' ? ocDrawerItems : plcDrawerItems;
+  const currentMenuTitle = activeMenu === 'oc' ? 'OC All-In' : 'Professional Learning Center';
 
   return (
     <LinearGradient
@@ -455,4 +455,3 @@ const styles = StyleSheet.create({
 });
 
 export default AppDrawerContent;
-

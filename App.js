@@ -23,9 +23,7 @@ import TeamSignup from './src/Screens/PlcScreens/TeamSignup/TeamSignup'
 import TeamNewScreen from './src/Screens/PlcScreens/TeamNewScreen/TeamNewScreen'
 
 import { persistor, store } from './src/store';
-import { fetchGoalPoints, fetchTermCodes } from './src/store/slices/termSlice';
-import { fetchEventsByTerm, fetchUpcomingEvents } from './src/store/slices/eventsSlice';
-import { selectAuth, selectTerms } from './src/store';
+import { selectAuth } from './src/store';
 import { setAuthData, clearAuth } from './src/store/slices/authSlice';
 import {
   loadAuthSession,
@@ -43,7 +41,6 @@ const Stack = createStackNavigator();
 function Root() {
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(selectAuth);
-  const { items: termItems, status: termStatus } = useSelector(selectTerms);
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
@@ -121,32 +118,6 @@ function Root() {
 
     restoreSession();
   }, [dispatch]);
-
-  
-  useEffect(() => {
-    if (accessToken && termStatus === 'idle') {
-      dispatch(fetchTermCodes({ accessToken }));
-    }
-  }, [accessToken, dispatch, termStatus]);
-
-  useEffect(() => {
-    if (accessToken && user?.id) {
-      dispatch(fetchUpcomingEvents({ accessToken, userId: user.id }));
-    }
-  }, [accessToken, dispatch, user?.id]);
-
-  useEffect(() => {
-    if (!termItems?.length || !accessToken || !user?.id) return;
-
-    const currentTerm = termItems.find(t => t.currentTerm === true);
-    const fallbackTerm = termItems[0];
-    const targetTerm = currentTerm || fallbackTerm;
-
-    if (targetTerm?.id) {
-      dispatch(fetchEventsByTerm({ accessToken, userId: user.id, termId: targetTerm.id }));
-      dispatch(fetchGoalPoints({ accessToken, termCodeId: targetTerm.id }));
-    }
-  }, [termItems, accessToken, user?.id, dispatch]);
 
   if (!authChecked) return null;
 

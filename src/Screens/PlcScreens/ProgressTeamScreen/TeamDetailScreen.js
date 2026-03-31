@@ -133,7 +133,10 @@ export default function TeamDetailScreen({ navigation, route }) {
                         <View style={styles.listCon}>
                             {status === 'loading' ? renderState('Loading team events...') : error ? renderState(error) : eventsData.length === 0 ? renderState('No team events found') : eventsData.map(item => (
                                 <View style={styles.eventSpace} key={item.id}>
-                                <TouchableOpacity onPress={() => navigation.navigate('PlcDetailScreen')} key={item.id} style={styles.eventCard}>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('PlcDetailScreen', { event: item.raw })}
+                                    key={item.id}
+                                    style={styles.eventCard}>
                                     <View style={styles.eventCardTop}>
                                         <View style={styles.eventTitleRow}>
                                             <Text style={styles.eventTitle}>{item.title}</Text>

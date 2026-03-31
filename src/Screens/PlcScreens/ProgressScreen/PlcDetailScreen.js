@@ -16,16 +16,46 @@ import { colors, typography } from '../../../styles/globalStyles';
 const { width, height } = Dimensions.get('window');
 
 export default function PlcDetailScreen({ navigation, route }) {
-    const event = route?.params || {
-        title: 'Graduation Ceremony',
-        type: 'Career Enhancement',
-        category: 'PLC 2006',
-        location: 'Conference Room A',
-        startDate: '2025 - 09 - 10 | 10:00 AM',
-        endDate: '2025 - 09 - 10 | 11:00 AM',
-        checkInDate: '2025 - 09 - 10 | 10:00 AM',
-        plcCredit: 1,
+    const rawEvent = route?.params?.event || null;
+
+    const splitDateTime = value => {
+        if (typeof value !== 'string' || !value.trim()) {
+            return 'TBD';
+        }
+
+        const normalized = value.trim();
+        const datePart = normalized.slice(0, 10) || 'TBD';
+        const timePart = normalized.slice(11) || 'TBD';
+        return `${datePart} | ${timePart}`;
     };
+
+    const event = rawEvent
+        ? {
+            title: rawEvent?.eventName || 'Event',
+            type: Array.isArray(rawEvent?.eventType)
+                ? rawEvent.eventType.filter(Boolean).join(', ')
+                : rawEvent?.eventType || 'N/A',
+            category: rawEvent?.eventCategory || 'N/A',
+            location: rawEvent?.eventLocation || 'TBD',
+            startDate: splitDateTime(rawEvent?.eventStartDateTime),
+            endDate: splitDateTime(rawEvent?.eventEndDateTime),
+            checkInDate: splitDateTime(rawEvent?.eventCheckInTime),
+            plcCredit: Number.isFinite(rawEvent?.eventPlcCredits)
+                ? rawEvent.eventPlcCredits
+                : Number.isFinite(rawEvent?.eventPoints)
+                    ? rawEvent.eventPoints
+                    : 0,
+        }
+        : {
+            title: 'Graduation Ceremony',
+            type: 'Career Enhancement',
+            category: 'PLC 2006',
+            location: 'Conference Room A',
+            startDate: '2025 - 09 - 10 | 10:00 AM',
+            endDate: '2025 - 09 - 10 | 11:00 AM',
+            checkInDate: '2025 - 09 - 10 | 10:00 AM',
+            plcCredit: 1,
+        };
 
     return (
         <SafeAreaView style={styles.safe}>

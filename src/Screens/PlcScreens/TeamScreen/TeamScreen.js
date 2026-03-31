@@ -8,6 +8,7 @@ import {
     Dimensions,
     Modal,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -38,6 +39,7 @@ export default function TeamScreen({ navigation }) {
     const [teamEvents, setTeamEvents] = useState([]);
     const [teamEventsStatus, setTeamEventsStatus] = useState('idle');
     const [teamEventsError, setTeamEventsError] = useState(null);
+    const [exitStatus, setExitStatus] = useState('idle');
     const { accessToken, user } = useSelector(selectAuth);
 
     useEffect(() => {
@@ -141,6 +143,34 @@ export default function TeamScreen({ navigation }) {
             <Text style={styles.stateText}>{message}</Text>
         </View>
     );
+
+    const handleExitTeam = async () => {
+        if (!accessToken || !user?.id || exitStatus === 'loading') {
+            return;
+        }
+
+        try {
+            setExitStatus('loading');
+
+            const response = await apiClient.post(
+                `${env.apiBaseUrl}${endpoints.plcExitTeam(user.id)}`,
+                {},
+                { token: accessToken },
+            );
+
+            if (response?.success) {
+                setShowExitModal(false);
+                navigation.navigate('TeamLoginSignScreen');
+                return;
+            }
+
+            throw new Error('Failed to exit team');
+        } catch (error) {
+            Alert.alert('Exit Team Failed', error?.message || 'Unable to exit the team right now.');
+        } finally {
+            setExitStatus('idle');
+        }
+    };
 
     return (
         <SafeAreaView style={styles.safe}>
@@ -325,12 +355,11 @@ export default function TeamScreen({ navigation }) {
 
                             <TouchableOpacity
                                 style={styles.modalExitButton}
-                                onPress={() => {
-                                    setShowExitModal(false);
-                                    navigation.navigate('TeamLoginSignScreen')
-                                    console.log('User confirmed exit from team');
-                                }}>
-                                <Text style={styles.modalExitText}>Exit from Team</Text>
+                                onPress={handleExitTeam}
+                                disabled={exitStatus === 'loading'}>
+                                <Text style={styles.modalExitText}>
+                                    {exitStatus === 'loading' ? 'Exiting...' : 'Exit from Team'}
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </View>

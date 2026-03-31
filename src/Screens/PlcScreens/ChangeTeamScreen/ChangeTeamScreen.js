@@ -1,25 +1,68 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
     TouchableOpacity,
     TextInput,
+    ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { apiClient } from '../../../api/client';
 import AppGradient, { BackHeader } from '../../../components/AppGradient';
+import { env, endpoints } from '../../../env';
+import { selectAuth } from '../../../store';
 import { styles } from './ChangeTeamStyle';
-
-const teamsData = [
-    { id: 1, name: 'Black Bears', type: 'Private' },
-    { id: 2, name: 'Green Falcons', type: 'Private' },
-    { id: 3, name: 'Red Hawks', type: 'Private' },
-    { id: 4, name: 'Blue Pythons', type: 'Public' },
-];
 
 export default function ChangeTeamScreen({ navigation }) {
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [password, setPassword] = useState('');
     const [showOptions, setShowOptions] = useState(false);
+    const [teams, setTeams] = useState([]);
+    const [teamsStatus, setTeamsStatus] = useState('idle');
+    const [teamsError, setTeamsError] = useState(null);
+    const { accessToken } = useSelector(selectAuth);
+
+    useEffect(() => {
+        if (!accessToken) {
+            setTeams([]);
+            setTeamsStatus('idle');
+            setTeamsError(null);
+            return;
+        }
+
+        const loadTeams = async () => {
+            try {
+                setTeamsStatus('loading');
+                setTeamsError(null);
+
+                const response = await apiClient.get(
+                    `${env.apiBaseUrl}${endpoints.plcTeams}`,
+                    { token: accessToken },
+                );
+
+                const data = response?.data;
+                const mappedTeams = Array.isArray(data)
+                    ? data.map(team => ({
+                        id: team?.teamId,
+                        name: team?.teamName || 'Team',
+                        type: typeof team?.teamType === 'string' && team.teamType.trim()
+                            ? `${team.teamType.charAt(0).toUpperCase()}${team.teamType.slice(1).toLowerCase()}`
+                            : 'Public',
+                    }))
+                    : [];
+
+                setTeams(mappedTeams);
+                setTeamsStatus('succeeded');
+            } catch (error) {
+                setTeams([]);
+                setTeamsStatus('failed');
+                setTeamsError(error?.message || 'Failed to load teams');
+            }
+        };
+
+        loadTeams();
+    }, [accessToken]);
 
     const isButtonEnabled = !!selectedTeam && (selectedTeam.type === 'Public' || password.trim().length > 0);
 
@@ -77,7 +120,20 @@ export default function ChangeTeamScreen({ navigation }) {
 
                     {showOptions && (
                         <View style={styles.optionsContainer}>
-                            {teamsData.map((team) => (
+                            {teamsStatus === 'loading' ? (
+                                <View style={styles.optionsStateContainer}>
+                                    <ActivityIndicator size="small" color="#006BB6" />
+                                    <Text style={styles.optionsStateText}>Loading teams...</Text>
+                                </View>
+                            ) : teamsError ? (
+                                <View style={styles.optionsStateContainer}>
+                                    <Text style={styles.optionsStateText}>{teamsError}</Text>
+                                </View>
+                            ) : teams.length === 0 ? (
+                                <View style={styles.optionsStateContainer}>
+                                    <Text style={styles.optionsStateText}>No teams found</Text>
+                                </View>
+                            ) : teams.map((team) => (
                                 <TouchableOpacity
                                     key={team.id}
                                     style={styles.optionItem}

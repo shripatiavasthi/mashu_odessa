@@ -70,6 +70,9 @@ const ENDPOINTS = {
   plcTeamProgressDetails: teamId => `/api/v1/app/plc/progress/teams/${teamId}`,
   plcMyTeam: userId => `/api/v1/app/plc/teams/users/${userId}`,
   plcMyTeamEvents: userId => `/api/v1/app/plc/teams/users/${userId}/events`,
+  plcTeams: '/api/v1/app/plc/teams',
+  plcExitTeam: userId => `/api/v1/app/plc/teams/users/${userId}/exit`,
+  plcJoinTeam: userId => `/api/v1/app/plc/teams/users/${userId}/join`,
 };
 
 

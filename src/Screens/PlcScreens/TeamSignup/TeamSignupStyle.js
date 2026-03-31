@@ -100,6 +100,19 @@ export const styles = StyleSheet.create({
         color: colors.textDark,
         fontFamily: typography.regular,
     },
+    optionsStateContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: width / 20,
+    },
+    optionsStateText: {
+        marginTop: height / 90,
+        fontSize: typography.size.sm,
+        color: colors.textMuted,
+        fontFamily: typography.regular,
+        textAlign: 'center',
+    },
     passwordInput: {
         alignSelf: 'center',
         width: width / 1.2,
@@ -144,4 +157,3 @@ export const styles = StyleSheet.create({
     },
     
 });
-

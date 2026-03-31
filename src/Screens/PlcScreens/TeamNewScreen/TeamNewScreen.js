@@ -5,19 +5,63 @@ import {
     TextInput,
     TouchableOpacity,
     ScrollView,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { apiClient } from '../../../api/client';
 import AppGradient, { BackHeader } from '../../../components/AppGradient';
+import { env, endpoints } from '../../../env';
+import { selectAuth } from '../../../store';
 import { styles } from './TeamNewStyle';
 
 const TeamNewScreen = ({ navigation }) => {
     const [teamName, setTeamName] = useState('');
     const [teamPassword, setTeamPassword] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { accessToken } = useSelector(selectAuth);
 
     const isCreateEnabled = teamName.trim().length > 0 && teamPassword.trim().length > 0;
 
-   const handleCreateTeam = () => {
-    navigation.navigate('TeamCreatedSuccessScreen')
+   const handleCreateTeam = async () => {
+    if (!isCreateEnabled || !accessToken || isSubmitting) {
+        return;
+    }
+
+    const trimmedTeamName = teamName.trim();
+    const trimmedTeamPassword = teamPassword.trim();
+
+    try {
+        setIsSubmitting(true);
+
+        const response = await apiClient.post(
+            `${env.apiBaseUrl}${endpoints.plcTeams}`,
+            {
+                teamName: trimmedTeamName,
+                teamPassword: trimmedTeamPassword,
+            },
+            { token: accessToken },
+        );
+
+        const responseMessage =
+            typeof response?.data === 'string' ? response.data : '';
+        const isCreated =
+            response?.success === true &&
+            responseMessage !== 'Team creation is not allowed';
+
+        if (!isCreated) {
+            throw new Error(responseMessage || 'Failed to create team');
+        }
+
+        navigation.navigate('TeamCreatedSuccessScreen', {
+            teamName: trimmedTeamName,
+            isPrivate: trimmedTeamPassword.length > 0,
+        });
+    } catch (error) {
+        Alert.alert('Create Team Failed', error?.message || 'Unable to create the team right now.');
+    } finally {
+        setIsSubmitting(false);
+    }
 };
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -110,16 +154,16 @@ const TeamNewScreen = ({ navigation }) => {
                             <TouchableOpacity
                                 style={[
                                     styles.createButton,
-                                    !isCreateEnabled && styles.createButtonDisabled
+                                    (!isCreateEnabled || isSubmitting) && styles.createButtonDisabled
                                 ]}
                                 onPress={handleCreateTeam}
-                                disabled={!isCreateEnabled}
+                                disabled={!isCreateEnabled || isSubmitting}
                             >
                                 <Text style={[
                                     styles.createButtonText,
-                                    !isCreateEnabled && styles.createButtonTextDisabled
+                                    (!isCreateEnabled || isSubmitting) && styles.createButtonTextDisabled
                                 ]}>
-                                    Create Team
+                                    {isSubmitting ? 'Creating Team...' : 'Create Team'}
                                 </Text>
                             </TouchableOpacity>
                         </View>

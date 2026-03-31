@@ -21,6 +21,7 @@ import TeamLoginSignScreen from './src/Screens/PlcScreens/TeamLoginSignScreen/Te
 import PolicyScreen from './src/Screens/PlcScreens/PolicyScreen/PolicyScreen'
 import TeamSignup from './src/Screens/PlcScreens/TeamSignup/TeamSignup'
 import TeamNewScreen from './src/Screens/PlcScreens/TeamNewScreen/TeamNewScreen'
+import TeamCreatedSuccessScreen from './src/Screens/PlcScreens/TeamNewScreen/TeamCreatedSuccessScreen';
 
 import { persistor, store } from './src/store';
 import { selectAuth } from './src/store';
@@ -144,6 +145,7 @@ function Root() {
         <Stack.Screen name="PolicyScreen" component={PolicyScreen} />
         <Stack.Screen name="TeamSignup" component={TeamSignup} />
         <Stack.Screen name="TeamNewScreen" component={TeamNewScreen} />
+        <Stack.Screen name="TeamCreatedSuccessScreen" component={TeamCreatedSuccessScreen} />
         
       </Stack.Navigator>
     </NavigationContainer>

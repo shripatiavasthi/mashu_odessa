@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Pressable,
   Image,
-  Platform,
   Modal,
   ActivityIndicator,
   RefreshControl

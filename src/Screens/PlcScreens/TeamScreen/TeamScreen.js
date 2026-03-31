@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     View,
     Text,
@@ -6,79 +6,22 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
-    Modal
+    Modal,
+    ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { apiClient } from '../../../api/client';
 import AppGradient from '../../../components/AppGradient';
 import AppHeader from '../../../components/AppHeader';
+import { env, endpoints } from '../../../env';
+import { selectAuth } from '../../../store';
+import { colors } from '../../../styles/globalStyles';
 import { styles } from '../ProgressTeamScreen/TeamDetailStyles';
 
 import Team from '../../../assets/Image/svg/Team.svg'
 
 const { height, width } = Dimensions.get('window');
-
-const eventsData = [
-    {
-        id: 1,
-        title: 'Graduation Ceremony',
-        points: 100,
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Exhibition Hall',
-        checkIn: '2024-11-15 | 02:30 PM',
-    },
-    {
-        id: 2,
-        title: 'Annual Awards Gala',
-        points: 100,
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Grand Ballroom',
-        checkIn: '2024-12-01 | 09:00 AM',
-    },
-    {
-        id: 3,
-        title: 'Innovation Summit',
-        points: 50,
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Conference Room A',
-        checkIn: '2024-12-15 | 04:00 PM',
-    },
-];
-
-const membersData = [
-    {
-        id: 1,
-        name: 'You',
-        email: 'michaela@odessa.edu',
-        avatar: null,
-    },
-    {
-        id: 2,
-        name: 'Ethan Carter',
-        email: 'ethan.carter@sunset.edu',
-        avatar: null,
-    },
-    {
-        id: 3,
-        name: 'Oliver James',
-        email: 'oliver.james@sunset.edu',
-        avatar: null,
-    },
-    {
-        id: 4,
-        name: 'Noah Smith',
-        email: 'noah.smith@sunset.edu',
-        avatar: null,
-    },
-    {
-        id: 5,
-        name: 'Lucas Bennett',
-        email: 'lucas.bennett@sunset.edu',
-        avatar: null,
-    },
-];
 
 const getInitials = name => {
     const parts = name.trim().split(' ');
@@ -89,7 +32,115 @@ const getInitials = name => {
 export default function TeamScreen({ navigation }) {
     const [activeTab, setActiveTab] = useState('myTeam');
     const [showExitModal, setShowExitModal] = useState(false);
-    const teamName = 'The Holly Headed Harpes';
+    const [myTeam, setMyTeam] = useState(null);
+    const [myTeamStatus, setMyTeamStatus] = useState('idle');
+    const [myTeamError, setMyTeamError] = useState(null);
+    const [teamEvents, setTeamEvents] = useState([]);
+    const [teamEventsStatus, setTeamEventsStatus] = useState('idle');
+    const [teamEventsError, setTeamEventsError] = useState(null);
+    const { accessToken, user } = useSelector(selectAuth);
+
+    useEffect(() => {
+        if (!accessToken || !user?.id) {
+            setMyTeam(null);
+            setMyTeamStatus('idle');
+            setMyTeamError(null);
+            return;
+        }
+
+        const loadMyTeam = async () => {
+            try {
+                setMyTeamStatus('loading');
+                setMyTeamError(null);
+
+                const response = await apiClient.get(
+                    `${env.apiBaseUrl}${endpoints.plcMyTeam(user.id)}`,
+                    { token: accessToken },
+                );
+
+                setMyTeam(response?.data || null);
+                setMyTeamStatus('succeeded');
+            } catch (error) {
+                setMyTeam(null);
+                setMyTeamStatus('failed');
+                setMyTeamError(error?.message || 'Failed to load your team');
+            }
+        };
+
+        loadMyTeam();
+    }, [accessToken, user?.id]);
+
+    useEffect(() => {
+        if (!accessToken || !user?.id) {
+            setTeamEvents([]);
+            setTeamEventsStatus('idle');
+            setTeamEventsError(null);
+            return;
+        }
+
+        const loadTeamEvents = async () => {
+            try {
+                setTeamEventsStatus('loading');
+                setTeamEventsError(null);
+
+                const response = await apiClient.get(
+                    `${env.apiBaseUrl}${endpoints.plcMyTeamEvents(user.id)}`,
+                    { token: accessToken },
+                );
+
+                const data = response?.data;
+                setTeamEvents(Array.isArray(data) ? data : []);
+                setTeamEventsStatus('succeeded');
+            } catch (error) {
+                setTeamEvents([]);
+                setTeamEventsStatus('failed');
+                setTeamEventsError(error?.message || 'Failed to load team events');
+            }
+        };
+
+        loadTeamEvents();
+    }, [accessToken, user?.id]);
+
+    const teamName = myTeam?.teamName || 'No team assigned';
+
+    const membersData = useMemo(() => {
+        const list = myTeam?.members;
+        if (!Array.isArray(list)) {
+            return [];
+        }
+
+        return list.map(item => {
+            const fullName = [item?.firstName, item?.lastName]
+                .filter(Boolean)
+                .join(' ')
+                .trim() || 'Member';
+
+            return {
+                id: item?.userId || fullName,
+                name: item?.isCurrentUser ? 'You' : fullName,
+                email: item?.email || '',
+                avatar: null,
+            };
+        });
+    }, [myTeam]);
+
+    const renderMyTeamState = message => (
+        <View style={styles.stateContainer}>
+            {myTeamStatus === 'loading' && (
+                <ActivityIndicator size="large" color={colors.primary} />
+            )}
+            <Text style={styles.stateText}>{message}</Text>
+        </View>
+    );
+
+    const renderTeamEventsState = message => (
+        <View style={styles.stateContainer}>
+            {teamEventsStatus === 'loading' && (
+                <ActivityIndicator size="large" color={colors.primary} />
+            )}
+            <Text style={styles.stateText}>{message}</Text>
+        </View>
+    );
 
     return (
         <SafeAreaView style={styles.safe}>
@@ -137,7 +188,7 @@ export default function TeamScreen({ navigation }) {
                                     <Text style={styles.teamMembersTitleText}>Team Members</Text>
                                     <Text style={styles.teamMembersStar}>★</Text>
                                 </View>
-                                {membersData.map(item => (
+                                {myTeamStatus === 'loading' ? renderMyTeamState('Loading your team...') : myTeamError ? renderMyTeamState(myTeamError) : membersData.length === 0 ? renderMyTeamState('No team members found') : membersData.map(item => (
                                     <View key={item.id} style={styles.spaceContainer}>
                                         <TouchableOpacity style={styles.memberCard}>
                                             <View style={styles.avatarSpace}>
@@ -194,34 +245,45 @@ export default function TeamScreen({ navigation }) {
                 ) : (
                     <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
                         <View style={styles.listCon}>
-                            {eventsData.map(item => (
-                                <View style={styles.eventSpace} key={item.id}>
-                                    <TouchableOpacity
-                                        onPress={() => navigation.navigate('PlcDetailScreen')}
-                                        style={styles.eventCard}>
-                                        <View style={styles.eventCardTop}>
-                                            <View style={styles.eventTitleRow}>
-                                                <Text style={styles.eventTitle}>{item.title}</Text>
-                                                <View style={styles.pointsBadge}>
-                                                    <View style={styles.dot} />
-                                                    <Text style={styles.pointsText}>{item.points} Points</Text>
-                                                </View>
-                                            </View>
-                                            <Text style={styles.eventMeta}>
-                                                {item.category}{'  '}|{'  '}{item.term}
-                                            </Text>
-                                            <Text style={styles.eventLocation}>
-                                                Location: {item.location}
-                                            </Text>
-                                        </View>
+                            {teamEventsStatus === 'loading' ? renderTeamEventsState('Loading team events...') : teamEventsError ? renderTeamEventsState(teamEventsError) : teamEvents.length === 0 ? renderTeamEventsState('No team events found') : teamEvents.map(item => {
+                                const title = item?.eventName || 'Event';
+                                const points = Number.isFinite(item?.eventPoints) ? item.eventPoints : 0;
+                                const category = Array.isArray(item?.eventType)
+                                    ? item.eventType.filter(Boolean).join(', ')
+                                    : item?.eventType || 'N/A';
+                                const term = item?.eventCategory || 'N/A';
+                                const location = item?.eventLocation || 'TBD';
+                                const checkIn = item?.eventCheckInTime || 'TBD';
 
-                                        <View style={styles.eventCheckInRow}>
-                                            <Text style={styles.checkInLabel}>Event Check In:{'  '}</Text>
-                                            <Text style={styles.checkInValue}>{item.checkIn}</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            ))}
+                                return (
+                                    <View style={styles.eventSpace} key={item?.eventId || title}>
+                                        <TouchableOpacity
+                                            onPress={() => navigation.navigate('PlcDetailScreen', { event: item })}
+                                            style={styles.eventCard}>
+                                            <View style={styles.eventCardTop}>
+                                                <View style={styles.eventTitleRow}>
+                                                    <Text style={styles.eventTitle}>{title}</Text>
+                                                    <View style={styles.pointsBadge}>
+                                                        <View style={styles.dot} />
+                                                        <Text style={styles.pointsText}>{points} Points</Text>
+                                                    </View>
+                                                </View>
+                                                <Text style={styles.eventMeta}>
+                                                    {category}{'  '}|{'  '}{term}
+                                                </Text>
+                                                <Text style={styles.eventLocation}>
+                                                    Location: {location}
+                                                </Text>
+                                            </View>
+
+                                            <View style={styles.eventCheckInRow}>
+                                                <Text style={styles.checkInLabel}>Event Check In:{'  '}</Text>
+                                                <Text style={styles.checkInValue}>{checkIn}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                );
+                            })}
                             <View style={{ height: height / 10 }} />
                         </View>
                     </ScrollView>

@@ -21,50 +21,42 @@ import { styles, tableStyles } from './ProgressStyles';
 
 const { width, height } = Dimensions.get('window');
 
-const summaryData = [
-    { category: 'Career Enhancement', plc: 7, required: 9, adjunct: 2 },
-    { category: 'Personal Enrichment', plc: 8, required: 3, adjunct: 'Optional' },
-    { category: 'Technology Training', plc: 1, required: 4, adjunct: 2 },
-];
-
-const totals = { plc: 16, required: 16, adjunct: 4 };
-
-const creditDetails = [
-    {
-        id: 1,
-        title: 'Graduation Ceremony',
-        credit: '1 PLC Credit',
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Conference Room A',
-        checkIn: '2025-09-10 | 10:00 AM',
-    },
-    {
-        id: 2,
-        title: 'Annual Awards Gala',
-        credit: '1 PLC Credit',
-        category: 'Career Enhancement',
-        term: 'PLC 2026',
-        location: 'Virtual Meeting',
-        checkIn: '2025-09-12 | 02:00 PM',
-    },
-    {
-        id: 3,
-        title: 'Leadership Workshop',
-        credit: '2 PLC Credits',
-        category: 'Personal Enrichment',
-        term: 'PLC 2026',
-        location: 'Main Auditorium',
-        checkIn: '2025-10-01 | 09:00 AM',
-    },
-];
-
 export default function ProgressScreen({ navigation }) {
     const [activeTab, setActiveTab] = useState('individual');
+    const [individualProgress, setIndividualProgress] = useState(null);
+    const [individualStatus, setIndividualStatus] = useState('idle');
+    const [individualError, setIndividualError] = useState(null);
     const [teamProgress, setTeamProgress] = useState([]);
     const [teamStatus, setTeamStatus] = useState('idle');
     const [teamError, setTeamError] = useState(null);
-    const { accessToken } = useSelector(selectAuth);
+    const { accessToken, user } = useSelector(selectAuth);
+
+    useEffect(() => {
+        if (activeTab !== 'individual' || !accessToken || !user?.id) {
+            return;
+        }
+
+        const loadIndividualProgress = async () => {
+            try {
+                setIndividualStatus('loading');
+                setIndividualError(null);
+
+                const response = await apiClient.get(
+                    `${env.apiBaseUrl}${endpoints.plcIndividualProgress(user.id)}`,
+                    { token: accessToken },
+                );
+
+                setIndividualProgress(response?.data || {});
+                setIndividualStatus('succeeded');
+            } catch (error) {
+                setIndividualProgress(null);
+                setIndividualStatus('failed');
+                setIndividualError(error?.message || 'Failed to load individual progress');
+            }
+        };
+
+        loadIndividualProgress();
+    }, [accessToken, activeTab, user?.id]);
 
     useEffect(() => {
         if (activeTab !== 'team' || !accessToken) {
@@ -93,6 +85,17 @@ export default function ProgressScreen({ navigation }) {
         loadTeamProgress();
     }, [accessToken, activeTab]);
 
+    const plcCreditSummary = Array.isArray(individualProgress?.plcCreditSummary)
+        ? individualProgress.plcCreditSummary
+        : [];
+    const eventDetails = Array.isArray(individualProgress?.eventDetails)
+        ? individualProgress.eventDetails
+        : [];
+    const totalPlcCredits = plcCreditSummary.reduce(
+        (sum, item) => sum + (Number(item?.plcCredits) || 0),
+        0,
+    );
+
     const renderTable = () => (
         <View style={tableStyles.wrapper}>
             <View style={tableStyles.row}>
@@ -110,19 +113,19 @@ export default function ProgressScreen({ navigation }) {
                 </View>
             </View>
 
-            {summaryData.map((row, index) => (
+            {plcCreditSummary.map((row, index) => (
                 <View key={index} style={tableStyles.row}>
                     <View style={[tableStyles.cell, tableStyles.categoryCell]}>
-                        <Text style={tableStyles.categoryText}>{row.category}</Text>
+                        <Text style={tableStyles.categoryText}>{row?.eventTypeName || 'N/A'}</Text>
                     </View>
                     <View style={tableStyles.cell}>
-                        <Text style={tableStyles.valueText}>{row.plc}</Text>
+                        <Text style={tableStyles.valueText}>{Number(row?.plcCredits) || 0}</Text>
                     </View>
                     <View style={tableStyles.cell}>
-                        <Text style={tableStyles.valueText}>{row.required}</Text>
+                        <Text style={tableStyles.valueText}>-</Text>
                     </View>
                     <View style={[tableStyles.cell, tableStyles.lastCell]}>
-                        <Text style={tableStyles.valueText}>{row.adjunct}</Text>
+                        <Text style={tableStyles.valueText}>-</Text>
                     </View>
                 </View>
             ))}
@@ -132,13 +135,13 @@ export default function ProgressScreen({ navigation }) {
                     <Text style={tableStyles.totalCategoryText}>Total PLC Credits</Text>
                 </View>
                 <View style={tableStyles.cell}>
-                    <Text style={tableStyles.totalValueText}>{totals.plc}</Text>
+                    <Text style={tableStyles.totalValueText}>{totalPlcCredits}</Text>
                 </View>
                 <View style={tableStyles.cell}>
-                    <Text style={tableStyles.totalValueText}>{totals.required}</Text>
+                    <Text style={tableStyles.totalValueText}>-</Text>
                 </View>
                 <View style={[tableStyles.cell, tableStyles.lastCell]}>
-                    <Text style={tableStyles.totalValueText}>{totals.adjunct}</Text>
+                    <Text style={tableStyles.totalValueText}>-</Text>
                 </View>
             </View>
 
@@ -171,50 +174,77 @@ export default function ProgressScreen({ navigation }) {
 
                 {activeTab === 'individual' ? (
                     <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-
-                        <View style={styles.sectionCon}>
-                            <Text style={styles.sectionTitle}>PLC Credit Summary</Text>
-                        </View>
-                        {renderTable()}
-                        <View style={styles.divider} />
-
-                        <View style={styles.sectionCon}>
-                            <Text style={styles.sectionTitle}>PLC Credit Details</Text>
-                        </View>
-                        {creditDetails.map(item => (
-                            <View key={item.id} style={styles.spaceCon}>
-                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('PlcDetailScreen')}>
-
-                                    <View style={styles.titleCon}>
-                                        <Text style={styles.cardTitle} numberOfLines={2}>{item.title}</Text>
-                                        <View style={styles.creditBadge}>
-                                            <View style={styles.dot} />
-                                            <Text style={styles.creditText}>{item.credit}</Text>
-                                        </View>
-                                    </View>
-
-                                    <View style={styles.cardMeta}>
-                                        <View style={styles.cardTop}>
-                                            <Text style={styles.metaText}>
-                                                {item.category}{'  '}|{'  '}{item.term}
-                                            </Text>
-                                            <Text style={styles.locationText}>Location: {item.location}</Text>
-                                        </View>
-                                        <Icon name="chevron-with-circle-right" size={18} color="#999" />
-                                    </View>
-
-                                    <View style={styles.checkInRow}>
-                                        <View style={styles.checkInCon}>
-                                            <Text style={styles.checkInLabel}>Event Check In: </Text>
-                                            <Text style={styles.checkInValue}>{item.checkIn}</Text>
-                                        </View>
-                                    </View>
-
-                                </TouchableOpacity>
+                        {individualStatus === 'loading' ? (
+                            <View style={styles.teamStateContainer}>
+                                <ActivityIndicator size="large" color={colors.primary} />
+                                <Text style={styles.teamStateText}>Loading individual progress...</Text>
                             </View>
-                        ))}
+                        ) : individualError ? (
+                            <View style={styles.teamStateContainer}>
+                                <Text style={styles.teamStateText}>{individualError}</Text>
+                            </View>
+                        ) : (
+                            <>
+                                <View style={styles.sectionCon}>
+                                    <Text style={styles.sectionTitle}>PLC Credit Summary</Text>
+                                </View>
 
-                        <View style={{ height: height / 10 }} />
+                                {renderTable()}
+
+                                <View style={styles.divider} />
+
+                                <View style={styles.sectionCon}>
+                                    <Text style={styles.sectionTitle}>PLC Credit Details</Text>
+                                </View>
+                                {eventDetails.length === 0 ? (
+                                    <View style={styles.teamStateContainer}>
+                                        <Text style={styles.teamStateText}>No PLC credit details found</Text>
+                                    </View>
+                                ) : (
+                                    eventDetails.map(item => {
+                                        const creditValue = Number(item?.eventPlcCredits) || 0;
+                                        return (
+                                            <View key={item?.eventId || item?.eventName} style={styles.spaceCon}>
+                                                <TouchableOpacity
+                                                    style={styles.card}
+                                                    onPress={() => navigation.navigate('PlcDetailScreen', { event: item })}>
+
+                                                    <View style={styles.titleCon}>
+                                                        <Text style={styles.cardTitle} numberOfLines={2}>{item?.eventName || 'Event'}</Text>
+                                                        <View style={styles.creditBadge}>
+                                                            <View style={styles.dot} />
+                                                            <Text style={styles.creditText}>
+                                                                {creditValue} PLC Credit{creditValue === 1 ? '' : 's'}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+
+                                                    <View style={styles.cardMeta}>
+                                                        <View style={styles.cardTop}>
+                                                            <Text style={styles.metaText}>
+                                                                {item?.eventCategory || 'N/A'}
+                                                            </Text>
+                                                            <Text style={styles.locationText}>Location: {item?.eventLocation || 'TBD'}</Text>
+                                                        </View>
+                                                        <Icon name="chevron-with-circle-right" size={18} color="#999" />
+                                                    </View>
+
+                                                    <View style={styles.checkInRow}>
+                                                        <View style={styles.checkInCon}>
+                                                            <Text style={styles.checkInLabel}>Event Check In: </Text>
+                                                            <Text style={styles.checkInValue}>{item?.eventCheckInTime || 'TBD'}</Text>
+                                                        </View>
+                                                    </View>
+
+                                                </TouchableOpacity>
+                                            </View>
+                                        );
+                                    })
+                                )}
+
+                                <View style={{ height: height / 10 }} />
+                            </>
+                        )}
                     </ScrollView>
                 ) : (
                     <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>

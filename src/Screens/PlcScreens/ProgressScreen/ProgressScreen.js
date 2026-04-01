@@ -146,8 +146,8 @@ export default function ProgressScreen({ navigation }) {
     );
 
     return (
-        <SafeAreaView style={styles.safe}>
-            <AppGradient style={styles.safe}>
+        <AppGradient style={styles.safe}>
+            <SafeAreaView style={styles.safe}>
                 <AppHeader />
 
                 <View style={styles.tabBar}>
@@ -175,9 +175,7 @@ export default function ProgressScreen({ navigation }) {
                         <View style={styles.sectionCon}>
                             <Text style={styles.sectionTitle}>PLC Credit Summary</Text>
                         </View>
-
                         {renderTable()}
-
                         <View style={styles.divider} />
 
                         <View style={styles.sectionCon}>
@@ -273,7 +271,7 @@ export default function ProgressScreen({ navigation }) {
                         <View style={{ height: height / 10 }} />
                     </ScrollView>
                 )}
-            </AppGradient>
-        </SafeAreaView>
+            </SafeAreaView>
+        </AppGradient>
     );
 }

@@ -65,8 +65,8 @@ const FaqScreen = () => {
               colors={['#006BB6']}
               tintColor={'#006BB6'}
             />
-          }
-        >
+          }>
+            
           {faqItems.map((item, index) => {
             const isOpen = index === activeIndex;
 
@@ -113,14 +113,14 @@ const styles = StyleSheet.create({
     width: width / 1,
   },
   scrollContent: {
-    // paddingTop: height / 40,
+    paddingTop: height / 40,
     paddingBottom: height / 10,
     alignItems: 'center',
   },
 
 
   card: {
-
+    // paddingVertical: height / 50,
     width: width / 1.1,
     backgroundColor: '#FFFFFF',
     borderRadius: 8,

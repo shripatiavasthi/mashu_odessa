@@ -1,6 +1,6 @@
 // const ENVIRONMENT = __DEV__ ? 'debug' : 'production'; 
 // debug, staging, production
-const ENVIRONMENT = 'staging';
+const ENVIRONMENT = 'debug';
 const CONFIG = {
   debug: {
     apiBaseUrl: 'https://odessa-dev.infojinicloud.com',

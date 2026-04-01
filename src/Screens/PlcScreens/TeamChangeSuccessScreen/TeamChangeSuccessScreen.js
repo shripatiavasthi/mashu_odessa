@@ -13,8 +13,8 @@ export default function TeamChangeSuccessScreen({ navigation, route }) {
     const teamName = route?.params?.teamName || 'Green Falcons';
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <AppGradient style={{ flex: 1 }}>
+        <AppGradient style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
 
                 <BackHeader
                     title="Change My Team"
@@ -53,14 +53,14 @@ export default function TeamChangeSuccessScreen({ navigation, route }) {
                     </View>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => navigation.navigate('Team')}>
+                        onPress={() => navigation.navigate('MainTabs')}>
                         <Text style={styles.buttonText}>
                             View My Team
                         </Text>
                     </TouchableOpacity>
 
                 </View>
-            </AppGradient>
-        </SafeAreaView>
+            </SafeAreaView>
+        </AppGradient>
     );
 }

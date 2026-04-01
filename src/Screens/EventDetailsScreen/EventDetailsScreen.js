@@ -75,116 +75,115 @@ const EventDetailsScreen = () => {
   );
 
   return (
-      
-    <SafeAreaView style={styles.safeArea}>
-      <AppGradient style={styles.linearStyle}>
-      <LinearGradient
-        colors={['#006BB6', '#00A2E5']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.header}
-      >
-        <View style={styles.headerContent}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.arrowCon}>
-            <Image
-              source={require('../../assets/Image/back.png')}
-              style={styles.backIcon}
-              resizeMode='contain'
-            />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Event Details</Text>
-        </View>
-      </LinearGradient>
-
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.section}>
-          <View style={styles.eventnameCon}>
-            <Text style={styles.label}>Event Name</Text>
+    <AppGradient style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <LinearGradient
+          colors={['#006BB6', '#00A2E5']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.header}
+        >
+          <View style={styles.headerContent}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.arrowCon}>
+              <Image
+                source={require('../../assets/Image/back.png')}
+                style={styles.backIcon}
+                resizeMode='contain'
+              />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Event Details</Text>
           </View>
-          <View style={styles.valueCon}>
-            <Text style={styles.value}>{eventName}</Text>
-          </View>
-        </View>
-        <View style={styles.divider} />
+        </LinearGradient>
 
-        {isPlcEvent ? (
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.section}>
             <View style={styles.eventnameCon}>
-              <Text style={styles.label}>
-                Event Type : <Text style={styles.value}>{eventType}</Text>
-              </Text>
+              <Text style={styles.label}>Event Name</Text>
             </View>
-            <View style={styles.eventnameCon}>
-              <Text style={styles.label}>
-                Event Category : <Text style={styles.value}>{eventCategory}</Text>
-              </Text>
+            <View style={styles.valueCon}>
+              <Text style={styles.value}>{eventName}</Text>
             </View>
           </View>
-        ) : (
-          <View style={styles.section}>
-            <View style={styles.eventnameCon}>
-              <Text style={styles.label}>
-                Term : <Text style={styles.value}>{eventTerm}</Text>
-              </Text>
-            </View>
-          </View>
-        )}
+          <View style={styles.divider} />
 
-
-        <View style={styles.section}>
-          <View style={styles.labelContainer}>
-            <Text style={styles.label}>
-              Event Location: <Text style={styles.value}>{eventLocation}</Text>
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.divider} />
-
-
-        <View style={styles.section}>
-          <View style={styles.eventnameCon}>
-            <Text style={styles.label}>Event Date</Text>
-          </View>
-          <View style={styles.valueCon}>
-            <Text style={styles.value}>
-              {eventDatePart} | {eventTimePart}
-            </Text>
-          </View>
-        </View>
-
-        {isMyEvent && (
-          <>
+          {isPlcEvent ? (
             <View style={styles.section}>
               <View style={styles.eventnameCon}>
-                <Text style={styles.label}>Event Check-In Date</Text>
+                <Text style={styles.label}>
+                  Event Type : <Text style={styles.value}>{eventType}</Text>
+                </Text>
               </View>
-              <View style={styles.valueCon}>
-                <Text style={styles.value}>
-                  {checkInDatePart} | {checkInTimePart}
-                  {/* {event.date} | {event.startTime || 'N/A'} */}
+              <View style={styles.eventnameCon}>
+                <Text style={styles.label}>
+                  Event Category : <Text style={styles.value}>{eventCategory}</Text>
                 </Text>
               </View>
             </View>
-          </>
-        )}
+          ) : (
+            <View style={styles.section}>
+              <View style={styles.eventnameCon}>
+                <Text style={styles.label}>
+                  Term : <Text style={styles.value}>{eventTerm}</Text>
+                </Text>
+              </View>
+            </View>
+          )}
 
-        <View style={styles.divider} />
 
-        <View style={styles.section}>
-          <View style={styles.eventnameCon}>
-            <Text style={styles.label}>
-              Event Points :{' '}
-              <Text style={styles.value}>{eventMetric}</Text>
-            </Text>
+          <View style={styles.section}>
+            <View style={styles.labelContainer}>
+              <Text style={styles.label}>
+                Event Location: <Text style={styles.value}>{eventLocation}</Text>
+              </Text>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-      </AppGradient>
-    </SafeAreaView>
+
+          <View style={styles.divider} />
+
+
+          <View style={styles.section}>
+            <View style={styles.eventnameCon}>
+              <Text style={styles.label}>Event Date</Text>
+            </View>
+            <View style={styles.valueCon}>
+              <Text style={styles.value}>
+                {eventDatePart} | {eventTimePart}
+              </Text>
+            </View>
+          </View>
+
+          {isMyEvent && (
+            <>
+              <View style={styles.section}>
+                <View style={styles.eventnameCon}>
+                  <Text style={styles.label}>Event Check-In Date</Text>
+                </View>
+                <View style={styles.valueCon}>
+                  <Text style={styles.value}>
+                    {checkInDatePart} | {checkInTimePart}
+                    {/* {event.date} | {event.startTime || 'N/A'} */}
+                  </Text>
+                </View>
+              </View>
+            </>
+          )}
+
+          <View style={styles.divider} />
+
+          <View style={styles.section}>
+            <View style={styles.eventnameCon}>
+              <Text style={styles.label}>
+                Event Points :{' '}
+                <Text style={styles.value}>{eventMetric}</Text>
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </AppGradient>
   );
 };
 
@@ -193,15 +192,11 @@ export default EventDetailsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: '#F6FBFF',
+    backgroundColor: '#F6FBFF',
 
   },
 
-  linearStyle:{
-    height: height/1.05,
-    width: width/1
-  },
-
+  /* Header */
   header: {
     height: height / 14,
     width: width / 1,
@@ -252,7 +247,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   valueCon: {
-    height: height / 25,
+    // height: height / 25,
+    paddingBottom: 15,
     width: width / 1.1,
     // backgroundColor: 'blue',
     alignSelf: 'center',
@@ -269,9 +265,10 @@ const styles = StyleSheet.create({
     fontWeight: '400'
   },
   value: {
-    fontSize: typography.size.md,
+    fontSize: typography.size.sm,
     color: colors.textDark,
     fontWeight: '700',
+    fontFamily: typography.bold
   },
 
   row: {
@@ -279,7 +276,8 @@ const styles = StyleSheet.create({
     // marginBottom: 16,
   },
   labelContainer: {
-    height: height / 20,
+    // height: height / 20,
+    paddingVertical: 15,
     width: width / 1.1,
     // backgroundColor: 'cyan',
     alignSelf: 'center',
@@ -315,3 +313,131 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
 });
+
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     // backgroundColor: '#F6FBFF',
+
+//   },
+
+//   linearStyle:{
+//     height: height/1.05,
+//     width: width/1
+//   },
+
+//   header: {
+//     height: height / 14,
+//     width: width / 1,
+//     // backgroundColor: 'red'
+//   },
+//   headerContent: {
+//     height: height / 14,
+//     width: width / 1,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     // backgroundColor: 'cyan',
+
+//   },
+//   arrowCon: {
+//     height: height / 14,
+//     width: width / 7.5,
+//     // backgroundColor: 'cyan',
+//     justifyContent: 'center',
+//     alignItems: 'center'
+//   },
+//   backIcon: {
+//     width: 25,
+//     height: 25,
+//     tintColor: colors.white,
+//   },
+//   headerTitle: {
+//     // marginLeft: 12,
+//     fontSize: typography.size.lg,
+//     color: colors.white,
+//     fontWeight: '700',
+//     fontFamily: typography.semiBold
+//   },
+
+//   content: {
+//     height: height / 10,
+//     width: width / 1.1,
+//     // backgroundColor: 'cyan',
+//     alignSelf: 'center',
+//     borderBottomWidth: 1,
+//     borderColor: colors.boderLight
+//   },
+
+//   eventnameCon: {
+//     height: height / 22,
+//     width: width / 1.1,
+//     // backgroundColor: 'yellow',
+//     alignSelf: 'center',
+//     justifyContent: 'flex-end'
+//   },
+//   valueCon: {
+//     height: height / 25,
+//     width: width / 1.1,
+//     // backgroundColor: 'blue',
+//     alignSelf: 'center',
+//     // justifyContent: 'center'
+//   },
+//   section: {
+//     // marginBottom: 22,
+//   },
+
+//   label: {
+//     fontSize: typography.size.sm,
+//     color: colors.grayDark,
+//     fontFamily: typography.regular,
+//     fontWeight: '400'
+//   },
+//   value: {
+//     fontSize: typography.size.md,
+//     color: colors.textDark,
+//     fontWeight: '700',
+//   },
+
+//   row: {
+
+//     // marginBottom: 16,
+//   },
+//   labelContainer: {
+//     height: height / 20,
+//     width: width / 1.1,
+//     // backgroundColor: 'cyan',
+//     alignSelf: 'center',
+//     borderBottomWidth: 0.5,
+//     borderColor: colors.boderLight,
+//     justifyContent: 'center'
+//   },
+//   rowLabelCon: {
+//     height: height / 22,
+//     width: width / 1.1,
+//     // backgroundColor: 'blue',
+//     alignSelf: 'center',
+
+//   },
+//   rowLabel: {
+//     fontSize: typography.size.sm,
+//     color: colors.grayDark,
+//     fontWeight: '400'
+//   },
+//   rowValue: {
+//     fontSize: typography.size.md,
+//     color: colors.textDark,
+//     fontWeight: '700',
+//     paddingHorizontal: 10,
+//     fontFamily: typography.regular
+//   },
+
+//   divider: {
+//     height: 1,
+//     width: width / 1.1,
+//     backgroundColor: colors.boderLight,
+//     // marginTop: 18
+//     alignSelf: 'center'
+//   },
+// });

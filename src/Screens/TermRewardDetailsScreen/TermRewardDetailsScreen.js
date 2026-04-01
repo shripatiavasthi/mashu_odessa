@@ -93,8 +93,8 @@ const TermRewardDetailsScreen = () => {
 
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <AppGradient style={styles.gradient}>
+    <AppGradient style={styles.gradient}>
+      <SafeAreaView style={styles.safeArea}>
         <LinearGradient
           colors={['#006BB6', '#00A2E5']}
           start={{ x: 0, y: 0 }}
@@ -164,7 +164,7 @@ const TermRewardDetailsScreen = () => {
                 <Text style={styles.label}>Event Name</Text>
               </View>
               <View style={styles.valueConatiner}>
-                <Text style={styles.value}>{selectedEvent?.title}</Text>
+                <Text style={styles.value} numberOfLines={5}>{selectedEvent?.title}</Text>
               </View>
               <View style={styles.modalDivider} />
               <View style={styles.labelConatiner}>
@@ -210,8 +210,8 @@ const TermRewardDetailsScreen = () => {
             </View>
           </View>
         </Modal>
-      </AppGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </AppGradient>
   );
 };
 
@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
   },
 
   cardTitle: {
+    width: width / 1.7,
     fontSize: 14,
     fontFamily: typography.bold,
     color: colors.textDark,
@@ -369,17 +370,19 @@ const styles = StyleSheet.create({
   },
 
   modalContainer: {
-    height: height / 2.04,
+    // height: height / 2.04,
+    paddingVertical: 5,
     width: width / 1.1,
     backgroundColor: colors.white,
     borderRadius: 12,
   },
 
   modalheadCon: {
-    height: height / 15,
+    height: height / 18,
     width: width / 1.2,
     alignSelf: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    // backgroundColor: 'cyan'
   },
 
   modalTitle: {
@@ -405,7 +408,8 @@ const styles = StyleSheet.create({
     height: height / 28,
     width: width / 1.2,
     alignSelf: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    // backgroundColor: 'cyan'
   },
 
   label: {
@@ -413,12 +417,23 @@ const styles = StyleSheet.create({
     color: colors.textDark,
     fontWeight: '400',
     lineHeight: 20,
-    fontFamily: typography.regular
+    fontFamily: typography.regular,
+    width: width / 1.2,
+    // backgroundColor: 'yellow'
   },
   valueConatiner: {
-    height: height / 28,
+    paddingBottom: 12,
     width: width / 1.2,
     alignSelf: 'center',
+    // justifyContent: 'center',
+    // backgroundColor: 'cyan'
+  },
+  modalTitleConatiner: {
+    // height: height / 28,
+    paddingBottom: 10,
+    width: width / 1.2,
+    alignSelf: 'center',
+    // backgroundColor: 'cyan',
   },
   pointMdConatiner: {
     height: height / 17,
@@ -427,7 +442,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   midValConatiner: {
-    height: height / 22,
+    // height: height / 22,
+    paddingBottom: 12,
     width: width / 1.2,
     alignSelf: 'center',
     justifyContent: 'center'
@@ -437,7 +453,9 @@ const styles = StyleSheet.create({
     color: colors.textDark,
     fontWeight: '700',
     lineHeight: 20,
-    fontFamily: typography.bold
+    fontFamily: typography.bold,
+    width: width / 1.2,
+    // backgroundColor: 'yellow'
   },
 
   bold: {

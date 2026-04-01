@@ -218,9 +218,10 @@ export const styles = StyleSheet.create({
   /* Reward Tag */
   rewardTag: {
     height: height / 35,
-    width: width / 7.5,
+    width: width / 6,
     justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor: 'cyan',
   },
 
   rewardText: {
@@ -228,6 +229,7 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     fontFamily: typography.semiBold,
+    left: 4,
   },
 
   modalOverlay: {

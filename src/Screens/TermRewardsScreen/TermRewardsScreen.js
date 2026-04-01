@@ -169,7 +169,6 @@ const RewardsScreen = ({ onMenuPress }) => {
 
   };
 
-
   return (
       <AppGradient style={styles.gradient}>
     <SafeAreaView style={styles.safeArea}>

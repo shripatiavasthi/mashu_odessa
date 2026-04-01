@@ -97,6 +97,12 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     setHasSetInitialTerm(false);
   }, [activeMenu]);
 
+  React.useEffect(() => {
+    if (isPlcMenu) {
+      setShowModal(false);
+    }
+  }, [isPlcMenu]);
+
 
   React.useEffect(() => {
     if (isPlcMenu) return;
@@ -260,7 +266,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     <View style={styles.spaceConatiner}>
       <TouchableOpacity onPress={() => goToEventDetails(event)} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardTitle} numberOfLines={2}>{title}</Text>
           <View style={styles.pointsRow}>
             <View style={styles.dot} />
             <Text style={styles.pointsText}>{points}</Text>
@@ -272,7 +278,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           </View>
         )}
         <View style={styles.locationCon}>
-          <Text style={styles.locationText}>Location: {location}</Text>
+          <Text style={styles.locationText} numberOfLines={2}>Location: {location}</Text>
           <Icon name="chevron-with-circle-right" size={18} color="#666666" />
         </View>
         <View style={styles.cardDivider} />
@@ -313,7 +319,7 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     <View style={styles.upcomingContainer}>
       <TouchableOpacity style={styles.upcomingCard} onPress={() => goToEventDetails(event)}>
         <View style={styles.cardHeaderUpcome}>
-          <Text style={styles.cardTitle}>{title}</Text>
+          <Text style={styles.cardTitle} numberOfLines={2}>{title}</Text>
           {earlyCheckinAllowed && (
             <View style={styles.ribbon}>
               <Image source={require('../../assets/Image/ArrowStyle.png')} />
@@ -321,10 +327,10 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           )}
         </View>
         <View style={styles.upcomingLoc}>
-          <Text style={styles.locationText}>Location: {location}</Text>
+          <Text style={styles.uplocationText} numberOfLines={2}>Location: {location}</Text>
           <View style={styles.pointsRow}>
             <View style={styles.dot} />
-            <Text style={styles.pointsText}>{points}</Text>
+            <Text style={styles.pointsText} numberOfLines={1}>{points}</Text>
           </View>
         </View>
         {!!detailsLine && (
@@ -453,7 +459,6 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
 
   const handleHomePress = () => {
     navigation.navigate('ChooseRoleScreen')
-    // setShowEmployeeModal(true);
 
   };
 
@@ -557,9 +562,11 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           </Pressable>
         </View>
 
-        <ScrollView
+       <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          style={{ height: height / 1 }}
+        
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -572,15 +579,16 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           {renderContent()}
         </ScrollView>
 
-        <TouchableOpacity
-          onPress={() => setShowModal(prev => !prev)}
-          style={styles.fab}
-          activeOpacity={0.8}
-        >
-          <Image
-            source={showModal ? require('../../assets/Image/close.png') : require('../../assets/Image/Info.png')}
-          />
-        </TouchableOpacity>
+        {!isPlcMenu && (
+          <TouchableOpacity
+            onPress={() => setShowModal(prev => !prev)}
+            style={styles.fab}
+            activeOpacity={0.8}>
+            <Image
+              source={showModal ? require('../../assets/Image/close.png') : require('../../assets/Image/Info.png')}
+            />
+          </TouchableOpacity>
+        )}
 
         <RewardPointsModal
           visible={showModal}

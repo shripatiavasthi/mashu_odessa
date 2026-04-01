@@ -109,8 +109,8 @@ export default function TeamSignup({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
             <AppGradient style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
 
                 <BackHeader
                     title="Sign Up for Team"
@@ -214,7 +214,7 @@ export default function TeamSignup({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </AppGradient>
         </SafeAreaView>
+            </AppGradient>
     );
 }

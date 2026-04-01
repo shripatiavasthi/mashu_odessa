@@ -9,7 +9,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppGradient, { BackHeader } from '../../../components/AppGradient';
 import { styles } from './TeamNewStyle';
 
-
 const TeamCreatedSuccessScreen = ({ navigation, route }) => {
 
     const { teamName, isPrivate } = route.params || {};
@@ -40,7 +39,6 @@ const TeamCreatedSuccessScreen = ({ navigation, route }) => {
                             Team Created Successfully!
                         </Text>
                     </View>
-
                     
 
                     <View style={styles.successTextContainer}>
@@ -61,7 +59,7 @@ const TeamCreatedSuccessScreen = ({ navigation, route }) => {
                             </Text>
                         </View>
 
-                        <View>
+                        <View style={styles.desContainer}>
                             <Text style={styles.successDescription}>
                                 This team is a{' '}
                                 <Text style={styles.boldText}>
@@ -73,7 +71,7 @@ const TeamCreatedSuccessScreen = ({ navigation, route }) => {
 
                         {
                             isPrivate && (
-                                <View style={styles.congratsContainer}>
+                                <View style={styles.desContainer}>
                                     <Text style={styles.successDescription}>
                                         Anyone wishing to join this team will need to know the password that you created. Make sure that you share the team name and password with the friends and family that you want to join the team so that they can select it while registering.
                                     </Text>

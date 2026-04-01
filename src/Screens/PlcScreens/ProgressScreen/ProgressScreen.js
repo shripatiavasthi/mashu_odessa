@@ -149,8 +149,8 @@ export default function ProgressScreen({ navigation }) {
     );
 
     return (
-        <SafeAreaView style={styles.safe}>
-            <AppGradient style={styles.safe}>
+        <AppGradient style={styles.safe}>
+            <SafeAreaView style={styles.safe}>
                 <AppHeader />
 
                 <View style={styles.tabBar}>
@@ -301,7 +301,7 @@ export default function ProgressScreen({ navigation }) {
                         <View style={{ height: height / 10 }} />
                     </ScrollView>
                 )}
-            </AppGradient>
-        </SafeAreaView>
+            </SafeAreaView>
+        </AppGradient>
     );
 }

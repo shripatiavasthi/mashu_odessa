@@ -128,7 +128,9 @@ const AppDrawerContent = ({ navigation }) => {
     );
   };
 
-
+  const navigateToChooseRole = () => {
+    navigation.navigate('ChooseRoleScreen');
+  };
 
   const handleNavigate = (tab, initialTab) => {
     navigation.closeDrawer();
@@ -211,7 +213,6 @@ const AppDrawerContent = ({ navigation }) => {
         }}
         onThirty={() => {
           setShowEmployeeModal(false);
-          // navigation.navigate('ContactUsScreen')
           navigation.closeDrawer();
           Alert.alert('WorkInProgess!', 'Working now on #o for 30 login flow, check back soon!')
         }}
@@ -232,19 +233,21 @@ const AppDrawerContent = ({ navigation }) => {
         </View>
 
 
-        <View style={styles.switchHeaderContainer}>
-          <View style={styles.switchIconContainer}>
-          {/* <Plc height= '30' width= '30'  /> */}
+        <View style={styles.roleContainer}>
+          <View style={styles.featureCon}>
+            {/* <Plc height= '30' width= '30'  /> */}
             <Image
               source={require('../assets/Image/Icons/PlcIcon.png')}
               style={styles.switchIcon}
               resizeMode="contain"
             />
-          </View>
+          
           <View style={styles.switchHeaderLeft}>
-            <Text style={styles.switchHeaderText} numberOfLines={1}>
+            <Text style={styles.switchHeaderText}>
               {currentMenuTitle}
             </Text>
+          </View>
+          </View>
           </View>
           {/* <TouchableOpacity
             // onPress={() => setActiveMenu(activeMenu === 'OC' ? 'PLC' : 'OC')}
@@ -257,10 +260,21 @@ const AppDrawerContent = ({ navigation }) => {
               resizeMode="contain"
             />
           </TouchableOpacity> */}
-        </View>
-        <View style={styles.divider} />
+        
+        {/* <View style={styles.divider} /> */}
 
         <View style={styles.menuSection}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={navigateToChooseRole}
+          >
+            <Image
+              source={require('../assets/Image/Icons/Home.png')}
+              style={styles.menuIcon}
+              resizeMode="contain"
+            />
+            <Text style={styles.menuLabel}>Home</Text>
+          </TouchableOpacity>
           {currentDrawerItems.map(item => (
             <TouchableOpacity
               key={item.label}
@@ -314,7 +328,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   profileSection: {
-    paddingTop: height * 0.04,
+    // paddingTop: height * 0.04,
     paddingBottom: height * 0.03,
     justifyContent: 'flex-start',
     width: width / 1.5,
@@ -367,44 +381,57 @@ const styles = StyleSheet.create({
   },
 
 
-  switchHeaderContainer: {
-    // width: width/4,
-    height: height / 18,
-    // backgroundColor: 'pink',
-    // justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // borderBottomWidth: 0.5,
-    // borderColor: colors.lightBlue
-  },
+ 
   switchHeaderLeft: {
     justifyContent: 'center',
     // alignItems: 'center',
-    width: width / 1.9,
+    width: width / 1.5,
     height: height / 18,
     // backgroundColor: 'cyan'
   },
   switchHeaderText: {
-    fontSize: typography.size.sm,
+    fontSize: typography.size.md,
     color: colors.white,
-    fontFamily: typography.regular,
-    fontWeight: '700',
-
+    fontFamily: typography.bold,
+    fontWeight: '600',
+    paddingHorizontal:10,
     lineHeight: 16
   },
-  switchIconContainer: {
-     width: width/7,
-    height: height / 18,
-    // backgroundColor: 'yellow',
+   roleContainer: {
+    height: height / 10,
+    width: width / 1.28,
     justifyContent: 'center',
-    alignItems: 'center'
+    // backgroundColor: 'yellow',
+    // flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 0,
+    // borderColor: colors.primaryLight,
   },
+  featureCon: {
+    height: height / 15,
+    width: width / 1.4,
+    // justifyContent: 'flex-end',
+    // backgroundColor: 'pink',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+
+    borderColor: colors.primaryLight,
+    // alignSelf: 'center',
+  },
+  roleIcon: {
+    width: 35,
+    height: 35,
+    tintColor: colors.white,
+    marginRight: 10,
+  },
+
   switchIcon: {
     width: 30,
     height: 30,
     tintColor: colors.white,
-    
+
   },
   divider: {
     width: width / 1.5,
@@ -416,7 +443,7 @@ const styles = StyleSheet.create({
 
 
   menuSection: {
-    marginTop: height * 0.01,
+    // marginTop: height * 0.01,
     width: '100%',
   },
   menuItem: {
@@ -424,7 +451,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: height * 0.018,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.2)',
+    borderBottomColor: colors.primaryLight,
     width: width / 1.5,
     alignSelf: 'center',
   },

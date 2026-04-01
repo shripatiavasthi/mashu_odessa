@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     safe: {
-        flex: 1,
+      height: height / 1,
     },
     tabBar: {
         flexDirection: 'row',

@@ -6,26 +6,24 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  RefreshControl, 
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
-import RewardPointsModal from '../../components/RewardPointsModal';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchFaqs} from '../../store/slices/faqSlice';
-import {selectAuth, selectFaq} from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFaqs } from '../../store/slices/faqSlice';
+import { selectAuth, selectFaq } from '../../store';
 
 
 const { height, width } = Dimensions.get('window');
 
 const FaqScreen = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
-  const {accessToken} = useSelector(selectAuth);
+  const { accessToken } = useSelector(selectAuth);
   const activeMenu = useSelector(state => state.app.activeMenu);
-  const {items: faqItems, status: faqStatus} = useSelector(selectFaq);
+  const { items: faqItems, status: faqStatus } = useSelector(selectFaq);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
 
@@ -33,7 +31,7 @@ const FaqScreen = () => {
     if (!accessToken || faqStatus !== 'idle') {
       return;
     }
-    dispatch(fetchFaqs({accessToken, activeMenu}));
+    dispatch(fetchFaqs({ accessToken, activeMenu }));
   }, [accessToken, activeMenu, dispatch, faqStatus]);
 
   const toggleItem = index => {
@@ -41,34 +39,34 @@ const FaqScreen = () => {
   };
 
   const handleRefresh = async () => {
-  setIsRefreshing(true);
-  try {
-    await dispatch(fetchFaqs({accessToken, activeMenu})).unwrap();
-  } catch (error) {
-    console.error('Failed to refresh FAQs:', error);
-  } finally {
-    setIsRefreshing(false);
-  }
-};
+    setIsRefreshing(true);
+    try {
+      await dispatch(fetchFaqs({ accessToken, activeMenu })).unwrap();
+    } catch (error) {
+      console.error('Failed to refresh FAQs:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <AppGradient style={styles.gradient}>
+      <SafeAreaView style={styles.safeArea}>
 
-      <AppGradient style={styles.gradient}>
         <AppHeader />
 
         <ScrollView
-  contentContainerStyle={styles.scrollContent}
-  showsVerticalScrollIndicator={false}
-  refreshControl={
-    <RefreshControl
-      refreshing={isRefreshing}
-      onRefresh={handleRefresh}
-      colors={['#006BB6']}    
-      tintColor={'#006BB6'}      // iOS
-    />
-  }
->
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              colors={['#006BB6']}
+              tintColor={'#006BB6'}
+            />
+          }>
+            
           {faqItems.map((item, index) => {
             const isOpen = index === activeIndex;
 
@@ -97,9 +95,9 @@ const FaqScreen = () => {
           })}
         </ScrollView>
 
-      </AppGradient>
 
-    </SafeAreaView>
+      </SafeAreaView>
+    </AppGradient>
   );
 };
 
@@ -107,21 +105,22 @@ export default FaqScreen;
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,
+    height: height / 1.05,
+    width: width / 1,
   },
   gradient: {
-    flex: 1,
+    height: height / 1,
+    width: width / 1,
   },
-
   scrollContent: {
     paddingTop: height / 40,
-    paddingBottom: height / 6,
+    paddingBottom: height / 10,
     alignItems: 'center',
   },
 
 
   card: {
-
+    // paddingVertical: height / 50,
     width: width / 1.1,
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
   },
 
   questionText: {
-    
+
     width: width / 1.5,
     fontSize: 14,
     fontWeight: '600',

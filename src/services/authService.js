@@ -103,7 +103,6 @@ export const refreshMsToken = async (msRefreshToken) => {
 
     return {
       msAccessToken: refreshResult.accessToken,
-      // If MS rotates the refresh token, use the new one; otherwise keep existing
       msRefreshToken: refreshResult.refreshToken || msRefreshToken,
       msTokenExpiry: refreshResult.accessTokenExpirationDate,
       idToken: refreshResult.idToken,

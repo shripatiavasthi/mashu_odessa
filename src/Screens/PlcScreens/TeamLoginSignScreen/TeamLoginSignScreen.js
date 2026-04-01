@@ -10,8 +10,8 @@ import { styles } from './TeamLoginSignStyle';
 import AppHeader from '../../../components/AppHeader';
 export default function TeamLoginSignScreen({ navigation }) {
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <AppGradient style={{ flex: 1 }}>
+        <AppGradient style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
                 <AppHeader />
                 <View style={styles.container}>
                     <View style={styles.contentBox}>
@@ -26,8 +26,8 @@ export default function TeamLoginSignScreen({ navigation }) {
                             <View style={styles.buttonSpace}>
                                 <TouchableOpacity
                                     style={styles.primaryButton}
-                                     onPress={() => navigation.navigate('TeamNewScreen')}
-                                    >
+                                    onPress={() => navigation.navigate('TeamNewScreen')}
+                                >
                                     <Text style={styles.buttonText}>Create a New Team</Text>
                                 </TouchableOpacity>
                             </View>
@@ -44,7 +44,7 @@ export default function TeamLoginSignScreen({ navigation }) {
                     </View>
                 </View>
 
-            </AppGradient>
-        </SafeAreaView>
+            </SafeAreaView>
+        </AppGradient>
     );
 }

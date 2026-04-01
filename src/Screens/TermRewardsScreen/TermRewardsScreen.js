@@ -171,8 +171,8 @@ const RewardsScreen = ({ onMenuPress }) => {
 
 
   return (
-    <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.gradient}>
+    <SafeAreaView style={styles.safeArea}>
         <LinearGradient colors={['#2E6FB6', '#4DA3DA']} style={styles.header}>
           <TouchableOpacity style={styles.menuContainer} onPress={handleHomePress}>
             <Image
@@ -377,8 +377,8 @@ const RewardsScreen = ({ onMenuPress }) => {
             </View>
           </View>
         </Modal>
-      </AppGradient>
     </SafeAreaView>
+      </AppGradient>
   );
 };
 

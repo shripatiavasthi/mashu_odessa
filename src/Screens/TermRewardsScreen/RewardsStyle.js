@@ -5,10 +5,12 @@ const { height, width } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,
+    height: height / 1.05,
+    width: width / 1,
   },
   gradient: {
-    flex: 1,
+    height: height / 1,
+    width: width / 1,
   },
 
   header: {

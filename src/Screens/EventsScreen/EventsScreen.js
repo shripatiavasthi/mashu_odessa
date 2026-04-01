@@ -557,9 +557,11 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           </Pressable>
         </View>
 
-        <ScrollView
+       <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          style={{ height: height / 1 }}
+        
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}

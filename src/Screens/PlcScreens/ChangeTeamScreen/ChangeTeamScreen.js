@@ -82,8 +82,8 @@ export default function ChangeTeamScreen({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
             <AppGradient style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
 
                 <BackHeader
                     title="Change My Team"
@@ -183,7 +183,7 @@ export default function ChangeTeamScreen({ navigation }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </AppGradient>
         </SafeAreaView>
+            </AppGradient>
     );
 }

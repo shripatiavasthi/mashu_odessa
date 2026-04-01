@@ -21,7 +21,7 @@ const TeamNewScreen = ({ navigation }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { accessToken } = useSelector(selectAuth);
 
-    const isCreateEnabled = teamName.trim().length > 0 && teamPassword.trim().length > 0;
+    const isCreateEnabled = teamName.trim().length > 0;
 
    const handleCreateTeam = async () => {
     if (!isCreateEnabled || !accessToken || isSubmitting) {
@@ -38,7 +38,7 @@ const TeamNewScreen = ({ navigation }) => {
             `${env.apiBaseUrl}${endpoints.plcTeams}`,
             {
                 teamName: trimmedTeamName,
-                teamPassword: trimmedTeamPassword,
+                ...(trimmedTeamPassword ? { teamPassword: trimmedTeamPassword } : {}),
             },
             { token: accessToken },
         );

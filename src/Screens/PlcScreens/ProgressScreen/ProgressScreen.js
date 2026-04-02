@@ -103,7 +103,7 @@ export default function ProgressScreen({ navigation }) {
                     <Text style={tableStyles.headerText}>Type</Text>
                 </View>
                 <View style={[tableStyles.cell, tableStyles.headerCell]}>
-                    <Text style={tableStyles.headerText}>PLC{'\n'}Credits</Text>
+                    <Text style={tableStyles.headerText} numberOfLines={2}>PLC{'\n'}Credits</Text>
                 </View>
                 <View style={[tableStyles.cell, tableStyles.headerCell]}>
                     <Text style={tableStyles.headerText}>Required{'\n'}Credits</Text>

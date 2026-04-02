@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     TextInput,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -21,7 +22,8 @@ export default function ChangeTeamScreen({ navigation }) {
     const [teams, setTeams] = useState([]);
     const [teamsStatus, setTeamsStatus] = useState('idle');
     const [teamsError, setTeamsError] = useState(null);
-    const { accessToken } = useSelector(selectAuth);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { accessToken, user } = useSelector(selectAuth);
 
     useEffect(() => {
         if (!accessToken) {
@@ -72,13 +74,38 @@ export default function ChangeTeamScreen({ navigation }) {
         if (team.type === 'Public') setPassword('');
     };
 
-    const handleChangeTeam = () => {
-        if (!isButtonEnabled) return;
-        console.log('Changing to team:', selectedTeam?.name, 'Password:', password || '(none)');
-        navigation.navigate('TeamChangeSuccessScreen', {
-            teamName: selectedTeam.name
-        });
+    const handleChangeTeam = async () => {
+        if (!isButtonEnabled || !accessToken || !user?.id || isSubmitting) return;
 
+        try {
+            setIsSubmitting(true);
+
+            const payload = {
+                teamId: selectedTeam.id,
+            };
+
+            if (selectedTeam.type === 'Private') {
+                payload.teamPassword = password.trim();
+            }
+
+            const response = await apiClient.post(
+                `${env.apiBaseUrl}${endpoints.plcJoinTeam(user.id)}`,
+                payload,
+                { token: accessToken },
+            );
+
+            if (!response?.success) {
+                throw new Error('Failed to join team');
+            }
+
+            navigation.navigate('TeamChangeSuccessScreen', {
+                teamName: selectedTeam.name
+            });
+        } catch (error) {
+            Alert.alert('Change Team Failed', error?.message || 'Unable to change the team right now.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -169,16 +196,16 @@ export default function ChangeTeamScreen({ navigation }) {
                         <TouchableOpacity
                             style={[
                                 styles.changeButton,
-                                !isButtonEnabled && styles.changeButtonDisabled,
+                                (!isButtonEnabled || isSubmitting) && styles.changeButtonDisabled,
                             ]}
                             onPress={handleChangeTeam}
-                            disabled={!isButtonEnabled}>
+                            disabled={!isButtonEnabled || isSubmitting}>
                             <Text
                                 style={[
                                     styles.changeButtonText,
-                                    !isButtonEnabled && styles.changeButtonTextDisabled,
+                                    (!isButtonEnabled || isSubmitting) && styles.changeButtonTextDisabled,
                                 ]}>
-                                Change My Team
+                                {isSubmitting ? 'Changing Team...' : 'Change My Team'}
                             </Text>
                         </TouchableOpacity>
                     </View>

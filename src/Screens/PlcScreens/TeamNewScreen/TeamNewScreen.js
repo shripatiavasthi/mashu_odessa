@@ -21,51 +21,51 @@ const TeamNewScreen = ({ navigation }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { accessToken } = useSelector(selectAuth);
 
-    const isCreateEnabled = teamName.trim().length > 0 && teamPassword.trim().length > 0;
+    const isCreateEnabled = teamName.trim().length > 0;
 
-   const handleCreateTeam = async () => {
-    if (!isCreateEnabled || !accessToken || isSubmitting) {
-        return;
-    }
-
-    const trimmedTeamName = teamName.trim();
-    const trimmedTeamPassword = teamPassword.trim();
-
-    try {
-        setIsSubmitting(true);
-
-        const response = await apiClient.post(
-            `${env.apiBaseUrl}${endpoints.plcTeams}`,
-            {
-                teamName: trimmedTeamName,
-                teamPassword: trimmedTeamPassword,
-            },
-            { token: accessToken },
-        );
-
-        const responseMessage =
-            typeof response?.data === 'string' ? response.data : '';
-        const isCreated =
-            response?.success === true &&
-            responseMessage !== 'Team creation is not allowed';
-
-        if (!isCreated) {
-            throw new Error(responseMessage || 'Failed to create team');
+    const handleCreateTeam = async () => {
+        if (!isCreateEnabled || !accessToken || isSubmitting) {
+            return;
         }
 
-        navigation.navigate('TeamCreatedSuccessScreen', {
-            teamName: trimmedTeamName,
-            isPrivate: trimmedTeamPassword.length < 0,
-        });
-    } catch (error) {
-        Alert.alert('Create Team Failed', error?.message || 'Unable to create the team right now.');
-    } finally {
-        setIsSubmitting(false);
-    }
-};
+        const trimmedTeamName = teamName.trim();
+        const trimmedTeamPassword = teamPassword.trim();
+
+        try {
+            setIsSubmitting(true);
+
+            const response = await apiClient.post(
+                `${env.apiBaseUrl}${endpoints.plcTeams}`,
+                {
+                    teamName: trimmedTeamName,
+                    ...(trimmedTeamPassword ? { teamPassword: trimmedTeamPassword } : {}),
+                },
+                { token: accessToken },
+            );
+
+            const responseMessage =
+                typeof response?.data === 'string' ? response.data : '';
+            const isCreated =
+                response?.success === true &&
+                responseMessage !== 'Team creation is not allowed';
+
+            if (!isCreated) {
+                throw new Error(responseMessage || 'Failed to create team');
+            }
+
+            navigation.navigate('TeamCreatedSuccessScreen', {
+                teamName: trimmedTeamName,
+                isPrivate: trimmedTeamPassword.length < 0,
+            });
+        } catch (error) {
+            Alert.alert('Create Team Failed', error?.message || 'Unable to create the team right now.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <AppGradient style={{ flex: 1 }}>
+        <AppGradient style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
 
                 <BackHeader
                     title="Create a New Team"
@@ -170,8 +170,8 @@ const TeamNewScreen = ({ navigation }) => {
 
                     </View>
                 </ScrollView>
-            </AppGradient>
-        </SafeAreaView>
+            </SafeAreaView>
+        </AppGradient>
     );
 }
 

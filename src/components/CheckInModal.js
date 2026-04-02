@@ -82,7 +82,6 @@ const CheckInModal = ({
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-
           <View style={styles.modalheadCon}>
             <Text style={styles.title}>Check In Now</Text>
           </View>
@@ -136,7 +135,7 @@ const CheckInModal = ({
               <View style={styles.txtinpCon}>
                 <View style={styles.inputContainer}>
                   <TextInput
-                  numberOfLines={1}
+                    numberOfLines={1}
                     placeholder="Enter activity ID"
                     value={activityId}
                     placeholderTextColor="#999"
@@ -317,23 +316,23 @@ const styles = StyleSheet.create({
   },
 
   inputContainer: {
-  height: height / 17,  
-  
-  width: width / 1.2,
-  justifyContent: 'center',
-  borderColor: colors.boderLight,
-  borderWidth: 1,
-  borderRadius: 8,
-  backgroundColor: colors.white,
-  paddingHorizontal: 12,     // moved padding here
-},
-input: {
-  flex: 1,                   // fills inputContainer cleanly
-  fontSize: 14,
-  fontFamily: typography.regular,
-  color: colors.textDark,
-  
-},
+    height: height / 17,
+
+    width: width / 1.2,
+    justifyContent: 'center',
+    borderColor: colors.boderLight,
+    borderWidth: 1,
+    borderRadius: 8,
+    backgroundColor: colors.white,
+    paddingHorizontal: 12,   
+  },
+  input: {
+    flex: 1,                 
+    fontSize: 14,
+    fontFamily: typography.regular,
+    color: colors.textDark,
+
+  },
 
   /* Footer */
   footer: {

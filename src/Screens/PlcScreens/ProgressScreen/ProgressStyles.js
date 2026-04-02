@@ -5,7 +5,8 @@ const { width, height } = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
     safe: {
-      height: height / 1,
+        height: height / 1,
+        width: width / 1,
     },
     tabBar: {
         flexDirection: 'row',
@@ -171,7 +172,7 @@ export const styles = StyleSheet.create({
         fontFamily: typography.bold,
         color: colors.text,
     },
-    
+
     spaceBox: {
         width: width,
         height: height / 9.5,

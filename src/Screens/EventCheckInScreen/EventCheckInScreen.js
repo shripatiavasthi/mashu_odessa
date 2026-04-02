@@ -17,7 +17,6 @@ import { selectAuth, selectCheckIn } from '../../store';
 import InvalidActivityModal from '../../components/InvalidActivityModal';
 import AppHeader from '../../components/AppHeader';
 import AppGradient from '../../components/AppGradient';
-import { colors, typography } from '../../styles/globalStyles';
 import styles from './EventCheckInstyles';
 
 

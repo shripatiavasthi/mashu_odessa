@@ -5,7 +5,6 @@ import {
     TouchableOpacity,
     TextInput,
     ActivityIndicator,
-    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -18,6 +17,7 @@ import { styles } from './ChangeTeamStyle';
 export default function ChangeTeamScreen({ navigation }) {
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [password, setPassword] = useState('');
+    const [submitError, setSubmitError] = useState('');
     const [showOptions, setShowOptions] = useState(false);
     const [teams, setTeams] = useState([]);
     const [teamsStatus, setTeamsStatus] = useState('idle');
@@ -71,6 +71,7 @@ export default function ChangeTeamScreen({ navigation }) {
     const handleTeamSelect = (team) => {
         setSelectedTeam(team);
         setShowOptions(false);
+        setSubmitError('');
         if (team.type === 'Public') setPassword('');
     };
 
@@ -79,6 +80,7 @@ export default function ChangeTeamScreen({ navigation }) {
 
         try {
             setIsSubmitting(true);
+            setSubmitError('');
 
             const payload = {
                 teamId: selectedTeam.id,
@@ -94,15 +96,26 @@ export default function ChangeTeamScreen({ navigation }) {
                 { token: accessToken },
             );
 
-            if (!response?.success) {
-                throw new Error('Failed to join team');
+            const responseMessage =
+                typeof response?.data === 'string' ? response.data.trim() : '';
+            const isInvalidPassword =
+                selectedTeam.type === 'Private' &&
+                responseMessage.toLowerCase() === 'invalid password';
+
+            if (!response?.success || isInvalidPassword) {
+                if (isInvalidPassword) {
+                    setSubmitError('Invalid team password');
+                    return;
+                }
+
+                throw new Error(responseMessage || 'Failed to join team');
             }
 
             navigation.navigate('TeamChangeSuccessScreen', {
                 teamName: selectedTeam.name
             });
         } catch (error) {
-            Alert.alert('Change Team Failed', error?.message || 'Unable to change the team right now.');
+            setSubmitError(error?.message || 'Unable to change the team right now.');
         } finally {
             setIsSubmitting(false);
         }
@@ -183,14 +196,25 @@ export default function ChangeTeamScreen({ navigation }) {
                                     <TextInput
                                         style={styles.passwordInput}
                                         value={password}
-                                        onChangeText={setPassword}
+                                        onChangeText={value => {
+                                            setPassword(value);
+                                            if (submitError) {
+                                                setSubmitError('');
+                                            }
+                                        }}
                                         placeholder="Enter team password"
                                         // secureTextEntry
                                         autoCapitalize="none"
                                     />
                                 </View>
+
                             </>
                         )}
+                         <View style={styles.selectTeamCon}>
+                                                            {!!submitError && (
+                                                                <Text style={styles.errorText}>Invalid credentials. Please check your password and try again.</Text>
+                                                            )}
+                                                        </View>
                     </View>
                     <View style={styles.btnContainer}>
                         <TouchableOpacity
@@ -208,6 +232,9 @@ export default function ChangeTeamScreen({ navigation }) {
                                 {isSubmitting ? 'Changing Team...' : 'Change My Team'}
                             </Text>
                         </TouchableOpacity>
+                        {/* {!!submitError && (
+                            <Text style={styles.errorText}>{submitError}</Text>
+                        )} */}
                     </View>
                 </View>
         </SafeAreaView>

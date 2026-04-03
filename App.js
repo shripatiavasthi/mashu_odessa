@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+
 import Splash from './src/Screens/Splash';
 import ChooseRoleScreen from './src/Screens/ChooseRoleScreen/ChooseRoleScreen';
 import LoginScreen from './src/Screens/EmployeeLoginScreen/LoginScreen';
@@ -34,7 +35,9 @@ import {
   saveAuthSession,
 } from './src/services/authService';
 import { loginWithIdToken } from './src/store/slices/authSlice';
-
+import NetInfo from '@react-native-community/netinfo';
+import AppGradient from './src/components/AppGradient';
+import { StyleSheet, View, Text } from 'react-native';
 
 
 const Stack = createStackNavigator();
@@ -43,6 +46,29 @@ function Root() {
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(selectAuth);
   const [authChecked, setAuthChecked] = useState(false);
+
+  const [isConnected, setIsConnected] = useState(true);
+  const [wasDisconnected, setWasDisconnected] = useState(false);
+
+
+useEffect(() => {
+  const unsubscribe = NetInfo.addEventListener(state => {
+    const connected = state.isConnected;
+    setIsConnected(connected);
+
+    if (connected && wasDisconnected) {
+      setWasDisconnected(false);
+      restoreSession(); 
+    }
+
+    if (!connected) {
+      setWasDisconnected(true);
+    }
+  });
+  return () => unsubscribe();
+}, [wasDisconnected]);
+
+
 
   useEffect(() => {
     const restoreSession = async () => {
@@ -75,7 +101,6 @@ function Root() {
             const loginResponse = await dispatch(
               loginWithIdToken({ idToken: refreshed.idToken }),
             ).unwrap();
-
             const userData = loginResponse?.data || {};
             const userWithPhoto = {
               ...userData,
@@ -122,6 +147,8 @@ function Root() {
 
   if (!authChecked) return null;
 
+  if (!isConnected) return <NoInternetScreen />;
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -162,4 +189,42 @@ function App() {
   );
 }
 
+function NoInternetScreen() {
+  return (
+    <AppGradient style={styles.AppGradientCon}>
+    <View style={styles.container}>
+      <Text style={styles.title}>No Internet Connection</Text>
+      <Text style={styles.subtitle}>
+        Please check your network and try again.
+      </Text>
+    </View>
+    </AppGradient>
+  );
+}
+
 export default App;
+
+
+const styles = StyleSheet.create({
+  AppGradientCon:{
+    flex: 1
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+   
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1a5fa8',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 15,
+    color: '#666',
+    textAlign: 'center',
+  },
+});

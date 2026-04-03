@@ -122,8 +122,8 @@ export default function TeamSignup({ navigation }) {
     };
 
     return (
-            <AppGradient style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <AppGradient style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
 
                 <BackHeader
                     title="Sign Up for Team"
@@ -144,20 +144,20 @@ export default function TeamSignup({ navigation }) {
                     <View style={styles.selectTeamCon}>
                         <Text style={styles.label}>Select a Team</Text>
                     </View>
-                        <View style={styles.dropdownWrapper}>
-                    <View style={styles.selectTeamCon}>
-                        <TouchableOpacity
-                            style={styles.selectBox}
-                            onPress={() => setShowOptions(!showOptions)}
-                            activeOpacity={0.8}>
-                            <Text style={styles.selectText}>
-                                {selectedTeam
-                                    ? `${selectedTeam.name} (${selectedTeam.type})`
-                                    : 'Select Team'}
-                            </Text>
-                            <Text style={styles.dropdownArrow}>▼</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <View style={styles.dropdownWrapper}>
+                        <View style={styles.selectTeamCon}>
+                            <TouchableOpacity
+                                style={styles.selectBox}
+                                onPress={() => setShowOptions(!showOptions)}
+                                activeOpacity={0.8}>
+                                <Text style={styles.selectText}>
+                                    {selectedTeam
+                                        ? `${selectedTeam.name} (${selectedTeam.type})`
+                                        : 'Select Team'}
+                                </Text>
+                                <Text style={styles.dropdownArrow}>▼</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     {showOptions && (
@@ -187,7 +187,7 @@ export default function TeamSignup({ navigation }) {
                             ))}
                         </View>
                     )}
-                    
+
 
                     <View style={styles.spaceCon}>
                         {selectedTeam && selectedTeam.type === 'Private' && (
@@ -211,15 +211,15 @@ export default function TeamSignup({ navigation }) {
                                     />
                                 </View>
                                 <View style={styles.selectTeamCon}>
-                                {!!submitError && (
-                            <Text style={styles.errorText}>Invalid credentials. Please check your password and try again.</Text>
-                        )}
-                        </View>
+                                    {!!submitError && (
+                                        <Text style={styles.errorText}>Invalid credentials. Please check your password and try again.</Text>
+                                    )}
+                                </View>
                             </>
                         )}
                     </View>
-                     
-                    
+
+
                     <View style={styles.btnContainer}>
                         <TouchableOpacity
                             style={[
@@ -236,10 +236,10 @@ export default function TeamSignup({ navigation }) {
                                 {isSubmitting ? 'Signing Up...' : 'Sign Up'}
                             </Text>
                         </TouchableOpacity>
-                       
+
                     </View>
                 </View>
-        </SafeAreaView>
-            </AppGradient>
+            </SafeAreaView>
+        </AppGradient>
     );
 }

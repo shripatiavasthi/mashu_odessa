@@ -39,6 +39,11 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         // backgroundColor: 'yellow'
     },
+    loaderContainer: {
+        minHeight: height / 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     buttonSpace:{
          height: height / 10,
         width: width / 1,

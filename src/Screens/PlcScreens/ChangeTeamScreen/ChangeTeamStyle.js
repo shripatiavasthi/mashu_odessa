@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
         color: colors.textMuted,
     },
     optionsContainer: {
-        height: height / 5.5,
+        // height: height / 5.5,
         width: width / 1.2,
         backgroundColor: colors.white,
         borderWidth: 1,
@@ -127,7 +127,7 @@ export const styles = StyleSheet.create({
 
     },
     btnContainer: {
-        height: height / 3,
+        height: height / 3.5,
         width: width / 1,
         //  backgroundColor: 'cyan',
         justifyContent: 'flex-end',
@@ -154,5 +154,13 @@ export const styles = StyleSheet.create({
     },
     changeButtonTextDisabled: {
         color: colors.white,
+    },
+    errorText: {
+        width: width / 1.2,
+        marginTop: height / 60,
+        color: colors.error || '#D32F2F',
+        fontSize: typography.size.sm,
+        fontFamily: typography.regular,
+        textAlign: 'center',
     },
 });

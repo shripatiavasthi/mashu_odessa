@@ -454,6 +454,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
 
   },
+   plcpointsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E4F1FB',
+    // height: height / 38,
+    // width: width / 4,
+    paddingVertical: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+    // gap: 2,
+    paddingHorizontal: 5,
+    right: 10
+
+  },
 
   dot: {
     height: width / 40,

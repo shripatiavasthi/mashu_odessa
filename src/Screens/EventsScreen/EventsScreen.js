@@ -282,13 +282,16 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           </View>
         </View>
         {!!detailsLine && (
-          <View style={styles.termContainer}>
+          <View style={styles.upcomingLoc}>
             <Text style={styles.termText}>{detailsLine}</Text>
+                      <Icon name="chevron-with-circle-right" size={18} color="#666666" />
           </View>
         )}
         <View style={styles.locationCon}>
           <Text style={styles.locationText} numberOfLines={2}>Location: {location}</Text>
+          {!detailsLine && (
           <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+          )}
         </View>
         <View style={styles.cardDivider} />
         <View style={styles.dateRow}>
@@ -341,21 +344,46 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
               <Image source={require('../../assets/Image/ArrowStyle.png')} />
             </View>
           )}
+
+          {!!detailsLine && (
+            <View style={styles.plcpointsRow}>
+              <View style={styles.dot} />
+              <Text style={styles.pointsText} numberOfLines={1}>{points}</Text>
+            </View>
+          )}
+
+
+
         </View>
         <View style={styles.upcomingLoc}>
-          <Text style={styles.uplocationText} numberOfLines={2}>Location: {location}</Text>
-          <View style={styles.pointsRow}>
-            <View style={styles.dot} />
-            <Text style={styles.pointsText} numberOfLines={1}>{points}</Text>
-          </View>
+          <Text style={styles.termText} numberOfLines={1}>
+            {isPlcMenu ? detailsLine : `Event Term : ${term}`}
+          </Text>
+          {!detailsLine && (
+            <View style={styles.pointsRow}>
+              <View style={styles.dot} />
+              <Text style={styles.pointsText} numberOfLines={1}>{points}</Text>
+            </View>
+          )}
+          {!!detailsLine && (
+          <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+          )}
         </View>
-        {!!detailsLine && (
+
+        <View style={styles.termContainer}>
+          <Text style={styles.uplocationText} numberOfLines={1}>Location: {location}</Text>
+          {!detailsLine && (
+          <Icon name="chevron-with-circle-right" size={18} color="#666666" />
+          )}
+        </View>
+
+
+        {/* {!detailsLine && (
           <View style={styles.termContainer}>
-            <Text style={styles.termText}>
-              {isPlcMenu ? detailsLine : `Event Term : ${term}`}
-            </Text>
+            <Text style={styles.termText}>Event Term : {term}</Text>
+            <Icon name="chevron-with-circle-right" size={18} color="#666666" />
           </View>
-        )}
+        )} */}
         <View style={styles.cardDivider} />
         <View style={styles.dateRow}>
           <View style={styles.dateBlock}>
@@ -578,11 +606,11 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
           </Pressable>
         </View>
 
-       <ScrollView
+        <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           style={{ height: height / 1 }}
-        
+
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}

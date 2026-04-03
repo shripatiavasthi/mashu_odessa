@@ -71,8 +71,8 @@ const EventSuccessScreens = () => {
       : '0 Points';
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <AppGradient style={styles.gradient}>
+    <AppGradient style={styles.gradient}>
+      <SafeAreaView style={styles.safeArea}>
 
         <LinearGradient
           colors={['#006BB6', '#00A2E5']}
@@ -118,7 +118,7 @@ const EventSuccessScreens = () => {
             <View style={styles.detailRowContainer}>
               <Text style={styles.detailText}>Event Name</Text>
             </View>
-            <View style={styles.boldContainer}>
+            <View style={styles.namValContainer}>
               <Text style={styles.nametxtBold}>{eventName}</Text>
             </View>
           </View>
@@ -162,7 +162,7 @@ const EventSuccessScreens = () => {
                 Event Start Date
               </Text>
             </View>
-            <View style={styles.boldContainer}>
+            <View style={styles.namValContainer}>
               <Text style={styles.detailBold}>
                 {eventStartDatePart} | {eventStartTimePart}
               </Text>
@@ -177,7 +177,7 @@ const EventSuccessScreens = () => {
                 </Text>
               </View>
 
-              <View style={styles.boldContainer}>
+              <View style={styles.namValContainer}>
                 <Text style={styles.detailBold}>
                   {eventEndDatePart} | {eventEndTimePart}
                 </Text>
@@ -188,17 +188,17 @@ const EventSuccessScreens = () => {
           <View style={styles.eventContainer}>
             <View>
               <Text style={styles.detailText}>
-                Event Check- In Date
+                Event Check-In Date
               </Text>
             </View>
 
-            <View style={styles.boldContainer}>
+            <View style={styles.namValContainer}>
               <Text style={styles.detailBold}>
                 {checkInDatePart} | {checkInTimePart}
               </Text>
             </View>
           </View>
-
+          <View style={styles.divider} />
           <View style={styles.detailRowContainer}>
             <Text style={styles.detailText}>
               {metricLabel} :{' '}
@@ -227,8 +227,8 @@ const EventSuccessScreens = () => {
           </View>
 
         </View>
-      </AppGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </AppGradient>
   );
 };
 
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    height: height / 1.2,
+    height: height / 1,
     width: width,
     alignItems: 'center',
   },
@@ -285,9 +285,9 @@ const styles = StyleSheet.create({
 
 
   iconOuter: {
-    height: height / 6.5,
+    height: height / 7,
     width: width / 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     // backgroundColor: 'green',
   },
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
 
 
   textContainer: {
-    height: height / 8,
+    height: height / 10,
     width: width / 1.2,
     justifyContent: 'center',
     // backgroundColor: 'pink',
@@ -325,7 +325,8 @@ const styles = StyleSheet.create({
   },
 
   eventstartCon: {
-    height: height / 10,
+    // height: height / ,
+    paddingVertical:  5,
     width: width / 1.2,
     // justifyContent: 'space-evenly',
 
@@ -333,7 +334,8 @@ const styles = StyleSheet.create({
   },
 
   detailsContainer: {
-    height: height / 10,
+    // height: height / 10,
+    paddingVertical:  5,
     width: width / 1.2,
     // justifyContent: 'space-evenly',
     borderBottomWidth: 1,
@@ -341,23 +343,26 @@ const styles = StyleSheet.create({
     // backgroundColor: 'pink',
   },
   eventContainer: {
-    height: height / 14,
+    paddingVertical: 5,
+    // height: height / 14,
     width: width / 1.2,
     // justifyContent: 'space-evenly',
-    borderBottomWidth: 1,
-    borderColor: colors.boderLight,
+    // borderBottomWidth: 1,
+    
     // backgroundColor: 'pink',
   },
   detailRowContainer: {
-    height: height / 20,
+    // height: height / 35,
+    paddingVertical: 5,
     width: width / 1.2,
     justifyContent: 'flex-end',
     // backgroundColor: 'lightblue',
   },
   locContainer: {
-    height: height / 22,
+    paddingVertical: 10,
+    // height: height / 22,
     width: width / 1.2,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     // backgroundColor: 'pink',
   },
   detailText: {
@@ -367,15 +372,23 @@ const styles = StyleSheet.create({
     fontFamily: typography.regular
   },
   boldContainer: {
-    height: height / 25,
+    // height: height / 25,
+    paddingVertical: 8,
     width: width / 1.2,
     justifyContent: 'center',
+    backgroundColor: 'lightgreen',
+  },
+   namValContainer: {
+    // height: height / 25,
+    paddingBottom: 8,
+    width: width / 1.2,
+    // justifyContent: 'center',
     // backgroundColor: 'lightgreen',
   },
   termContainer: {
     height: height / 27,
     width: width / 1.2,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     // backgroundColor: 'lightpink',
   },
   nametxtBold: {
@@ -393,11 +406,11 @@ const styles = StyleSheet.create({
     fontFamily: typography.bold
   },
 
-  /* Button */
+
   buttonContainer: {
     height: height / 9.2,
     width: width / 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: 'yellow',
   },

@@ -55,7 +55,7 @@ const TeamNewScreen = ({ navigation }) => {
 
             navigation.navigate('TeamCreatedSuccessScreen', {
                 teamName: trimmedTeamName,
-                isPrivate: trimmedTeamPassword.length < 0,
+                isPrivate: trimmedTeamPassword.length > 0,
             });
         } catch (error) {
             Alert.alert('Create Team Failed', error?.message || 'Unable to create the team right now.');

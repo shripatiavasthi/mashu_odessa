@@ -126,6 +126,16 @@ export default function TeamScreen({ navigation }) {
         });
     }, [myTeam]);
 
+    useEffect(() => {
+        if (myTeamStatus !== 'succeeded') {
+            return;
+        }
+
+        if (membersData.length === 0) {
+            navigation.navigate('TeamLoginSignScreen');
+        }
+    }, [membersData.length, myTeamStatus, navigation]);
+
     const renderMyTeamState = message => (
         <View style={styles.stateContainer}>
             {myTeamStatus === 'loading' && (
@@ -218,7 +228,7 @@ export default function TeamScreen({ navigation }) {
                                     <Text style={styles.teamMembersTitleText}>Team Members</Text>
                                     <Text style={styles.teamMembersStar}>★</Text>
                                 </View>
-                                {myTeamStatus === 'loading' ? renderMyTeamState('Loading your team...') : myTeamError ? renderMyTeamState(myTeamError) : membersData.length === 0 ? renderMyTeamState('No team members found') : membersData.map(item => (
+                                {myTeamStatus === 'loading' ? renderMyTeamState('Loading your team...') : myTeamError ? renderMyTeamState(myTeamError) : membersData.map(item => (
                                     <View key={item.id} style={styles.spaceContainer}>
                                         <TouchableOpacity style={styles.memberCard}>
                                             <View style={styles.avatarSpace}>

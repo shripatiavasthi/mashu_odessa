@@ -237,13 +237,34 @@ const styles = StyleSheet.create({
     // backgroundColor: 'lightblue',
     alignSelf: 'flex-end'
   },
+  cardTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexShrink: 1,
+    width: width / 1.75,
+    gap: width / 40,
+  },
   cardTitle: {
-    width: width / 2,
+    width: width / 3.4,
     fontSize: typography.size.md,
     fontWeight: '700',
     color: colors.textDark,
     fontFamily: typography.bold,
     // backgroundColor: 'cyan'
+  },
+  teamEventBadge: {
+    backgroundColor: '#FFF4E5',
+    borderRadius: 16,
+    paddingHorizontal: width / 40,
+    paddingVertical: height / 140,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  teamEventText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#C56A16',
+    fontFamily: typography.semiBold,
   },
   pointsText: {
     fontSize: 12,

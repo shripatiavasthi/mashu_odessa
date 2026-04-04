@@ -214,7 +214,7 @@ export const styles = StyleSheet.create({
     desContainer: {
         // height: height / 12,
         width: width / 1.1,
-        backgroundColor: 'cyan',
+        // backgroundColor: 'cyan',
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',

@@ -188,7 +188,7 @@ function App() {
     </Provider>
   );
 }
-
+ 
 function NoInternetScreen() {
   return (
     <AppGradient style={styles.AppGradientCon}>

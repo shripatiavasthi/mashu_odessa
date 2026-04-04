@@ -254,6 +254,8 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
   const getEventCheckInDisplay = event =>
     event?.checkInTime || event?.eventCheckInTime || 'TBD';
 
+  const isTeamEvent = event => event?.eventMode === 'team';
+
   const MyEventCard = ({
     event,
     title,
@@ -266,7 +268,14 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     <View style={styles.spaceConatiner}>
       <TouchableOpacity onPress={() => goToEventDetails(event)} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.cardTitle} numberOfLines={2}>{title}</Text>
+          <View style={styles.cardTitleRow}>
+            <Text style={styles.cardTitle} numberOfLines={2}>{title}</Text>
+            {isTeamEvent(event) && (
+              <View style={styles.teamEventBadge}>
+                <Text style={styles.teamEventText}>Team Event</Text>
+              </View>
+            )}
+          </View>
           <View style={styles.pointsRow}>
             <View style={styles.dot} />
             <Text style={styles.pointsText}>{points}</Text>
@@ -322,7 +331,14 @@ const EventsScreen = ({ showMenu = true, onMenuPress }) => {
     <View style={styles.upcomingContainer}>
       <TouchableOpacity style={styles.upcomingCard} onPress={() => goToEventDetails(event)}>
         <View style={styles.cardHeaderUpcome}>
-          <Text style={styles.cardTitle} numberOfLines={2}>{title}</Text>
+          <View style={styles.cardTitleRow}>
+            <Text style={styles.cardTitle} numberOfLines={2}>{title}</Text>
+            {isTeamEvent(event) && (
+              <View style={styles.teamEventBadge}>
+                <Text style={styles.teamEventText}>Team Event</Text>
+              </View>
+            )}
+          </View>
           {earlyCheckinAllowed && (
             <View style={styles.ribbon}>
               <Image source={require('../../assets/Image/ArrowStyle.png')} />

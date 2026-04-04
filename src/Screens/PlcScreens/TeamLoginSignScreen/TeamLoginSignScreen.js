@@ -1,14 +1,73 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     View,
     Text,
     TouchableOpacity,
+    ActivityIndicator,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { apiClient } from '../../../api/client';
 import AppGradient from '../../../components/AppGradient';
 import { styles } from './TeamLoginSignStyle';
 import AppHeader from '../../../components/AppHeader';
+import { env, endpoints } from '../../../env';
+import { selectAuth } from '../../../store';
+import { colors } from '../../../styles/globalStyles';
+
 export default function TeamLoginSignScreen({ navigation }) {
+    const { accessToken } = useSelector(selectAuth);
+    const [allowTeamCreation, setAllowTeamCreation] = useState(false);
+    const [settingsStatus, setSettingsStatus] = useState('idle');
+
+    useFocusEffect(
+        useCallback(() => {
+            let isActive = true;
+
+            const loadTeamSettings = async () => {
+                if (!accessToken) {
+                    if (isActive) {
+                        setAllowTeamCreation(false);
+                        setSettingsStatus('idle');
+                    }
+                    return;
+                }
+
+                try {
+                    if (isActive) {
+                        setSettingsStatus('loading');
+                    }
+
+                    const response = await apiClient.get(
+                        `${env.apiBaseUrl}${endpoints.plcTeamSettings}`,
+                        { token: accessToken },
+                    );
+
+                    if (!isActive) {
+                        return;
+                    }
+
+                    setAllowTeamCreation(Boolean(response?.data?.allowTeamCreation));
+                    setSettingsStatus('succeeded');
+                } catch (error) {
+                    if (!isActive) {
+                        return;
+                    }
+
+                    setAllowTeamCreation(false);
+                    setSettingsStatus('failed');
+                }
+            };
+
+            loadTeamSettings();
+
+            return () => {
+                isActive = false;
+            };
+        }, [accessToken]),
+    );
+
     return (
         <AppGradient style={{ flex: 1 }}>
             <SafeAreaView style={{ flex: 1 }}>
@@ -23,14 +82,21 @@ export default function TeamLoginSignScreen({ navigation }) {
                         </View>
 
                         <View style={styles.buttonContainer}>
-                            <View style={styles.buttonSpace}>
-                                <TouchableOpacity
-                                    style={styles.primaryButton}
-                                    onPress={() => navigation.navigate('TeamNewScreen')}
-                                >
-                                    <Text style={styles.buttonText}>Create a New Team</Text>
-                                </TouchableOpacity>
-                            </View>
+                            {settingsStatus === 'loading' && (
+                                <View style={styles.loaderContainer}>
+                                    <ActivityIndicator size="small" color={colors.primary} />
+                                </View>
+                            )}
+                            {allowTeamCreation && (
+                                <View style={styles.buttonSpace}>
+                                    <TouchableOpacity
+                                        style={styles.primaryButton}
+                                        onPress={() => navigation.navigate('TeamNewScreen')}
+                                    >
+                                        <Text style={styles.buttonText}>Create a New Team</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
                             <View>
                                 <View style={styles.secbtnnSpace}>
                                     <TouchableOpacity

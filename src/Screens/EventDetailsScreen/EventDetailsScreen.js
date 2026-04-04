@@ -58,6 +58,7 @@ const EventDetailsScreen = () => {
     ? event.eventType.filter(Boolean).join(', ')
     : event?.eventType || 'N/A';
   const eventCategory = event?.eventCategory || 'N/A';
+  const isTeamEvent = event?.eventMode === 'team';
   const eventMetric = isPlcEvent
     ? Number.isFinite(event?.eventPlcCredits)
       ? `${event.eventPlcCredits} PLC Credit${event.eventPlcCredits === 1 ? '' : 's'}`
@@ -100,8 +101,13 @@ const EventDetailsScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.section}>
-            <View style={styles.eventnameCon}>
+            <View style={styles.eventNameHeader}>
               <Text style={styles.label}>Event Name</Text>
+              {isTeamEvent && (
+                <View style={styles.teamEventBadge}>
+                  <Text style={styles.teamEventText}>Team Event</Text>
+                </View>
+              )}
             </View>
             <View style={styles.valueCon}>
               <Text style={styles.value}>{eventName}</Text>
@@ -246,6 +252,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'flex-end'
   },
+  eventNameHeader: {
+    minHeight: height / 22,
+    width: width / 1.1,
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: width / 40,
+  },
   valueCon: {
     // height: height / 25,
     paddingBottom: 15,
@@ -311,6 +326,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.boderLight,
     // marginTop: 18
     alignSelf: 'center'
+  },
+  teamEventBadge: {
+    backgroundColor: '#FFF4E5',
+    borderRadius: 16,
+    paddingHorizontal: width / 40,
+    paddingVertical: height / 140,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 2,
+  },
+  teamEventText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#C56A16',
+    fontFamily: typography.semiBold,
   },
 });
 

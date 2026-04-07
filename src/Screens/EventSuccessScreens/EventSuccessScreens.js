@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Image
+  Image,
+  Linking
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -34,12 +35,18 @@ const EventSuccessScreens = () => {
       return ['N/A', 'N/A'];
     }
 
+
     const normalized = value.trim();
     const datePart = normalized.slice(0, 10) || 'N/A';
     const timePart = normalized.slice(11) || 'N/A';
 
     return [datePart, timePart];
   };
+
+  const googleLink = data?.eventLink;
+  const shouldShowGoogleMeetButton =
+    activeMenu === 'plc' && typeof googleLink === 'string' && googleLink.trim();
+
 
   const eventName = data?.eventName || 'Event';
   const eventLocation = data?.eventLocation || 'TBD';
@@ -48,6 +55,7 @@ const EventSuccessScreens = () => {
   const eventType = Array.isArray(data?.eventType)
     ? data.eventType.filter(Boolean).join(', ')
     : data?.eventType || 'N/A';
+
 
   const [eventStartDatePart, eventStartTimePart] = isPlcResponse
     ? splitDateTime(data?.eventStartDateTime)
@@ -62,6 +70,7 @@ const EventSuccessScreens = () => {
   );
 
   const metricLabel = isPlcResponse ? 'PLC Credit' : 'Event Points';
+  
   const metricValue = isPlcResponse
     ? Number.isFinite(data?.eventPlcCredits)
       ? `${data.eventPlcCredits}`
@@ -70,6 +79,7 @@ const EventSuccessScreens = () => {
       ? `${data.eventPoints} Points`
       : '0 Points';
 
+  console.log("checkin data", data)
   return (
     <AppGradient style={styles.gradient}>
       <SafeAreaView style={styles.safeArea}>
@@ -208,7 +218,13 @@ const EventSuccessScreens = () => {
 
 
 
+          {/* <View style={styles.buttonContainer}>
+           
+
+          </View> */}
+
           <View style={styles.buttonContainer}>
+
             <TouchableOpacity
               style={styles.button}
               onPress={() =>
@@ -223,6 +239,14 @@ const EventSuccessScreens = () => {
 
               <Text style={styles.buttonText}>Visit Events</Text>
             </TouchableOpacity>
+
+            {shouldShowGoogleMeetButton && (
+            <TouchableOpacity
+              style={styles.eventButton}
+              onPress={() => Linking.openURL(googleLink.trim())}>
+              <Text style={styles.buttonText}>Join Event</Text>
+            </TouchableOpacity>
+            )}
 
           </View>
 
@@ -326,7 +350,7 @@ const styles = StyleSheet.create({
 
   eventstartCon: {
     // height: height / ,
-    paddingVertical:  5,
+    paddingVertical: 5,
     width: width / 1.2,
     // justifyContent: 'space-evenly',
 
@@ -335,7 +359,7 @@ const styles = StyleSheet.create({
 
   detailsContainer: {
     // height: height / 10,
-    paddingVertical:  5,
+    paddingVertical: 5,
     width: width / 1.2,
     // justifyContent: 'space-evenly',
     borderBottomWidth: 1,
@@ -348,7 +372,7 @@ const styles = StyleSheet.create({
     width: width / 1.2,
     // justifyContent: 'space-evenly',
     // borderBottomWidth: 1,
-    
+
     // backgroundColor: 'pink',
   },
   detailRowContainer: {
@@ -378,7 +402,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'lightgreen',
   },
-   namValContainer: {
+  namValContainer: {
     // height: height / 25,
     paddingBottom: 8,
     width: width / 1.2,
@@ -408,23 +432,46 @@ const styles = StyleSheet.create({
 
 
   buttonContainer: {
-    height: height / 9.2,
-    width: width / 1,
+    height: height / 7,
+    width: width / 1.1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     // backgroundColor: 'yellow',
+    flexDirection: 'row',
+    gap: 20
   },
   button: {
-    height: height / 20,
-    width: width / 1.2,
-    backgroundColor: colors.primary,
+    flex: 1,
+    // padding: 10,
+    height: height / 18,
+    // width: width / 1.2,
+    backgroundColor: colors.primaryDark,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.primary
+
+  },
+  eventButton: {
+    // flex: 1,
+    // padding: 10,
+    height: height / 18,
+    width: width / 2.35,
+    backgroundColor: colors.primaryDark,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+
   },
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+   visitBtnTxt: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.primaryDark,
   },
 });

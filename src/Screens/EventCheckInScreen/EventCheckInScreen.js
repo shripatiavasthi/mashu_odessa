@@ -32,13 +32,16 @@ const EventCheckInScreen = ({ navigation, route }) => {
   const { user, accessToken: navToken } = route.params || {};
   const [showModal, setShowModal] = useState(false);
 
+   const isPlcMenu = activeMenu === 'plc';
+  const activityLabel = isPlcMenu ? 'Event Code' : 'Activity ID';
+
   const isValidActivityId = /^\d{6}$/.test(activityId);
   
   const onCheckIn = async () => {
     const trimmedId = activityId.trim();
 
     if (!trimmedId) {
-      Alert.alert('Invalid Activity ID', 'Please enter an Activity ID.');
+      Alert.alert(`Invalid ${activityLabel}`, `Please enter an ${activityLabel}.`);
       return;
     }
 
@@ -66,6 +69,8 @@ const EventCheckInScreen = ({ navigation, route }) => {
     }
   };
 
+  
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppGradient style={styles.container}>
@@ -80,7 +85,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
 
             <View style={styles.headerContainers}>
               <Text style={styles.description}>
-                To proceed with the check-in, enter the Activity ID you received
+               To proceed with the check-in, enter the {activityLabel} you received
                 from the event organizer.
               </Text>
             </View>
@@ -92,7 +97,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
             </View>
 
             <View style={styles.labelContainer}>
-              <Text style={styles.label}>Activity ID</Text>
+              <Text style={styles.label}>{activityLabel}</Text>
             </View>
 
             <View style={styles.spacer}>
@@ -105,7 +110,7 @@ const EventCheckInScreen = ({ navigation, route }) => {
                 onChangeText={text =>
                   setActivityId(text.replace(/[^0-9]/g, ''))
                 }
-                placeholder="Enter Activity ID"
+                placeholder={`Enter ${activityLabel}`}
                 keyboardType="number-pad"
                 style={styles.input}
                 maxLength={6}

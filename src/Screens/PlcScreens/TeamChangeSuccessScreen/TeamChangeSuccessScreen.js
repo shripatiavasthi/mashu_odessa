@@ -10,7 +10,27 @@ import AppGradient, { BackHeader } from '../../../components/AppGradient';
 import { styles } from './TeamSuccessStyles';
 
 export default function TeamChangeSuccessScreen({ navigation, route }) {
-    const teamName = route?.params?.teamName || 'Green Falcons';
+    const teamName = route?.params?.teamName || '';
+
+  const handleViewTeam = () => {
+    navigation.reset({
+        index: 0,
+        routes: [
+            {
+                name: 'MainTabs',
+                params: {
+                    screen: 'Home',
+                    params: {
+                        screen: 'Team',
+                        params: {
+                            screen: 'TeamScreen',
+                        },
+                    },
+                },
+            },
+        ],
+    });
+};
 
     return (
         <AppGradient style={{ flex: 1 }}>
@@ -53,7 +73,9 @@ export default function TeamChangeSuccessScreen({ navigation, route }) {
                     </View>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => navigation.navigate('MainTabs')}>
+                        onPress={handleViewTeam}
+                        activeOpacity={0.8}
+                    >
                         <Text style={styles.buttonText}>
                             View My Team
                         </Text>

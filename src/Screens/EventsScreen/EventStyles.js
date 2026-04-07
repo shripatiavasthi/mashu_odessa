@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
     alignItems: 'center',
     flexDirection: 'row',
-
   },
   dropDownWrapper: {
     position: 'relative',
@@ -242,7 +241,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexShrink: 1,
     width: width / 1.75,
-    gap: width / 40,
+    gap: width / 50,
   },
   cardTitle: {
     width: width / 3.4,
@@ -324,14 +323,15 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
   },
   dateBlock: {
-    height: height / 14.5,
+    height: height / 15,
     width: width / 2.4,
     // justifyContent: 'center',
     // backgroundColor: 'yellow',
     // paddingHorizontal: 15
+    justifyContent: 'center'
   },
   dateContainer: {
-    height: height / 30,
+    height: height / 35,
     width: width / 2.4,
     justifyContent: 'flex-end',
     // backgroundColor: 'pink',
@@ -487,13 +487,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    // backgroundColor: 'cyan'
+    
   },
   btnContainer: {
-    height: height / 15,
-    width: width / 2.2,
+    height: height / 18,
+    width: width / 2.4,
     // backgroundColor: 'cyan',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderLeftWidth: 1,
+    borderColor: colors.boderLight
+
   },
 
   checkInBtn: {

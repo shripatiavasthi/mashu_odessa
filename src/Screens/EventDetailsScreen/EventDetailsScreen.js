@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,18 @@ import { useSelector } from 'react-redux';
 import { colors, typography } from '../../styles/globalStyles';
 import LinearGradient from 'react-native-linear-gradient';
 import AppGradient from '../../components/AppGradient';
+import CheckInModal from '../../components/CheckInModal';
+
+
 const { width, height } = Dimensions.get('window');
 
 const EventDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const activeMenu = useSelector(state => state.app.activeMenu);
+
+  const [showCheckInModal, setShowCheckInModal] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
 
 
@@ -37,10 +43,12 @@ const EventDetailsScreen = () => {
   }
 
   const isMyEvent = fromTab === 'MY_EVENTS';
+  const isUpcomingEvent = fromTab === 'UPCOMING_EVENTS';
   const isPlcEvent =
     activeMenu === 'plc' ||
     Array.isArray(event?.eventType) ||
     event?.eventPlcCredits !== undefined;
+  const showCheckInButton = isUpcomingEvent && Boolean(event?.showCheckInButton);
 
   const splitDateTime = value => {
     if (typeof value !== 'string' || !value.trim()) {
@@ -59,13 +67,11 @@ const EventDetailsScreen = () => {
     : event?.eventType || 'N/A';
   const eventCategory = event?.eventCategory || 'N/A';
   const isTeamEvent = event?.eventMode === 'team';
-  const eventMetric = isPlcEvent
-    ? Number.isFinite(event?.eventPlcCredits)
-      ? `${event.eventPlcCredits} PLC Credit${event.eventPlcCredits === 1 ? '' : 's'}`
-      : Number.isFinite(event?.eventPoints)
-        ? `${event.eventPoints} Points`
-        : '0 PLC Credit'
-    : `${event?.eventPoints || event?.points || '0'} Pts`;
+  const hasPlcCredits = Number.isFinite(event?.eventPlcCredits);
+  const metricLabel = hasPlcCredits ? 'PLC Credit' : 'Event Points';
+  const metricValue = hasPlcCredits
+    ? `${event.eventPlcCredits} PLC Credit${event.eventPlcCredits === 1 ? '' : 's'}`
+    : `${event?.eventPoints || event?.points || '0'} Points`;
 
   const [eventDatePart, eventTimePart] = isPlcEvent
     ? splitDateTime(event?.eventStartDateTime)
@@ -74,6 +80,12 @@ const EventDetailsScreen = () => {
   const [checkInDatePart, checkInTimePart] = splitDateTime(
     isPlcEvent ? event?.eventCheckInTime : event?.checkInTime,
   );
+
+  const [eventEndDatePart, eventEndTimePart] = isPlcEvent
+    ? splitDateTime(event?.eventEndDateTime)
+    : [event?.endDate || event?.date || 'N/A', event?.endTime || 'N/A'];
+
+    
 
   return (
     <AppGradient style={styles.container}>
@@ -84,6 +96,17 @@ const EventDetailsScreen = () => {
           end={{ x: 1, y: 0 }}
           style={styles.header}
         >
+           <CheckInModal
+          visible={showCheckInModal}
+          eventName={selectedEvent?.name}
+          onClose={() => setShowCheckInModal(false)}
+          onSubmit={activityId => {
+            console.log('Check-in submitted:', {
+              eventId: selectedEvent?.id,
+              activityId,
+            });
+          }}
+        />
           <View style={styles.headerContent}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.arrowCon}>
               <Image
@@ -103,14 +126,16 @@ const EventDetailsScreen = () => {
           <View style={styles.section}>
             <View style={styles.eventNameHeader}>
               <Text style={styles.label}>Event Name</Text>
+            </View>
+            <View style={styles.titlevalueCon}>
+              <Text style={styles.titleValue}>{eventName}
+              </Text>
+
               {isTeamEvent && (
                 <View style={styles.teamEventBadge}>
                   <Text style={styles.teamEventText}>Team Event</Text>
                 </View>
               )}
-            </View>
-            <View style={styles.valueCon}>
-              <Text style={styles.value}>{eventName}</Text>
             </View>
           </View>
           <View style={styles.divider} />
@@ -150,31 +175,73 @@ const EventDetailsScreen = () => {
           <View style={styles.divider} />
 
 
-          <View style={styles.section}>
-            <View style={styles.eventnameCon}>
-              <Text style={styles.label}>Event Date</Text>
-            </View>
-            <View style={styles.valueCon}>
-              <Text style={styles.value}>
-                {eventDatePart} | {eventTimePart}
-              </Text>
-            </View>
-          </View>
 
-          {isMyEvent && (
+
+          {!isPlcEvent && (
             <>
               <View style={styles.section}>
                 <View style={styles.eventnameCon}>
-                  <Text style={styles.label}>Event Check-In Date</Text>
+                  <Text style={styles.label}>Event Date</Text>
                 </View>
                 <View style={styles.valueCon}>
                   <Text style={styles.value}>
-                    {checkInDatePart} | {checkInTimePart}
-                    {/* {event.date} | {event.startTime || 'N/A'} */}
+                    {eventDatePart} | {eventTimePart}
                   </Text>
                 </View>
               </View>
+
+              {isMyEvent && (
+                <View style={styles.section}>
+                  <View style={styles.eventnameCon}>
+                    <Text style={styles.label}>Event Check-In Date</Text>
+                  </View>
+                  <View style={styles.valueCon}>
+                    <Text style={styles.value}>
+                      {checkInDatePart} | {checkInTimePart}
+                    </Text>
+                  </View>
+                </View>
+              )}
             </>
+          )}
+
+          {isPlcEvent && (
+            <View style={styles.dateSectionCon}>
+              <View style={styles.section}>
+                <View style={styles.nameCon}>
+                  <Text style={styles.label}>Event Start Date</Text>
+                </View>
+                <View style={styles.titleCon}>
+                  <Text style={styles.dateValue}>
+                    {eventDatePart} | {eventTimePart}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.section}>
+                <View style={styles.nameCon}>
+                  <Text style={styles.label}>Event End Date</Text>
+                </View>
+                <View style={styles.titleCon}>
+                  <Text style={styles.dateValue}>
+                    {eventEndDatePart} | {eventEndTimePart}
+                  </Text>
+                </View>
+              </View>
+
+              {isMyEvent && (
+                <View style={styles.section}>
+                  <View style={styles.nameCon}>
+                    <Text style={styles.label}>Event Check-In Date</Text>
+                  </View>
+                  <View style={styles.titleCon}>
+                    <Text style={styles.dateValue}>
+                      {checkInDatePart} | {checkInTimePart}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            </View>
           )}
 
           <View style={styles.divider} />
@@ -182,11 +249,26 @@ const EventDetailsScreen = () => {
           <View style={styles.section}>
             <View style={styles.eventnameCon}>
               <Text style={styles.label}>
-                Event Points :{' '}
-                <Text style={styles.value}>{eventMetric}</Text>
+                {metricLabel} : <Text style={styles.value}>{metricValue}</Text>
               </Text>
             </View>
           </View>
+          {showCheckInButton && (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  setSelectedEvent({
+                    id: event?.id || event?.eventId,
+                    name: eventName,
+                  });
+                  setShowCheckInModal(true);
+                }}>
+                <Text style={styles.buttonText}>Check In Now</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
         </ScrollView>
       </SafeAreaView>
     </AppGradient>
@@ -252,11 +334,28 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'flex-end'
   },
+  dateSectionCon: {
+    width: width,
+    paddingVertical: 8,
+  },
+  nameCon: {
+    height: height / 25,
+    width: width / 1.1,
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+  },
+  titleCon: {
+    minHeight: height / 35,
+    width: width / 1.1,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    paddingBottom: 12,
+  },
   eventNameHeader: {
     minHeight: height / 22,
     width: width / 1.1,
     alignSelf: 'center',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: width / 40,
@@ -269,10 +368,24 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     // justifyContent: 'center'
   },
-  section: {
-    // marginBottom: 22,
-  },
+  titlevalueCon: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    // flexShrink: 1,
+    // justifyContent: 'center',
+    // width: width / 1.75,
+    gap: width / 50,
 
+    // // height: height / 25,
+    paddingBottom: 15,
+    width: width / 1.1,
+    // backgroundColor: 'lightblue',
+    // flexDirection: 'row',
+    // alignSelf: 'center',
+    // // justifyContent: 'center',
+    alignItems: 'center',
+
+  },
   label: {
     fontSize: typography.size.sm,
     color: colors.grayDark,
@@ -285,7 +398,20 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: typography.bold
   },
+  dateValue: {
+    fontSize: typography.size.sm,
+    color: colors.textDark,
+    fontWeight: '700',
+    fontFamily: typography.bold
+  },
 
+  titleValue: {
+    width: width / 1.55,
+    fontSize: typography.size.sm,
+    color: colors.textDark,
+    fontWeight: '700',
+    fontFamily: typography.bold
+  },
   row: {
 
     // marginBottom: 16,
@@ -330,17 +456,38 @@ const styles = StyleSheet.create({
   teamEventBadge: {
     backgroundColor: '#FFF4E5',
     borderRadius: 16,
-    paddingHorizontal: width / 40,
-    paddingVertical: height / 140,
+    height: height / 40,
+    width: width / 4.5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 2,
   },
   teamEventText: {
     fontSize: 12,
     fontWeight: '600',
     color: '#C56A16',
     fontFamily: typography.semiBold,
+  },
+
+   buttonContainer: {
+    height: height / 3,
+    width: width / 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    // backgroundColor: 'yellow',
+  },
+  button: {
+    height: height / 22,
+    width: width / 1.2,
+    backgroundColor: '#2E6FB6',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
 });
 

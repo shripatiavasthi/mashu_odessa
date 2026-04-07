@@ -18,7 +18,7 @@ import PlcDetailScreen from './src/Screens/PlcScreens/ProgressScreen/PlcDetailSc
 import TeamDetailScreen from './src/Screens/PlcScreens/ProgressTeamScreen/TeamDetailScreen'
 import ChangeTeamScreen from './src/Screens/PlcScreens/ChangeTeamScreen/ChangeTeamScreen'
 import TeamChangeSuccessScreen from './src/Screens/PlcScreens/TeamChangeSuccessScreen/TeamChangeSuccessScreen'
-import TeamLoginSignScreen from './src/Screens/PlcScreens/TeamLoginSignScreen/TeamLoginSignScreen'
+// import TeamLoginSignScreen from './src/Screens/PlcScreens/TeamLoginSignScreen/TeamLoginSignScreen'
 import PolicyScreen from './src/Screens/PlcScreens/PolicyScreen/PolicyScreen'
 import TeamSignup from './src/Screens/PlcScreens/TeamSignup/TeamSignup'
 import TeamNewScreen from './src/Screens/PlcScreens/TeamNewScreen/TeamNewScreen'
@@ -168,7 +168,7 @@ useEffect(() => {
         <Stack.Screen name="TeamDetailScreen" component={TeamDetailScreen} />
         <Stack.Screen name="ChangeTeamScreen" component={ChangeTeamScreen} />
         <Stack.Screen name="TeamChangeSuccessScreen" component={TeamChangeSuccessScreen} />
-        <Stack.Screen name="TeamLoginSignScreen" component={TeamLoginSignScreen} />
+        {/* <Stack.Screen name="TeamLoginSignScreen" component={TeamLoginSignScreen} /> */}
         <Stack.Screen name="PolicyScreen" component={PolicyScreen} />
         <Stack.Screen name="TeamSignup" component={TeamSignup} />
         <Stack.Screen name="TeamNewScreen" component={TeamNewScreen} />

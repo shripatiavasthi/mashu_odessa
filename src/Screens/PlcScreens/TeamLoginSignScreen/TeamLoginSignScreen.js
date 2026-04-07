@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     Image,
+    BackHandler,
 } from 'react-native';
 import { DrawerActions } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -28,6 +29,11 @@ export default function TeamLoginSignScreen({ navigation }) {
     useFocusEffect(
         useCallback(() => {
             let isActive = true;
+            const handleBackPress = () => true;
+            const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+            const unsubscribeBeforeRemove = navigation.addListener('beforeRemove', event => {
+                event.preventDefault();
+            });
 
             const loadTeamSettings = async () => {
                 if (!accessToken) {
@@ -68,8 +74,10 @@ export default function TeamLoginSignScreen({ navigation }) {
 
             return () => {
                 isActive = false;
+                backHandler.remove();
+                unsubscribeBeforeRemove();
             };
-        }, [accessToken]),
+        }, [accessToken, navigation]),
     );
 
     const navigateToTab = tabName => {
@@ -103,8 +111,11 @@ export default function TeamLoginSignScreen({ navigation }) {
                         <View style={styles.contentCon}>
                             <Text style={styles.descriptionText}>
                                 You are not currently part of any team.{"\n"}
-                                Please join an existing team or create a new team.
-                            </Text>
+                                Please join an existing team
+                                {allowTeamCreation && (
+                                <Text> or create a new team</Text>
+                                )}.
+                                </Text>
                         </View>
 
                         <View style={styles.buttonContainer}>

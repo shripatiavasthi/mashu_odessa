@@ -40,11 +40,12 @@ export default function PlcDetailScreen({ navigation, route }) {
             startDate: splitDateTime(rawEvent?.eventStartDateTime),
             endDate: splitDateTime(rawEvent?.eventEndDateTime),
             checkInDate: splitDateTime(rawEvent?.eventCheckInTime),
-            plcCredit: Number.isFinite(rawEvent?.eventPlcCredits)
-                ? rawEvent.eventPlcCredits
-                : Number.isFinite(rawEvent?.eventPoints)
-                    ? rawEvent.eventPoints
-                    : 0,
+            metricLabel: Number.isFinite(rawEvent?.eventPlcCredits)
+                ? 'PLC Credit'
+                : 'Event Points',
+            metricValue: Number.isFinite(rawEvent?.eventPlcCredits)
+                ? `${rawEvent.eventPlcCredits} PLC Credit${rawEvent.eventPlcCredits === 1 ? '' : 's'}`
+                : `${rawEvent?.eventPoints || rawEvent?.points || 0} Points`,
         }
         : {
             title: 'Graduation Ceremony',
@@ -54,23 +55,24 @@ export default function PlcDetailScreen({ navigation, route }) {
             startDate: '2025 - 09 - 10 | 10:00 AM',
             endDate: '2025 - 09 - 10 | 11:00 AM',
             checkInDate: '2025 - 09 - 10 | 10:00 AM',
-            plcCredit: 1,
+            metricLabel: 'PLC Credit',
+            metricValue: '1 PLC Credit',
         };
 
     return (
-        <SafeAreaView style={styles.safe}>
-            <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
+        <AppGradient style={styles.fill}>
+            <SafeAreaView style={styles.safe}>
+                <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
 
-            {/* <BackHeader title="Event Details" onBack={() => navigation.goBack()} /> */}
+                {/* <BackHeader title="Event Details" onBack={() => navigation.goBack()} /> */}
 
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <Ionicons name="arrow-back" size={25} color={colors.white} />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Event Details</Text>
-            </View>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+                        <Ionicons name="arrow-back" size={25} color={colors.white} />
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Event Details</Text>
+                </View>
 
-            <AppGradient style={styles.fill}>
                 <ScrollView
                     style={styles.scroll}
                     showsVerticalScrollIndicator={false}>
@@ -111,34 +113,34 @@ export default function PlcDetailScreen({ navigation, route }) {
                         </View>
                         <View style={styles.titleCon}>
                             <Text style={styles.dateValue}>{event.startDate}</Text>
-</View>
+                        </View>
 
                         <View style={styles.nameCon}>
                             <Text style={styles.label}>Event End Date</Text>
                         </View>
                         <View style={styles.titleCon}>
                             <Text style={styles.dateValue}>{event.endDate}</Text>
-</View>
+                        </View>
                         <View style={styles.nameCon}>
                             <Text style={styles.label}>Event Check- In Date</Text>
                         </View>
                         <View style={styles.titleCon}>
                             <Text style={styles.dateValue}>{event.checkInDate}</Text>
-                            </View>
+                        </View>
                     </View>
 
                     <View style={styles.divider} />
 
                     <View style={styles.lastSection}>
                         <View style={styles.inlineFieldCon}>
-                            <Text style={styles.inlineLabel}>PLC Credit : </Text>
-                            <Text style={styles.inlineValue}>{event.plcCredit}</Text>
+                            <Text style={styles.inlineLabel}>{event.metricLabel} : </Text>
+                            <Text style={styles.inlineValue}>{event.metricValue}</Text>
                         </View>
                     </View>
 
                 </ScrollView>
-            </AppGradient>
-        </SafeAreaView>
+            </SafeAreaView>
+        </AppGradient>
     );
 }
 
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.boderLight,
     },
 
-   
+
 
     label: {
         fontSize: typography.size.xs,
@@ -242,7 +244,7 @@ const styles = StyleSheet.create({
     },
     inlineFieldCon: {
         flexDirection: 'row',
-       height: height / 23,
+        height: height / 23,
         width: width / 1.1,
         alignItems: 'flex-end',
         alignSelf: 'center',
@@ -262,15 +264,15 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: colors.textDark,
     },
-    lastSection:{
-         height: height / 15,
+    lastSection: {
+        height: height / 15,
         width: width / 1,
         // alignItems: 'flex-end',
         // alignSelf: 'center',
         // backgroundColor: 'lightgreen',
     },
-    dateSectionCon:{
-         height: height / 4.5,
+    dateSectionCon: {
+        height: height / 4.5,
         width: width / 1,
         // alignItems: 'flex-end',
         // alignSelf: 'center',

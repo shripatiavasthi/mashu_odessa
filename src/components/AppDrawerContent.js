@@ -18,7 +18,8 @@ import { selectAuth } from '../store';
 import { logoutWithAccessToken, clearAuth } from '../store/slices/authSlice';
 import { clearAuthSession } from '../services/authService';
 // import { useNavigation } from '@react-navigation/native';
-import EmployeeLoginModal from '../components/EmployeeLoginModal';
+
+// import EmployeeLoginModal from '../components/EmployeeLoginModal';
 
 import LogoutModal from './LogoutModal';
 
@@ -148,7 +149,7 @@ const AppDrawerContent = ({ navigation }) => {
     }
 
     if (tab === 'Team') {
-      navigation.navigate('Home', {
+      navigation.navigate('Team', {
         screen: 'Team',
       });
       return;
@@ -187,17 +188,21 @@ const AppDrawerContent = ({ navigation }) => {
     }
   };
 
-  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  // const [showEmployeeModal, setShowEmployeeModal] = useState(false);
 
   const currentDrawerItems = activeMenu === 'oc' ? ocDrawerItems : plcDrawerItems;
   const currentMenuTitle = activeMenu === 'oc' ? 'OC All-In' : 'Professional Learning Center';
+  const currentMenuIcon =
+    activeMenu === 'oc'
+      ? require('../assets/Image/Ocallin.png')
+      : require('../assets/Image/Plc.png');
 
   return (
     <LinearGradient
       colors={[colors.primary, colors.primaryLight]}
       style={styles.fill}
     >
-      <EmployeeLoginModal
+      {/* <EmployeeLoginModal
         visible={showEmployeeModal}
         onClose={() => setShowEmployeeModal(false)}
         onAllIn={() => {
@@ -216,7 +221,7 @@ const AppDrawerContent = ({ navigation }) => {
           navigation.closeDrawer();
           Alert.alert('WorkInProgess!', 'Working now on #o for 30 login flow, check back soon!')
         }}
-      />
+      /> */}
 
       <SafeAreaView style={styles.safeArea}>
 
@@ -237,7 +242,7 @@ const AppDrawerContent = ({ navigation }) => {
           <View style={styles.featureCon}>
             {/* <Plc height= '30' width= '30'  /> */}
             <Image
-              source={require('../assets/Image/Icons/PlcIcon.png')}
+              source={currentMenuIcon}
               style={styles.switchIcon}
               resizeMode="contain"
             />
@@ -428,8 +433,8 @@ const styles = StyleSheet.create({
   },
 
   switchIcon: {
-    width: 30,
-    height: 30,
+    width: 35,
+    height: 35,
     tintColor: colors.white,
 
   },
